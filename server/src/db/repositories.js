@@ -187,6 +187,7 @@ function mapEnrichmentJob(row){
     status:row.status,
     requestedBy:row.requested_by||null,
     sourceStatuses:row.source_statuses||{},
+    error:row.status==='failed'?(row.error_code||row.error_message||null):null,
     errorCode:row.error_code||null,
     errorMessage:row.error_message||null,
     attemptCount:Number(row.attempt_count)||0,
@@ -195,6 +196,52 @@ function mapEnrichmentJob(row){
     lockedBy:row.locked_by||null,
     startedAt:asTimestamp(row.started_at),
     completedAt:asTimestamp(row.completed_at),
+    createdAt:asTimestamp(row.created_at),
+    updatedAt:asTimestamp(row.updated_at)
+  };
+}
+
+function mapEnrichmentResult(row){
+  if(!row) return null;
+  return {
+    jobId:row.job_id,
+    organization:row.organization||null,
+    eventSignals:Array.isArray(row.event_signals)?row.event_signals:[],
+    contactCandidates:Array.isArray(row.contact_candidates)?row.contact_candidates:[],
+    contactData:Array.isArray(row.contact_data)?row.contact_data:[],
+    recommendation:row.recommendation||null,
+    createdAt:asTimestamp(row.created_at),
+    updatedAt:asTimestamp(row.updated_at)
+  };
+}
+
+function mapSource(row){
+  if(!row) return null;
+  return {
+    id:row.id,
+    organizationId:row.organization_id||null,
+    enrichmentJobId:row.enrichment_job_id||null,
+    provider:row.provider,
+    sourceUrl:row.source_url||null,
+    providerRef:row.provider_ref||null,
+    title:row.title||null,
+    checkedAt:asTimestamp(row.checked_at),
+    metadata:row.metadata||{},
+    createdAt:asTimestamp(row.created_at)
+  };
+}
+
+function mapResearchedFact(row){
+  if(!row) return null;
+  return {
+    id:row.id,
+    organizationId:row.organization_id,
+    fieldKey:row.field_key,
+    value:row.value==null?null:row.value,
+    sourceId:row.source_id||null,
+    confidence:row.confidence==null?null:Number(row.confidence),
+    reviewState:row.review_state,
+    checkedAt:asTimestamp(row.checked_at),
     createdAt:asTimestamp(row.created_at),
     updatedAt:asTimestamp(row.updated_at)
   };
@@ -451,6 +498,141 @@ function createRepositories(input) {
       }
     },
 
+    enrichmentResults:{
+      async upsert(jobId,result={}){
+        if(!jobId) throw new TypeError('enrichmentResults.upsert requires jobId');
+        const organization=result.organization==null?null:JSON.stringify(result.organization);
+        const eventSignals=JSON.stringify(result.eventSignals||[]);
+        const contactCandidates=JSON.stringify(result.contactCandidates||[]);
+        const contactData=JSON.stringify(result.contactData||[]);
+        const recommendation=result.recommendation==null?null:JSON.stringify(result.recommendation);
+        const saved=await db.query(`
+          INSERT INTO enrichment_results(
+            job_id, organization, event_signals, contact_candidates, contact_data, recommendation
+          )
+          VALUES ($1,$2::jsonb,$3::jsonb,$4::jsonb,$5::jsonb,$6::jsonb)
+          ON CONFLICT (job_id) DO UPDATE SET
+            organization=EXCLUDED.organization,
+            event_signals=EXCLUDED.event_signals,
+            contact_candidates=EXCLUDED.contact_candidates,
+            contact_data=EXCLUDED.contact_data,
+            recommendation=EXCLUDED.recommendation,
+            updated_at=now()
+          RETURNING *
+        `,[jobId,organization,eventSignals,contactCandidates,contactData,recommendation]);
+        return mapEnrichmentResult(saved.rows[0]);
+      },
+
+      async get(jobId){
+        const result=await db.query(
+          'SELECT * FROM enrichment_results WHERE job_id = $1 LIMIT 1',
+          [jobId]
+        );
+        return mapEnrichmentResult(result.rows[0]);
+      }
+    },
+
+    sources:{
+      async save({
+        id,
+        organizationId=null,
+        enrichmentJobId=null,
+        provider,
+        sourceUrl=null,
+        providerRef=null,
+        title=null,
+        checkedAt=null,
+        metadata={}
+      }={}){
+        if(!id||!provider) throw new TypeError('sources.save requires id and provider');
+        if(!organizationId&&!enrichmentJobId){
+          throw new TypeError('sources.save requires organizationId or enrichmentJobId');
+        }
+        const saved=await db.query(`
+          INSERT INTO sources(
+            id, organization_id, enrichment_job_id, provider,
+            source_url, provider_ref, title, checked_at, metadata
+          )
+          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb)
+          ON CONFLICT (id) DO UPDATE SET
+            organization_id=EXCLUDED.organization_id,
+            enrichment_job_id=EXCLUDED.enrichment_job_id,
+            provider=EXCLUDED.provider,
+            source_url=EXCLUDED.source_url,
+            provider_ref=EXCLUDED.provider_ref,
+            title=EXCLUDED.title,
+            checked_at=EXCLUDED.checked_at,
+            metadata=EXCLUDED.metadata
+          RETURNING *
+        `,[
+          id,organizationId,enrichmentJobId,provider,
+          sourceUrl,providerRef,title,checkedAt,JSON.stringify(metadata||{})
+        ]);
+        return mapSource(saved.rows[0]);
+      },
+
+      async listForJob(jobId){
+        const result=await db.query(`
+          SELECT *
+          FROM sources
+          WHERE enrichment_job_id=$1
+          ORDER BY checked_at DESC NULLS LAST, created_at DESC
+        `,[jobId]);
+        return result.rows.map(mapSource);
+      }
+    },
+
+    researchedFacts:{
+      async save({
+        id,
+        organizationId,
+        fieldKey,
+        value=null,
+        sourceId=null,
+        confidence=null,
+        reviewState='unreviewed',
+        checkedAt=null
+      }={}){
+        if(!id||!organizationId||!fieldKey){
+          throw new TypeError('researchedFacts.save requires id, organizationId and fieldKey');
+        }
+        const allowed=new Set(['unreviewed','accepted','rejected','conflict']);
+        if(!allowed.has(reviewState)) throw new TypeError('invalid researched fact reviewState');
+        const serialized=value==null?null:JSON.stringify(value);
+        const saved=await db.query(`
+          INSERT INTO researched_facts(
+            id, organization_id, field_key, value,
+            source_id, confidence, review_state, checked_at
+          )
+          VALUES ($1,$2,$3,$4::jsonb,$5,$6,$7,$8)
+          ON CONFLICT (id) DO UPDATE SET
+            organization_id=EXCLUDED.organization_id,
+            field_key=EXCLUDED.field_key,
+            value=EXCLUDED.value,
+            source_id=EXCLUDED.source_id,
+            confidence=EXCLUDED.confidence,
+            review_state=EXCLUDED.review_state,
+            checked_at=EXCLUDED.checked_at,
+            updated_at=now()
+          RETURNING *
+        `,[
+          id,organizationId,fieldKey,serialized,
+          sourceId,confidence,reviewState,checkedAt
+        ]);
+        return mapResearchedFact(saved.rows[0]);
+      },
+
+      async listForAccount(organizationId){
+        const result=await db.query(`
+          SELECT *
+          FROM researched_facts
+          WHERE organization_id=$1
+          ORDER BY field_key, checked_at DESC NULLS LAST, created_at DESC
+        `,[organizationId]);
+        return result.rows.map(mapResearchedFact);
+      }
+    },
+
     calendar:{
       async list({from,to}) {
         const range=[from,to];
@@ -522,6 +704,9 @@ module.exports={
   compareCalendarItems,
   calendarParts,
   mapEnrichmentJob,
+  mapEnrichmentResult,
+  mapSource,
+  mapResearchedFact,
   buildProspectWhere,
   asTimestamp,
   asDateOnly

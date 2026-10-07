@@ -9,6 +9,9 @@ const {
   mapContact,
   mapOpportunity,
   mapEnrichmentJob,
+  mapEnrichmentResult,
+  mapSource,
+  mapResearchedFact,
   calendarParts,
   buildProspectWhere
 }=require('../src/db/repositories');
@@ -256,6 +259,7 @@ test('enrichment job mapper exposes explicit queue and error state',()=>{
   assert.equal(job.lockedBy,'worker-1');
   assert.deepEqual(job.sourceStatuses,{web:'ok',apollo:'plan_restricted'});
   assert.equal(job.completedAt,null);
+  assert.equal(job.error,null);
 });
 
 test('enrichment queue claim is atomic and uses SKIP LOCKED',async()=>{
@@ -349,4 +353,199 @@ test('enrichment worker updates are locked, parameterized and fail closed',async
     repositories.enrichmentJobs.reschedule('job-1','worker-a',{delaySeconds:-1}),
     /delaySeconds must be a non-negative number/
   );
+});
+
+
+test('research persistence mappers keep provenance and unknown values explicit',()=>{
+  const result=mapEnrichmentResult({
+    job_id:'job-1',
+    organization:{name:'Eksempel AS'},
+    event_signals:[{event:'Fagdag'}],
+    contact_candidates:[],
+    contact_data:[],
+    recommendation:null,
+    created_at:new Date('2026-10-07T12:00:00.000Z'),
+    updated_at:new Date('2026-10-07T12:01:00.000Z')
+  });
+  assert.equal(result.jobId,'job-1');
+  assert.equal(result.organization.name,'Eksempel AS');
+  assert.deepEqual(result.contactCandidates,[]);
+  assert.equal(result.recommendation,null);
+
+  const source=mapSource({
+    id:'src-1',
+    organization_id:'o-1',
+    enrichment_job_id:'job-1',
+    provider:'web',
+    source_url:'https://example.test/team',
+    provider_ref:null,
+    title:'Team',
+    checked_at:new Date('2026-10-07T12:00:00.000Z'),
+    metadata:{hash:'abc'},
+    created_at:new Date('2026-10-07T12:00:00.000Z')
+  });
+  assert.equal(source.organizationId,'o-1');
+  assert.equal(source.enrichmentJobId,'job-1');
+  assert.equal(source.providerRef,null);
+  assert.deepEqual(source.metadata,{hash:'abc'});
+
+  const fact=mapResearchedFact({
+    id:'fact-1',
+    organization_id:'o-1',
+    field_key:'primary_contact',
+    value:null,
+    source_id:'src-1',
+    confidence:null,
+    review_state:'unreviewed',
+    checked_at:null
+  });
+  assert.equal(fact.value,null);
+  assert.equal(fact.confidence,null);
+  assert.equal(fact.reviewState,'unreviewed');
+});
+
+test('enrichment results upsert normalized research output without raw interpolation',async()=>{
+  const calls=[];
+  const db={
+    async query(text,params){
+      calls.push({text:String(text),params});
+      return {rows:[{
+        job_id:'job-1',
+        organization:{name:'Eksempel AS'},
+        event_signals:[{event:'Fagdag'}],
+        contact_candidates:[{name:'Pia Testesen'}],
+        contact_data:[],
+        recommendation:{whyNow:'Planlegger fagdag'}
+      }]};
+    }
+  };
+  const repositories=createRepositories(db);
+  const saved=await repositories.enrichmentResults.upsert('job-1',{
+    organization:{name:'Eksempel AS'},
+    eventSignals:[{event:'Fagdag'}],
+    contactCandidates:[{name:'Pia Testesen'}],
+    contactData:[],
+    recommendation:{whyNow:'Planlegger fagdag'}
+  });
+
+  assert.equal(saved.jobId,'job-1');
+  assert.equal(saved.contactCandidates[0].name,'Pia Testesen');
+  assert.match(calls[0].text,/ON CONFLICT \(job_id\) DO UPDATE/);
+  assert.deepEqual(calls[0].params,[
+    'job-1',
+    JSON.stringify({name:'Eksempel AS'}),
+    JSON.stringify([{event:'Fagdag'}]),
+    JSON.stringify([{name:'Pia Testesen'}]),
+    JSON.stringify([]),
+    JSON.stringify({whyNow:'Planlegger fagdag'})
+  ]);
+  assert.equal(calls[0].text.includes('Pia Testesen'),false);
+});
+
+test('sources are idempotent, linked and preserve metadata as data',async()=>{
+  const calls=[];
+  const db={
+    async query(text,params){
+      calls.push({text:String(text),params});
+      return {rows:[{
+        id:'src-1',
+        organization_id:'o-1',
+        enrichment_job_id:'job-1',
+        provider:'web',
+        source_url:'https://example.test/team',
+        provider_ref:null,
+        title:'Team',
+        checked_at:new Date('2026-10-07T12:00:00.000Z'),
+        metadata:{hash:'abc'}
+      }]};
+    }
+  };
+  const repositories=createRepositories(db);
+  const source=await repositories.sources.save({
+    id:'src-1',
+    organizationId:'o-1',
+    enrichmentJobId:'job-1',
+    provider:'web',
+    sourceUrl:'https://example.test/team',
+    title:'Team',
+    checkedAt:'2026-10-07T12:00:00.000Z',
+    metadata:{hash:'abc'}
+  });
+
+  assert.equal(source.id,'src-1');
+  assert.match(calls[0].text,/ON CONFLICT \(id\) DO UPDATE/);
+  assert.deepEqual(calls[0].params,[
+    'src-1','o-1','job-1','web',
+    'https://example.test/team',null,'Team','2026-10-07T12:00:00.000Z',
+    JSON.stringify({hash:'abc'})
+  ]);
+
+  await assert.rejects(
+    repositories.sources.save({id:'src-2',provider:'web'}),
+    /requires organizationId or enrichmentJobId/
+  );
+});
+
+test('researched facts are validated and parameterized for human review',async()=>{
+  const calls=[];
+  const db={
+    async query(text,params){
+      calls.push({text:String(text),params});
+      return {rows:[{
+        id:'fact-1',
+        organization_id:'o-1',
+        field_key:'primary_contact',
+        value:{name:'Pia Testesen'},
+        source_id:'src-1',
+        confidence:'91.5',
+        review_state:'unreviewed',
+        checked_at:new Date('2026-10-07T12:00:00.000Z')
+      }]};
+    }
+  };
+  const repositories=createRepositories(db);
+  const fact=await repositories.researchedFacts.save({
+    id:'fact-1',
+    organizationId:'o-1',
+    fieldKey:'primary_contact',
+    value:{name:'Pia Testesen'},
+    sourceId:'src-1',
+    confidence:91.5,
+    reviewState:'unreviewed',
+    checkedAt:'2026-10-07T12:00:00.000Z'
+  });
+
+  assert.equal(fact.confidence,91.5);
+  assert.equal(fact.reviewState,'unreviewed');
+  assert.deepEqual(calls[0].params,[
+    'fact-1','o-1','primary_contact',
+    JSON.stringify({name:'Pia Testesen'}),
+    'src-1',91.5,'unreviewed','2026-10-07T12:00:00.000Z'
+  ]);
+  assert.equal(calls[0].text.includes('Pia Testesen'),false);
+
+  await assert.rejects(
+    repositories.researchedFacts.save({
+      id:'fact-2',
+      organizationId:'o-1',
+      fieldKey:'primary_contact',
+      reviewState:'approved-by-ai'
+    }),
+    /invalid researched fact reviewState/
+  );
+});
+
+
+test('failed enrichment job exposes the public error field',()=>{
+  const job=mapEnrichmentJob({
+    id:'job-failed',
+    account_id:'o-1',
+    status:'failed',
+    source_statuses:{web:'error'},
+    error_code:'provider_unavailable',
+    error_message:'Provider svarte ikke.',
+    attempt_count:3
+  });
+  assert.equal(job.error,'provider_unavailable');
+  assert.equal(job.errorCode,'provider_unavailable');
 });
