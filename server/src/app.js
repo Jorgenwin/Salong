@@ -1,6 +1,7 @@
 'use strict';
 
 const { randomUUID } = require('node:crypto');
+const { handleReadRequest } = require('./api/read');
 
 function writeJson(res, statusCode, body, requestId) {
   const payload = JSON.stringify(body);
@@ -13,10 +14,10 @@ function writeJson(res, statusCode, body, requestId) {
   res.end(payload);
 }
 
-function createApp({ config, now = () => new Date(), makeRequestId = randomUUID } = {}) {
+function createApp({ config, repositories = null, now = () => new Date(), makeRequestId = randomUUID } = {}) {
   if (!config) throw new Error('createApp requires config');
 
-  return function handleRequest(req, res) {
+  return async function handleRequest(req, res) {
     const incomingId = req.headers['x-request-id'];
     const requestId = typeof incomingId === 'string' && incomingId.trim()
       ? incomingId.trim().slice(0, 128)
@@ -33,6 +34,15 @@ function createApp({ config, now = () => new Date(), makeRequestId = randomUUID 
           time: now().toISOString(),
           requestId
         }, requestId);
+        return;
+      }
+
+      const readResult = await handleReadRequest({ req, url, repositories });
+      if (readResult) {
+        const body = readResult.body && readResult.body.success === false
+          ? { ...readResult.body, requestId }
+          : readResult.body;
+        writeJson(res, readResult.status, body, requestId);
         return;
       }
 
