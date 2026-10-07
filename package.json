@@ -14,7 +14,7 @@
     "test": "npm run build && node tests/run.js",
     "test:unit": "node tests/e2e/u_cd.js",
     "server:start": "node server/src/index.js",
-    "server:check": "node --check server/src/config.js && node --check server/src/app.js && node --check server/src/index.js",
+    "server:check": "node --check server/src/config.js && node --check server/src/app.js && node --check server/src/index.js && node --check server/src/db/repositories.js && node --check server/src/db/migrate.js",
     "test:server": "node --test server/test/*.test.js"
   },
   "devDependencies": {
