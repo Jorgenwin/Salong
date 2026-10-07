@@ -14,7 +14,7 @@ function writeJson(res, statusCode, body, requestId) {
   res.end(payload);
 }
 
-function createApp({ config, repositories = null, now = () => new Date(), makeRequestId = randomUUID } = {}) {
+function createApp({ config, repositories = null, authBoundary = null, now = () => new Date(), makeRequestId = randomUUID } = {}) {
   if (!config) throw new Error('createApp requires config');
 
   return async function handleRequest(req, res) {
@@ -35,6 +35,16 @@ function createApp({ config, repositories = null, now = () => new Date(), makeRe
           requestId
         }, requestId);
         return;
+      }
+
+      if (authBoundary && url.pathname.startsWith('/api/')) {
+        const minimumRole = req.method === 'GET' ? 'reader' : 'editor';
+        const auth = await authBoundary.authorizeRequest(req, { minimumRole });
+        if (!auth.ok) {
+          writeJson(res, auth.status, { ...auth.body, requestId }, requestId);
+          return;
+        }
+        req.salongUser = auth.user;
       }
 
       const readResult = await handleReadRequest({ req, url, repositories });
