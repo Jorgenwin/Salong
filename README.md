@@ -2,11 +2,11 @@
 
 CRM og prospektering for utleie ved Litteraturhuset. Salong hjelper med tre ting: hvem som skal kontaktes, hvorfor nå, og neste handling. Salong sender ingen e-post; den lager utkast.
 
-Status: frontend-prototype som flyttes fra en Claude-artefakt til en vanlig kodebase. Ingen backend er bygget. Se [docs/architecture.md](docs/architecture.md) for hva som virker i dag og hva som krever en server, og [docs/backend-roadmap.md](docs/backend-roadmap.md) for veien videre.
+Status: frontend-prototypen er flyttet til vanlig kodebase, og backend v1 bygges nå gradvis. Første serverskjelett har helseendepunkt, konfigurasjonsvalidering og tester; database, auth og providerintegrasjoner kommer i egne PR-er. Se [docs/architecture.md](docs/architecture.md), [backend-veikartet](docs/backend-roadmap.md) og [ADR 0001](docs/decisions/0001-backend-v1.md).
 
 ## Kom i gang (fra bunnen)
 
-Krever Node 18+ og Python 3 (bare standardbiblioteket).
+Krever Node 22+ og Python 3 (bare standardbiblioteket).
 
 ```bash
 git clone https://github.com/Jorgenwin/Salong.git && cd Salong
@@ -20,6 +20,9 @@ npm start          # bygger og kjører på http://localhost:8080
 | `npm start` | Bygger og starter en statisk server (`PORT` styrer porten) |
 | `npm run check` | Bygger og syntakssjekker `dist/app.js` |
 | `npm test` | Bygger og kjører alle ende-til-ende-testene (`tests/run.js`). Filtrer: `node tests/run.js t12 t20` |
+| `npm run server:check` | Syntakssjekker backend-koden |
+| `npm run test:server` | Kjører backendens Node-tester |
+| `npm run server:start` | Starter backend-skjelettet (standard `http://localhost:3000`) |
 
 Testene bruker Playwright med Chromium. I Claude Code-skyøkter er Chromium forhåndsinstallert: sett `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` og ikke kjør `playwright install`. Andre steder: `npx playwright install chromium`. Skjermbilder fra testene havner i en temp-mappe (`SALONG_SHOTS` overstyrer), ikke i repoet.
 
@@ -31,7 +34,7 @@ Testene bruker Playwright med Chromium. I Claude Code-skyøkter er Chromium forh
 
 ## Hva du får utenfor Claude
 
-Appen starter i **demomodus**: eksempeldata (merket «Eksempel»), ingenting lagres, og research/Apollo/Spør Salong er «ikke tilkoblet», fordi de i dag går via Claude-artefaktens kapabiliteter (`db`, `mcp`, `sample`). Det er ikke en feil. Full funksjon krever artefakten eller en fremtidig backend. `data/example/seed.json` er eneste kilde for demodata og bygges inn i appen av `src/build.py`.
+Frontenden starter fortsatt i **demomodus** utenfor Claude: eksempeldata (merket «Eksempel») lagres ikke, og research/Apollo/Spør Salong er ikke koblet til den nye serveren ennå. Backend-skjelettet finnes, men har foreløpig bare drift/helsefunksjoner. `data/example/seed.json` er eneste kilde for demodata og bygges inn i appen av `src/build.py`.
 
 ## Struktur
 
@@ -42,8 +45,8 @@ src/                 frontend: app_base.js + ca. 50 moduler + CSS + build.py
 data/                example/ (eksempeldata), research/ (offentlig researchgrunnlag), README.md
 tests/               run.js og e2e/ (Playwright, mockede Exa/Apollo, oppdiktede testdata)
 scripts/serve.js     statisk lokal server
-server/              plassholder: foreslått backend-struktur, ingen kode
-docs/                architecture.md, backend-roadmap.md
+server/              backend v1: HTTP-server, config, tester; database/auth/providers kommer gradvis
+docs/                architecture.md, backend-roadmap.md, decisions/
 ```
 
 Moduler slås sammen i rekkefølgen i `MODS` i `src/build.py`. Rekkefølgen er en del av programmet (se «Teknisk gjeld» i arkitekturdokumentet).
@@ -54,8 +57,8 @@ Moduler slås sammen i rekkefølgen i `MODS` i `src/build.py`. Rekkefølgen er e
 
 ## Hemmeligheter
 
-Frontenden har ingen, og skal aldri få noen. Aldri commit nøkler eller kundedata. `.env.example` lister variabler en fremtidig server trenger (uten verdier). `.env` er i `.gitignore`.
+Frontenden har ingen hemmeligheter og skal aldri få noen. Aldri commit nøkler eller kundedata. `.env.example` dokumenterer backend-variabler uten hemmelige verdier; ekte verdier skal ligge i lokal/deployment secret storage. `.env` er i `.gitignore`.
 
 ## Arbeid i Claude Code-skyøkter
 
-Repoet bygger og testes fra bunnen med kommandoene over, uten lokale oppsett. Endre i `src/`, kjør `npm test`, og commit på en egen gren. Ikke redigér `dist/`.
+Repoet bygger og testes fra bunnen med kommandoene over, uten lokale oppsett. Frontendendringer gjøres i `src/`; backendendringer i `server/`. Kjør relevante checks/tester og commit på en egen gren. Ikke redigér `dist/`.
