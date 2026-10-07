@@ -549,3 +549,36 @@ test('failed enrichment job exposes the public error field',()=>{
   assert.equal(job.error,'provider_unavailable');
   assert.equal(job.errorCode,'provider_unavailable');
 });
+
+
+test('member lookup maps auth subject and preserves role/active state',async()=>{
+  const calls=[];
+  const db={
+    async query(text,params){
+      calls.push({text:String(text),params});
+      return {rows:[{
+        id:'m-1',
+        auth_subject:'auth-123',
+        name:'Test User',
+        email:'test@example.test',
+        role:'editor',
+        active:true
+      }]};
+    }
+  };
+
+  const repositories=createRepositories(db);
+  const member=await repositories.members.getByAuthSubject('auth-123');
+
+  assert.deepEqual(member,{
+    id:'m-1',
+    authSubject:'auth-123',
+    name:'Test User',
+    email:'test@example.test',
+    role:'editor',
+    active:true
+  });
+  assert.deepEqual(calls[0].params,['auth-123']);
+  assert.equal(calls[0].text.includes('auth-123'),false);
+  assert.equal(await repositories.members.getByAuthSubject(''),null);
+});
