@@ -8,6 +8,7 @@ const {
   mapAccount,
   mapContact,
   mapOpportunity,
+  mapEnrichmentJob,
   calendarParts,
   buildProspectWhere
 }=require('../src/db/repositories');
@@ -227,4 +228,125 @@ test('calendar timestamps are rendered in Europe/Oslo across DST and midnight',(
   assert.deepEqual(calendarParts(new Date('2027-01-15T08:00:00.000Z')),{date:'2027-01-15',time:'09:00'});
   assert.deepEqual(calendarParts(new Date('2027-07-15T07:00:00.000Z')),{date:'2027-07-15',time:'09:00'});
   assert.deepEqual(calendarParts(new Date('2027-01-15T23:30:00.000Z')),{date:'2027-01-16',time:'00:30'});
+});
+
+
+test('enrichment job mapper exposes explicit queue and error state',()=>{
+  const job=mapEnrichmentJob({
+    id:'job-1',
+    account_id:'o-1',
+    status:'running',
+    requested_by:'m-1',
+    source_statuses:{web:'ok',apollo:'plan_restricted'},
+    error_code:null,
+    error_message:null,
+    attempt_count:2,
+    available_at:new Date('2026-10-07T12:00:00.000Z'),
+    locked_at:new Date('2026-10-07T12:01:00.000Z'),
+    locked_by:'worker-1',
+    started_at:new Date('2026-10-07T12:01:00.000Z'),
+    completed_at:null,
+    created_at:new Date('2026-10-07T11:59:00.000Z'),
+    updated_at:new Date('2026-10-07T12:01:00.000Z')
+  });
+
+  assert.equal(job.accountId,'o-1');
+  assert.equal(job.status,'running');
+  assert.equal(job.attemptCount,2);
+  assert.equal(job.lockedBy,'worker-1');
+  assert.deepEqual(job.sourceStatuses,{web:'ok',apollo:'plan_restricted'});
+  assert.equal(job.completedAt,null);
+});
+
+test('enrichment queue claim is atomic and uses SKIP LOCKED',async()=>{
+  const calls=[];
+  const db={
+    async query(text,params){
+      calls.push({text:String(text),params});
+      return {rows:[{
+        id:'job-1',
+        account_id:'o-1',
+        status:'running',
+        source_statuses:{},
+        attempt_count:1,
+        locked_by:'worker-a',
+        locked_at:new Date('2026-10-07T12:00:00.000Z'),
+        started_at:new Date('2026-10-07T12:00:00.000Z')
+      }]};
+    }
+  };
+
+  const repositories=createRepositories(db);
+  const job=await repositories.enrichmentJobs.claimNext('worker-a');
+
+  assert.equal(job.id,'job-1');
+  assert.equal(job.lockedBy,'worker-a');
+  assert.equal(job.attemptCount,1);
+  assert.match(calls[0].text,/FOR UPDATE SKIP LOCKED/);
+  assert.match(calls[0].text,/attempt_count=j\.attempt_count\+1/);
+  assert.deepEqual(calls[0].params,['worker-a']);
+  await assert.rejects(
+    repositories.enrichmentJobs.claimNext(''),
+    /workerId is required/
+  );
+});
+
+test('enrichment worker updates are locked, parameterized and fail closed',async()=>{
+  const calls=[];
+  const db={
+    async query(text,params){
+      calls.push({text:String(text),params});
+      return {rows:[{
+        id:'job-1',
+        account_id:'o-1',
+        status:/status='queued'/.test(String(text))?'queued':params&&params[2]||'running',
+        source_statuses:params&&params[3]?{[params[2]]:params[3]}:{},
+        attempt_count:2,
+        locked_by:/locked_by=NULL/.test(String(text))?null:'worker-a'
+      }]};
+    }
+  };
+
+  const repositories=createRepositories(db);
+
+  await repositories.enrichmentJobs.setSourceStatus('job-1','worker-a','web','ok');
+  assert.deepEqual(calls[0].params,['job-1','worker-a','web','ok']);
+  assert.match(calls[0].text,/jsonb_set/);
+  assert.match(calls[0].text,/locked_by=\$2/);
+
+  await assert.rejects(
+    repositories.enrichmentJobs.setSourceStatus('job-1','worker-a','web','made_up'),
+    /invalid enrichment source status/
+  );
+
+  await repositories.enrichmentJobs.finish('job-1','worker-a',{
+    status:'partial',
+    errorCode:'apollo_plan',
+    errorMessage:'Personsøk er ikke tilgjengelig.'
+  });
+  assert.deepEqual(calls[1].params,[
+    'job-1','worker-a','partial','apollo_plan','Personsøk er ikke tilgjengelig.'
+  ]);
+  assert.match(calls[1].text,/completed_at=now\(\)/);
+  assert.match(calls[1].text,/locked_by=NULL/);
+
+  await assert.rejects(
+    repositories.enrichmentJobs.finish('job-1','worker-a',{status:'running'}),
+    /invalid enrichment finish status/
+  );
+
+  await repositories.enrichmentJobs.reschedule('job-1','worker-a',{
+    delaySeconds:30,
+    errorCode:'rate_limited',
+    errorMessage:'Prøv igjen senere.'
+  });
+  assert.deepEqual(calls[2].params,[
+    'job-1','worker-a',30,'rate_limited','Prøv igjen senere.'
+  ]);
+  assert.match(calls[2].text,/status='queued'/);
+
+  await assert.rejects(
+    repositories.enrichmentJobs.reschedule('job-1','worker-a',{delaySeconds:-1}),
+    /delaySeconds must be a non-negative number/
+  );
 });
