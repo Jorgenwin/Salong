@@ -15,3 +15,11 @@ credentials*.json
 test-results/
 playwright-report/
 tests/e2e/*.png
+
+# lokale/private driftsdata: aldri commit reelle CRM-eksporter eller persondata
+data/private/
+data/local/
+data/exports/
+*.sqlite
+*.sqlite3
+*.db
