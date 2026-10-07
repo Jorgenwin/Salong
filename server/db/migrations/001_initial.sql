@@ -25,6 +25,7 @@ CREATE TABLE organizations (
   id text PRIMARY KEY,
   name text NOT NULL,
   website text,
+  domain text,
   org_number text,
   segment text,
   tier text CHECK (tier IS NULL OR tier IN ('A','B','C')),
@@ -46,12 +47,20 @@ CREATE TABLE contacts (
   name text NOT NULL,
   title text,
   email text,
+  email_status text,
   phone text,
+  phone_status text,
   linkedin_url text,
+  role_match text,
+  relevant boolean,
+  active boolean NOT NULL DEFAULT true,
+  do_not_contact boolean NOT NULL DEFAULT false,
+  do_not_contact_reason text,
   is_primary boolean NOT NULL DEFAULT false,
   relevance_score numeric(5,2),
   source_state text,
   verified_at timestamptz,
+  last_enriched_at timestamptz,
   deleted_at timestamptz,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
@@ -92,6 +101,7 @@ CREATE TABLE activities (
   id text PRIMARY KEY,
   organization_id text REFERENCES organizations(id) ON DELETE CASCADE,
   opportunity_id text REFERENCES opportunities(id) ON DELETE CASCADE,
+  contact_id text REFERENCES contacts(id) ON DELETE SET NULL,
   type text NOT NULL CHECK (type IN ('call','email','meeting','visning','note','task')),
   text text NOT NULL DEFAULT '',
   body text,
@@ -100,6 +110,7 @@ CREATE TABLE activities (
   done boolean NOT NULL DEFAULT true,
   actor_id text REFERENCES members(id) ON DELETE SET NULL,
   owner_id text REFERENCES members(id) ON DELETE SET NULL,
+  direction text,
   wait_reason text,
   task_key text,
   deleted_at timestamptz,
@@ -116,7 +127,9 @@ CREATE INDEX activities_owner_idx ON activities (owner_id) WHERE type='task' AND
 CREATE TABLE prospects (
   organization_id text PRIMARY KEY REFERENCES organizations(id) ON DELETE CASCADE,
   relationship text,
+  kind text,
   status text,
+  stage text,
   fit_score numeric(5,2),
   potential_score numeric(5,2),
   expected_value numeric(14,2),
@@ -129,6 +142,27 @@ CREATE TABLE prospects (
 
 CREATE INDEX prospects_priority_idx ON prospects (priority);
 CREATE INDEX prospects_owner_idx ON prospects (owner_id);
+
+CREATE TABLE prospect_batches (
+  id text PRIMARY KEY,
+  name text NOT NULL,
+  status text,
+  wave text,
+  owner_id text REFERENCES members(id) ON DELETE SET NULL,
+  segment_ids jsonb NOT NULL DEFAULT '[]'::jsonb,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE prospect_batch_accounts (
+  batch_id text NOT NULL REFERENCES prospect_batches(id) ON DELETE CASCADE,
+  organization_id text NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  position integer CHECK (position IS NULL OR position > 0),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (batch_id, organization_id)
+);
+
+CREATE INDEX prospect_batch_accounts_org_idx ON prospect_batch_accounts (organization_id);
 
 CREATE TABLE bookings (
   id text PRIMARY KEY,
