@@ -1,37 +1,59 @@
-# server/ – plassholder for fremtidig backend
+# server/ – backend v1
 
-Ingen kode ennå, bevisst. Backend v1 er nå besluttet på arkitekturnivå i `docs/decisions/0001-backend-v1.md` (se også `docs/backend-roadmap.md`). Ingen backend-kode er installert ennå; implementeringen skal fortsatt skje i små, testede PR-er.
+Dette er starten på den ekte Salong-backenden. Arkitekturvalget ligger i `docs/decisions/0001-backend-v1.md`.
 
-## Foreslått struktur
+## Nåværende status
 
+Første steg er med vilje lite:
+
+- Node 22 HTTP-server uten tredjeparts runtime-avhengigheter
+- konfigurasjonsvalidering
+- `GET /health`
+- strukturert oppstarts-/avslutningslogg
+- request-id på svar
+- servertester i CI
+
+Det finnes **ikke** database, auth eller providerintegrasjoner ennå. De legges til i egne PR-er.
+
+## Kjør lokalt
+
+Fra repo-roten:
+
+```bash
+npm install
+npm run server:check
+npm run test:server
+npm run server:start
 ```
+
+Standard er `HOST=0.0.0.0`, `PORT=3000` og `NODE_ENV=development`.
+
+Helsesjekk:
+
+```text
+GET /health
+```
+
+Responsen inneholder bare driftsstatus, miljø, tidspunkt og request-id. Den skal aldri lekke hemmeligheter eller database/provider-detaljer.
+
+## Struktur
+
+```text
 server/
   src/
-    api/            ruter: accounts, contacts, enrichment, opportunities, calendar (samme navn som SalongServices)
-    enrichment/     jobbkø + arbeider som kjører research-pipelinen og skriver EnrichmentJob/-result
-    integrations/   apollo (samme tre operasjoner som src/services/providers/apollo.js), exa, firecrawl
-    auth/           innlogging og enkel tilgang
-    db/             skjema og migrasjoner
-  .env              (ikke i git; variabler står i ../.env.example)
+    app.js          HTTP-handler og endepunkter
+    config.js       miljøvariabler og validering
+    index.js        prosessoppstart, logging og graceful shutdown
+  test/
+    health.test.js
 ```
 
-## Kontrakten
-
-Serveren implementerer `SalongBackend` fra `src/services/types.js`, f.eks.:
-
-| Frontend-kall | HTTP |
-|---|---|
-| `getAccount(id)` | `GET /api/accounts/:id` |
-| `getProspects(filter)` | `GET /api/prospects` |
-| `getContacts(accountId)` | `GET /api/accounts/:id/contacts` |
-| `enrichAccount(id)` | `POST /api/enrichment/accounts/:id` → `{ jobId }` |
-| `enrichAccounts(ids)` | `POST /api/enrichment/batch` |
-| `getEnrichmentJob(id)` | `GET /api/enrichment/jobs/:id` → `EnrichmentJob` |
-
-Tabeller (forslag): `organizations`, `persons`, `cases`, `activities`, `prospects`, `enrichment_jobs`, `enrichment_results`, `sources`, `bookings` (senere).
+Neste planlagte steg er PostgreSQL-skjema/migrasjoner og repository-lag. API-et skal implementere `SalongBackend` fra `src/services/types.js` gradvis, uten at UI-et kobles direkte til database eller providers.
 
 ## Regler
 
-- Nøkler (Apollo, Exa, Firecrawl, LLM) bare her, aldri i frontend.
-- Ingen simulerte svar fra eksterne kilder. Feil er tilstander (`plan_restricted`, `blocked`, `not_connected`), ikke tomme resultater.
-- Salong sender ikke e-post uten en eksplisitt, egen beslutning.
+- Nøkler (Apollo, Exa, Firecrawl, LLM, database, auth) bare serverside.
+- Ingen simulerte providerresultater i produksjonskode.
+- Forventede providerfeil skal bli eksplisitte tilstander, ikke tomme «vellykkede» resultater.
+- Produksjonsdata skal i PostgreSQL, aldri i Git.
+- Salong sender ikke e-post uten en separat, eksplisitt beslutning.
