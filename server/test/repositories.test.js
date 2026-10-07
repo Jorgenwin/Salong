@@ -8,6 +8,7 @@ const {
   mapAccount,
   mapContact,
   mapOpportunity,
+  calendarParts,
   buildProspectWhere
 }=require('../src/db/repositories');
 
@@ -211,10 +212,18 @@ test('calendar repository combines opportunities, bookings and actionable activi
     ['2027-10-15','event','org:o-2'],
     ['2027-10-16','meet','deal:d-3']
   ]);
-  assert.equal(items[1].time,'08:30');
+  assert.equal(items[1].time,'10:30');
+  assert.equal(items[2].time,'13:00');
   assert.equal(items[2].owner,'m-2');
   assert.equal(calls.length,3);
   for(const call of calls){
     assert.deepEqual(call.params,['2027-10-01','2027-10-31']);
   }
+});
+
+
+test('calendar timestamps are rendered in Europe/Oslo across DST and midnight',()=>{
+  assert.deepEqual(calendarParts(new Date('2027-01-15T08:00:00.000Z')),{date:'2027-01-15',time:'09:00'});
+  assert.deepEqual(calendarParts(new Date('2027-07-15T07:00:00.000Z')),{date:'2027-07-15',time:'09:00'});
+  assert.deepEqual(calendarParts(new Date('2027-01-15T23:30:00.000Z')),{date:'2027-01-16',time:'00:30'});
 });
