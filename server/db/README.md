@@ -26,6 +26,7 @@ Rules:
 - opportunities
 - activities
 - prospects
+- prospect batches / batch memberships
 - bookings
 - enrichment_jobs
 - enrichment_results
