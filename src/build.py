@@ -3,7 +3,7 @@
 # og dist/index.html (full side for lokal kjøring og tester). Bare Python 3 standardbibliotek.
 import re,sys,os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-MODS=[f for f in ['dq.js','core.js','kb.js','kbui.js','kn.js','team.js','market.js','ux.js','mseed.js','cal2.js','market2.js','u3.js','u3seed.js','k3.js','i3.js','g3.js','m3.js','c3.js','mt.js','mtui.js','mtmod.js','elig.js','services/crm.js','services/planning.js','berik.js','berikui.js','enr.js','cdisc.js','enrsvc.js','enrrun.js','cov.js','drw.js','kal3.js','idag.js','idagui.js','idnew.js','idcmd.js','planui.js','maler.js','m3v.js','mkgap.js','tier.js','tierui.js','tierseq.js','strat.js','enrui2.js','ask.js'] if os.path.exists(f)]
+MODS=[f for f in ['dq.js','core.js','kb.js','kbui.js','kn.js','team.js','market.js','ux.js','mseed.js','cal2.js','market2.js','u3.js','u3seed.js','k3.js','i3.js','g3.js','m3.js','c3.js','mt.js','mtui.js','mtmod.js','elig.js','services/crm.js','services/planning.js','berik.js','berikui.js','services/providers/apollo.js','enr.js','cdisc.js','enrsvc.js','enrrun.js','cov.js','drw.js','kal3.js','idag.js','idagui.js','idnew.js','idcmd.js','planui.js','maler.js','m3v.js','mkgap.js','tier.js','tierui.js','tierseq.js','strat.js','enrui2.js','ask.js'] if os.path.exists(f)]
 CSS=[f for f in ['p7.css','p8.css','p9.css','p10.css','p11.css','p12.css','p13.css','p14.css','p15.css','p16.css','p17.css','p18.css','p19.css','p20.css','p21.css','p22.css'] if os.path.exists(f)]
 def rd(f): return open(f).read()
 src=rd('app_base.js')

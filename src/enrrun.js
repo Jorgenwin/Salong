@@ -37,10 +37,7 @@ const WebResearchProvider={id:'web',async call(op,args){ try{ return {ok:true,da
 /* ---------- ApolloProvider ---------- */
 const APOLLO_OPS={
   async org(x){ return enrApolloCompany({a:x.a}); },
-  async people(x){ const inp={q_organization_domains_list:[x.dom],per_page:25}; if(x.orgId) inp.organization_ids=[x.orgId]; if(x.titles&&x.titles.length) inp.person_titles=x.titles.slice(0,12); if(x.keywords) inp.q_keywords=x.keywords;
-    let r; try{ r=await enrCall('apollo_mixed_people_api_search',inp); }
-    catch(e){ if(e&&e.code==='tool_error'&&/API_INACCESSIBLE|upgrade|plan/i.test(String(e.message||''))) throw {code:'plan_restricted',message:'Apollo-planen gir ikke tilgang til personsøk.'}; throw e; }
-    const P=(r.payload&&(r.payload.people||r.payload.contacts))||[]; return {people:cdFromApollo(P),count:P.length}; } };
+  async people(x){ return apolloAdapter.searchPeople({domain:x.dom,orgId:x.orgId,titles:x.titles,keywords:x.keywords}); } };
 const ApolloProvider={id:'apollo',async call(op,args){ try{ return {ok:true,data:await APOLLO_OPS[op](args)}; }catch(e){ return {ok:false,...enrClassify(e)}; } }};
 
 /* ---------- sider → kandidater og generell adresse ---------- */

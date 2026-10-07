@@ -104,26 +104,7 @@ async function enrWebPeople(args){
     out.push({name:String(p.name).trim(),title:String(p.title).trim(),email:em,url:r.url,quote:String(p.quote).slice(0,200)}); }
   return {people:out,count:out.length,pages:res.length}; }
 
-/* ---------- Apollo ---------- */
-async function enrApolloCompany(args){
-  const a=args.a, dom=a.domain||enrHost(a.website||''); if(!dom) return {matched:false,note:'Mangler domene.'};
-  const r=await enrCall('apollo_organizations_lookup',{q_organization_fuzzy_name:dom,display_mode:'fuzzy_select_mode',per_page:3});
-  const L=(r.payload&&r.payload.organizations)||[], hit=L.find(o=>String(o.domain||enrHost(o.website_url||'')).toLowerCase().replace(/^www\./,'')===dom.toLowerCase());
-  return hit?{matched:true,id:hit.id,name:hit.name||''}:{matched:false}; }
-async function enrApolloPeople(args){
-  const a=args.a, dom=a.domain||enrHost(a.website||''), roles=args.roles||[]; if(!dom) return {people:[]};
-  let r; try{ r=await enrCall('apollo_mixed_people_api_search',{q_organization_domains_list:[dom],person_titles:roles.slice(0,6),per_page:5}); }
-  catch(e){ if(e&&e.code==='tool_error'&&/API_INACCESSIBLE|upgrade|plan/i.test(String(e.message||''))) throw {code:'plan_restricted',message:'Apollo-planen gir ikke tilgang til personsøk.'}; throw e; }
-  const P=(r.payload&&(r.payload.people||r.payload.contacts))||[], out=[];
-  for(const p of P.slice(0,5)){ const name=[p.first_name,p.last_name_obfuscated||p.last_name].filter(Boolean).join(' ')||p.name||''; if(!name||!p.title) continue;
-    out.push({name,title:p.title,email:'',apolloId:p.id||'',url:p.linkedin_url||''}); }
-  return {people:out,count:out.length}; }
-/* e-post koster kreditter hos Apollo: egen, eksplisitt handling per person, aldri i bulk og aldri automatisk */
-async function enrApolloEmail(args){
-  const p=args.p, a=args.a; const inp={reveal_personal_emails:false,reveal_phone_number:false};
-  if(p.sourceId&&/^[a-f0-9]{24}$/.test(p.sourceId)) inp.id=p.sourceId; else { inp.name=p.name; inp.organization_name=a.name; if(a.domain) inp.domain=a.domain; }
-  const r=await enrCall('apollo_people_match',inp), pe=(r.payload&&(r.payload.person||r.payload))||{};
-  return {email:pe.email||'',emailStatus:pe.email_status||'',linkedin:pe.linkedin_url||'',id:pe.id||'',credits:r.payload&&r.payload.mcp_credits||null}; }
+/* ---------- Apollo: se services/providers/apollo.js (adapter bak findOrganization/searchPeople/matchPerson) ---------- */
 async function enrFetchEmail(pid){
   const p=S.mtper[pid]; if(!p) return fail('not_found','Kontakten finnes ikke.'); const a=mtGet(p.accId); if(!a) return fail('not_found','Accounten finnes ikke.');
   await enrProbe(); const r=await apolloProvider.call('enrichPerson',{p:{...p,id:pid},a});
