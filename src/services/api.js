@@ -20,6 +20,7 @@ let salongBackend=localBackend;
 const SalongServices={
   use(impl){ salongBackend=Object.assign({},localBackend,impl||{}); return SalongServices; },
   reset(){ salongBackend=localBackend; },
+  createHttpBackend,
   accounts:{ getAccount:id=>salongBackend.getAccount(id), getProspects:f=>salongBackend.getProspects(f) },
   contacts:{ getContacts:accountId=>salongBackend.getContacts(accountId) },
   enrichment:{ enrichAccount:(id,o)=>salongBackend.enrichAccount(id,o), enrichAccounts:(ids,o)=>salongBackend.enrichAccounts(ids,o),
