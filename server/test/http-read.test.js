@@ -172,6 +172,13 @@ test('calendar requires a valid date range and delegates to the repository',asyn
     assert.equal(bad.status,400);
     assert.equal(badBody.error_code,'invalid_date_range');
 
+    for(const invalid of ['2027-02-30','2027-99-99']){
+      const invalidResponse=await fetch(base+'/api/calendar?from='+invalid);
+      const invalidBody=await invalidResponse.json();
+      assert.equal(invalidResponse.status,400);
+      assert.equal(invalidBody.error_code,'invalid_date_range');
+    }
+
     const response=await fetch(base+'/api/calendar?from=2027-04-01&to=2027-04-30');
     const body=await response.json();
     assert.equal(response.status,200);
