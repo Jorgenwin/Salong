@@ -1,0 +1,290 @@
+[
+{
+"id": "o-recovery",
+"name": "Recovery Norge",
+"website": "https://www.recoverynorge.org/",
+"segment": null
+},
+{
+"id": "o-psyk",
+"name": "Institutt for Psykoterapi",
+"website": "https://instpsyk.no/",
+"segment": null
+},
+{
+"id": "o-lesesenter",
+"name": "Nasjonalt lesesenter (UiS)",
+"website": "https://www.uis.no/nb/lesesenteret",
+"segment": null
+},
+{
+"id": "o-lnu",
+"name": "Landslaget for norskundervisning",
+"website": "https://www.norskundervisning.no/",
+"segment": null
+},
+{
+"id": "o-civita",
+"name": "Civita",
+"website": "https://civita.no/",
+"segment": "Organisasjon"
+},
+{
+"id": "o-forfatterforeningen",
+"name": "Den norske Forfatterforening",
+"website": "https://www.forfatterforeningen.no/",
+"segment": "Organisasjon"
+},
+{
+"id": "o-cappelen",
+"name": "Cappelen Damm",
+"website": "https://www.cappelendamm.no/",
+"segment": "Forlag"
+},
+{
+"id": "o-frambu",
+"name": "Frambu",
+"website": "https://frambu.no/",
+"segment": null
+},
+{
+"id": "o-heartland",
+"name": "Heartland Forlag",
+"website": "https://www.americantune.no/",
+"segment": null
+},
+{
+"id": "o-lese",
+"name": "Stiftelsen LESE",
+"website": "https://stiftelsenlese.no/",
+"segment": null
+},
+{
+"id": "o-konflikt",
+"name": "Konfliktrådet",
+"website": "https://konfliktraadet.no/",
+"segment": null
+},
+{
+"id": "o-agenda",
+"name": "Tankesmien Agenda",
+"website": "https://www.tankesmienagenda.no/",
+"segment": "Organisasjon"
+},
+{
+"id": "o-psykologforeningen",
+"name": "Norsk psykologforening",
+"website": "https://www.psykologforeningen.no/",
+"segment": "Profesjon og forbund"
+},
+{
+"id": "o-gyldendal",
+"name": "Gyldendal Norsk Forlag",
+"website": "https://www.gyldendal.no/",
+"segment": "Forlag"
+},
+{
+"id": "o-rodekors",
+"name": "Norges Røde Kors",
+"website": "https://www.rodekors.no/",
+"segment": null
+},
+{
+"id": "o-heldor",
+"name": "Heldor forlag",
+"website": "https://www.syngogstrekk.no/",
+"segment": null
+},
+{
+"id": "o-nbf",
+"name": "Norsk bibliotekforening",
+"website": "https://norskbibliotekforening.no/",
+"segment": null
+},
+{
+"id": "o-kvinnehelse",
+"name": "Nasjonalt senter for kvinnehelseforskning",
+"website": "https://www.oslo-universitetssykehus.no/fag-og-forskning/nasjonale-og-regionale-tjenester/nasjonalt-senter-for-kvinnehelseforskning",
+"segment": null
+},
+{
+"id": "o-manifest",
+"name": "Manifest Analyse (tidligere Manifest Tankesmie)",
+"website": "https://manifestanalyse.no/",
+"segment": "Organisasjon"
+},
+{
+"id": "o-utdanningsforbundet",
+"name": "Utdanningsforbundet",
+"website": "https://www.utdanningsforbundet.no/",
+"segment": "Profesjon og forbund"
+},
+{
+"id": "o-respublica",
+"name": "Res Publica",
+"website": "https://respublica.no/",
+"segment": "Forlag"
+},
+{
+"id": "o-nupi",
+"name": "NUPI",
+"website": "https://www.nupi.no",
+"segment": null
+},
+{
+"id": "o-uf",
+"name": "Universitetsforlaget og Juridika",
+"website": "https://www.universitetsforlaget.no",
+"segment": null
+},
+{
+"id": "o-af",
+"name": "Alliance Française i Oslo",
+"website": "https://www.alliancefrancaise.no",
+"segment": null
+},
+{
+"id": "o-prio",
+"name": "PRIO, Institutt for fredsforskning",
+"website": "https://www.prio.org",
+"segment": "Forskning"
+},
+{
+"id": "o-pen",
+"name": "Norsk PEN",
+"website": "https://norskpen.no",
+"segment": "Organisasjon"
+},
+{
+"id": "o-ffo",
+"name": "Funksjonshemmedes Fellesorganisasjon (FFO)",
+"website": "https://www.ffo.no",
+"segment": "Helse og pasient"
+},
+{
+"id": "o-samlaget",
+"name": "Det Norske Samlaget",
+"website": "https://samlaget.no",
+"segment": "Forlag"
+},
+{
+"id": "o-fhi",
+"name": "Folkehelseinstituttet (FHI)",
+"website": "https://www.fhi.no/",
+"segment": null
+},
+{
+"id": "o-kolofon",
+"name": "Kolofon Forlag",
+"website": "https://www.kolofon.no/",
+"segment": null
+},
+{
+"id": "o-latvia",
+"name": "Embassy of Latvia in Norway (Latvias ambassade i Oslo)",
+"website": "https://www2.mfa.gov.lv/en/norway/",
+"segment": null
+},
+{
+"id": "o-fafo",
+"name": "Fafo",
+"website": "https://www.fafo.no/",
+"segment": "Forskning"
+},
+{
+"id": "o-amnesty",
+"name": "Amnesty International Norge",
+"website": "https://amnesty.no/",
+"segment": "Organisasjon"
+},
+{
+"id": "o-frivillighet",
+"name": "Frivillighet Norge",
+"website": "https://www.frivillighetnorge.no/",
+"segment": "Organisasjon"
+},
+{
+"id": "o-icorn",
+"name": "ICORN (International Cities of Refuge Network)",
+"website": "https://www.icorn.org/",
+"segment": "Organisasjon"
+},
+{
+"id": "o-sifo",
+"name": "SIFO, Forbruksforskningsinstituttet ved OsloMet",
+"website": "https://www.oslomet.no/om/sifo",
+"segment": null
+},
+{
+"id": "o-segl",
+"name": "SEGL, katolsk årsskrift (St. Olav forlag, Den katolske kirke)",
+"website": "https://segl.no/",
+"segment": null
+},
+{
+"id": "o-jodisk",
+"name": "Jødisk Museum i Oslo",
+"website": "https://www.jodiskmuseumoslo.no/",
+"segment": null
+},
+{
+"id": "o-nifu",
+"name": "NIFU, Nordisk institutt for studier av innovasjon, forskning og utdanning",
+"website": "https://www.nifu.no/",
+"segment": "Forskning"
+},
+{
+"id": "o-forleggerforeningen",
+"name": "Den norske Forleggerforening",
+"website": "https://forleggerforeningen.no/",
+"segment": "Forlag"
+},
+{
+"id": "o-goethe",
+"name": "Goethe-Institut Norwegen (Oslo)",
+"website": "https://www.goethe.de/ins/no/no/index.html",
+"segment": "Ambassader og kultur"
+},
+{
+"id": "o-norla",
+"name": "NORLA, Norwegian Literature Abroad",
+"website": "https://norla.no/",
+"segment": "Organisasjon"
+},
+{
+"id": "o-farma",
+"name": "Norges Farmaceutiske Forening",
+"website": "https://www.farmaceutene.no/",
+"segment": null
+},
+{
+"id": "o-matmarked",
+"name": "Mat & Marked (Økologisk24)",
+"website": "https://www.okologisk24.no/matogmarked2025",
+"segment": null
+},
+{
+"id": "o-martinus",
+"name": "Martinus Senter Oslo",
+"website": "https://martinus.no/",
+"segment": null
+},
+{
+"id": "o-isf",
+"name": "Institutt for samfunnsforskning",
+"website": "https://www.samfunnsforskning.no/",
+"segment": "Forskning"
+},
+{
+"id": "o-nffo",
+"name": "Norsk faglitterær forfatter- og oversetterforening (NFFO)",
+"website": "https://www.nffo.no/",
+"segment": "Organisasjon"
+},
+{
+"id": "o-oslomet",
+"name": "OsloMet, arrangementer og konferanser",
+"website": "https://www.oslomet.no/om/arrangement/arrangementsoversikt",
+"segment": "Utdanning"
+}
+]

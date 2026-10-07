@@ -1,0 +1,25 @@
+<div class="app">
+  <aside class="side" aria-label="Hovedmeny">
+    <div class="brand"><b>Salong <em>2027</em></b><span>Utleiestasjon · Litteraturhuset</span></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      <span class="mode" id="mode"><i></i>Kobler til …</span>
+      <span>Uoffisielt verktøy. Tall og priser fra offentlige kilder, september 2026.</span>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="top">
+      <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Søk i kontakter og saker" aria-label="Søk i kontakter og saker" autocomplete="off"></label>
+      <button class="btn" id="askSalong" type="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>Spør Salong</button>
+      <button class="btn" id="newDeal" type="button"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Ny sak</button>
+      <span class="team" id="team"></span>
+      <span class="me" id="me"></span>
+    </div>
+    <div class="pghead"><h1 id="vt">I dag</h1><p id="vd"></p></div>
+    <div class="view" id="view"></div>
+  </div>
+</div>
+<div id="drawer-root"></div>
+<aside id="askPanel" class="askp" hidden role="dialog" aria-label="Spør Salong"><header class="askp-h"><div><h2>Spør Salong</h2><p id="askSub"></p></div><button type="button" class="x" id="askClose" aria-label="Lukk">×</button></header><div class="askp-b" id="askBody"></div></aside>
+<div id="modal-root"></div>
+<div id="toast-root" aria-live="polite"></div>

@@ -1,0 +1,71 @@
+/* I dag (omarbeidet) og seksmånedersmål */
+.idn-hd h2{font-size:26px; margin:0 0 14px; font-family:var(--serif); font-weight:600; letter-spacing:-.01em}
+.idn-prog{display:grid; gap:10px; padding:20px 22px; border:1px solid var(--rule-2); border-radius:var(--r,10px); background:var(--surface); margin-bottom:14px}
+.idn-prog.none{grid-template-columns:minmax(0,1fr) auto; align-items:center}
+.idn-prog.none p{margin:4px 0 0; color:var(--muted); font-size:14px}
+.idn-pn{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap}
+.idn-pn b{font-size:42px; line-height:1; font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+.idn-pn span{font-size:16px; color:var(--muted)}
+.idn-bar{height:10px; border-radius:6px; background:var(--surface-2); box-shadow:inset 0 0 0 1px var(--rule); overflow:hidden}
+.idn-bar i{display:block; height:100%; background:var(--accent); border-radius:6px}
+.idn-ps{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:0; font-size:14px; color:var(--muted)}
+.idn-ps b{color:var(--ink); font-variant-numeric:tabular-nums}
+.idn-week{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:0 0 22px; padding:10px 2px; border-bottom:1px solid var(--rule); font-size:14px}
+.idn-week b{font-size:11px; letter-spacing:.1em; color:var(--muted); font-weight:700; margin-right:4px}
+.idn-week .lnk{margin-left:auto}
+.idn-sec{display:grid; gap:10px; margin-bottom:26px}
+.idn-sec>h3,.idn-box>h3{font-size:11px; letter-spacing:.1em; color:var(--muted); font-weight:700; margin:0}
+.idn-fl{list-style:none; margin:0; padding:0; display:grid; gap:0}
+.idn-f{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:14px; align-items:center; padding:16px 2px; border-bottom:1px solid var(--rule)}
+.idn-f:first-child{border-top:1px solid var(--rule)}
+.idn-fo{font-size:12.5px; color:var(--muted); font-weight:600}
+.idn-fo span{font-weight:400; margin-left:6px}
+.idn-fa{font-size:17px; font-weight:600; margin:2px 0}
+.idn-fw{font-size:13.5px; color:var(--muted)}
+.idn-f.late .idn-fw{color:var(--danger)}
+.idn-fb{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+.idn-rest{margin-top:6px} .idn-rest summary{cursor:pointer; font-size:13.5px; color:var(--muted)}
+.idn-two{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:28px; align-items:start}
+.idn-box{display:grid; gap:10px; min-width:0; padding:16px 18px; border:1px solid var(--rule); border-radius:var(--r,10px)}
+.idn-box ul{margin:0; padding-left:18px; font-size:13.5px; color:var(--muted)}
+.idn-box .btn{justify-self:start}
+.idn-big{margin:0; font-size:15px} .idn-big b{font-size:22px; font-variant-numeric:tabular-nums} .idn-big span{color:var(--muted); font-size:13.5px; margin-left:6px}
+.idn-bh{margin:0; font-size:13.5px; color:var(--muted)}
+.idn-wp{margin:6px 0 4px; font-size:15px} .idn-wp b{font-size:20px; font-variant-numeric:tabular-nums} .idn-wp span{color:var(--muted)} .idn-wp.none{color:var(--muted)}
+.idn-adj{margin:0 0 14px; font-size:13.5px}
+.pl-chip{display:inline-block; padding:2px 9px; border-radius:99px; font-size:12px; font-weight:600; background:var(--surface-2); box-shadow:inset 0 0 0 1px var(--rule); color:var(--muted)}
+.pl-chip.ok{color:var(--accent)} .pl-chip.warn{color:var(--warn,#A86E12)} .pl-chip.bad{color:var(--danger)}
+.pl-warn{margin:0; padding:10px 12px; border-left:3px solid var(--warn,#A86E12); background:var(--surface-2); font-size:13.5px}
+.pl-sec{display:grid; gap:14px; padding:18px 0 22px; border-bottom:1px solid var(--rule); margin-bottom:18px}
+.pl-h{display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap}
+.pl-h h3{margin:0; font-size:20px}
+.pl-cards{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px}
+.pl-cards>div{display:grid; gap:2px; padding:12px 14px; border:1px solid var(--rule); border-radius:var(--r,8px); min-width:0}
+.pl-cards span{font-size:11px; letter-spacing:.08em; color:var(--muted); text-transform:uppercase}
+.pl-cards b{font-size:22px; font-variant-numeric:tabular-nums} .pl-cards small{font-size:12px; color:var(--muted)}
+.pl-cols{display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:30px}
+.pl-cols h4,.pl-adj h4{margin:0 0 6px; font-size:13px; color:var(--muted); letter-spacing:.04em}
+.pl-t{width:100%; border-collapse:collapse; font-size:13.5px; font-variant-numeric:tabular-nums}
+.pl-t th,.pl-t td{padding:7px 8px; border-bottom:1px solid var(--rule); text-align:right} .pl-t th:first-child{text-align:left; font-weight:600}
+.pl-t thead th{font-size:11.5px; color:var(--muted); font-weight:600} .pl-t tr.cur{background:var(--surface-2)} .pl-t tr.past td{color:var(--muted)} .pl-t th i{font-style:normal; font-size:11px; color:var(--accent); margin-left:4px}
+.pl-chain{list-style:none; margin:0; padding:0; display:grid; gap:6px; font-size:14px}
+.pl-chain li{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap} .pl-chain b{font-size:20px; min-width:46px; font-variant-numeric:tabular-nums}
+.pl-b{font-style:normal; font-size:11.5px; padding:1px 8px; border-radius:99px; box-shadow:inset 0 0 0 1px var(--rule); color:var(--muted)}
+.pl-b.real{color:var(--accent)} .pl-b.assume{color:var(--warn,#A86E12)}
+.pl-ed{display:grid; gap:10px; padding-top:10px}
+.pl-fields{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px} .pl-fields .wide{grid-column:1/-1}
+.pl-rev{margin:0; padding-left:18px; font-size:13px; color:var(--muted)}
+.pl-adj>summary{cursor:pointer; font-size:14px; color:var(--accent); font-weight:600}
+.pl-sec p.meta{margin:0}
+@media (max-width:900px){ .idn-two,.pl-cols{grid-template-columns:minmax(0,1fr)} .pl-cards{grid-template-columns:repeat(2,minmax(0,1fr))} .pl-fields{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} .idn-prog.none{grid-template-columns:minmax(0,1fr)} .idn-f{grid-template-columns:minmax(0,1fr)} .idn-fb{justify-content:flex-start} }
+.pl-cols>div{min-width:0}
+.pl-t{table-layout:fixed} .pl-t th:first-child{width:34%}
+.pl-t thead th{text-transform:none; letter-spacing:0; font-size:12px}
+.pl-t tbody th{text-transform:none; letter-spacing:0; font-size:13.5px}
+.idn-f .idn-fa{color:var(--ink)}
+.idn-f.late .idn-fw{color:var(--danger)}
+.pl-t{min-width:0; width:100%}
+.pl-t th,.pl-t td{padding:7px 6px; cursor:default; white-space:normal; background:transparent}
+.pl-t thead th{background:transparent}
+.idn-sh{display:flex; justify-content:space-between; align-items:baseline}
+.idn-fb .id-more{align-self:center}

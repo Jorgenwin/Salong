@@ -1,0 +1,58 @@
+/* ---------- Trinn 1: strammere hierarki, Kunder ---------- */
+.top h1{font-weight:600; letter-spacing:-.02em}
+.top .ttl p{color:var(--muted)}
+.panel h2,.dbody h2{font-weight:650}
+.btn.primary{box-shadow:0 1px 0 rgba(0,0,0,.08)}
+/* status og prioritet: konsekvente merker */
+.chip.stt{font-size:11.5px; font-weight:600; padding:1px 8px; line-height:19px; border-radius:var(--r-sm); border:1px solid transparent; display:inline-flex; align-items:center; gap:6px; white-space:nowrap}
+.chip.stt::before{content:""; width:7px; height:7px; border-radius:50%; flex:0 0 auto}
+.chip.stt.fast{background:var(--accent); color:var(--accent-ink)} .chip.stt.fast::before{background:var(--accent-ink)}
+.chip.stt.kunde{background:var(--accent-soft); color:var(--accent)} .chip.stt.kunde::before{background:var(--accent)}
+.chip.stt.prospekt{background:var(--surface); color:var(--muted); border-color:var(--rule-2)} .chip.stt.prospekt::before{background:transparent; border:1.5px solid var(--faint)}
+.tier{display:inline-grid; place-items:center; width:17px; height:17px; border-radius:var(--r-sm); border:1px solid var(--rule-2); font-size:10.5px; font-weight:700; color:var(--muted); background:var(--surface); margin-left:6px; vertical-align:1px}
+.ku{display:grid; gap:14px; min-width:0}
+.ku-kpi{margin:0; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); background:var(--surface); border:1px solid var(--rule); border-radius:var(--r)}
+.ku-t{padding:12px 16px 12px; border-left:1px solid var(--rule); display:grid; gap:1px; align-content:start; min-width:0}
+.ku-t:first-child{border-left:0}
+.ku-t dt{font-size:11px; letter-spacing:.07em; text-transform:uppercase; font-weight:600; color:var(--muted)}
+.ku-t dd{margin:2px 0 0; font-size:24px; font-weight:650; line-height:1.1; letter-spacing:-.02em; font-variant-numeric:tabular-nums; color:var(--ink)}
+.ku-t small{font-size:12px; color:var(--muted)}
+.ku-t.warn dd{color:var(--warn)}
+.ku-t .lnk{justify-self:start; font-size:12.5px}
+.ku-bar{display:grid; gap:8px; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule); border-radius:var(--r)}
+.ku-row{display:flex; flex-wrap:wrap; gap:8px 10px; align-items:center}
+.ku-row #newOrg{margin-left:auto}
+.ku-row.sec{padding-top:8px; border-top:1px solid var(--rule)}
+.ku-row select.in.fsel{width:auto; max-width:100%}
+.ku-lbl{font-size:11px; letter-spacing:.07em; text-transform:uppercase; font-weight:600; color:var(--muted); margin-left:8px}
+.ownseg button[disabled]{opacity:.45; cursor:not-allowed}
+.ku-bulk{display:flex; flex-wrap:wrap; gap:8px 10px; align-items:center; padding:8px 12px; border-radius:var(--r); background:var(--sel); border:1px solid color-mix(in srgb,var(--accent) 35%,transparent); font-size:13.5px}
+.ku-bulk select.in.fsel{width:auto}
+.ku-tbl{max-height:72vh}
+table.k2{width:100%; border-collapse:separate; border-spacing:0; font-size:13.5px}
+table.k2 th{padding:9px 12px; text-align:left; font-size:10.5px; letter-spacing:.08em; cursor:pointer; white-space:nowrap; border-bottom:1px solid var(--rule-2)}
+table.k2 th.dim,table.k2 td.dim{color:var(--muted)}
+table.k2 th[aria-sort]{color:var(--ink)} table.k2 th[aria-sort="ascending"]::after{content:" ↑"} table.k2 th[aria-sort="descending"]::after{content:" ↓"}
+table.k2 th:focus-visible,table.k2 tr:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+table.k2 td{padding:11px 12px; border-bottom:1px solid var(--rule); vertical-align:top}
+table.k2 tbody tr{cursor:pointer; transition:background .1s}
+table.k2 tbody tr:hover{background:var(--surface-2)} table.k2 tbody tr:hover .on{color:var(--accent)}
+table.k2 tbody tr.sel{background:var(--sel)}
+table.k2 tbody tr:last-child td{border-bottom:0}
+table.k2 .ck{width:34px; padding-right:0} table.k2 .ck input{width:15px; height:15px; accent-color:var(--accent)}
+table.k2 .org .on{font-size:14.5px; font-weight:650; color:var(--ink); letter-spacing:-.005em}
+table.k2 .sub2{display:block; font-size:12px; color:var(--muted); font-weight:400; margin-top:1px}
+table.k2 .sub2.warn{color:var(--warn)}
+table.k2 .n{text-align:right} table.k2 .num{font-variant-numeric:tabular-nums; white-space:nowrap}
+table.k2 .num b{font-size:14.5px; font-weight:650}
+table.k2 .nx{max-width:280px} .nx-a{display:block; font-weight:550; color:var(--ink)} .nx-a::before{content:"→ "; color:var(--accent); font-weight:700} .nx-a.over{color:var(--danger)} .nx-a.over::before{color:var(--danger)}
+.ownsel{appearance:none; -webkit-appearance:none; font:inherit; font-size:12.5px; font-weight:600; color:var(--ink); background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23777' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 8px center; border:1px solid var(--rule-2); border-radius:999px; padding:3px 24px 3px 10px; cursor:pointer; max-width:150px}
+.ownsel.none{color:var(--warn); border-style:dashed; border-color:color-mix(in srgb,var(--warn) 50%,transparent)}
+.ownsel:hover{border-color:var(--accent)} .ownsel:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+@media (max-width:1100px){ .ku-kpi{grid-template-columns:repeat(3,minmax(0,1fr))} .ku-t:nth-child(4){border-left:0} .ku-t:nth-child(n+4){border-top:1px solid var(--rule)} }
+@media (max-width:700px){ .ku-kpi{grid-template-columns:repeat(2,minmax(0,1fr))} .ku-t{border-left:0; border-top:1px solid var(--rule)} .ku-t:nth-child(-n+2){border-top:0} .ku-t:nth-child(even){border-left:1px solid var(--rule)} .ku-row #newOrg{margin-left:0} .ku-lbl{margin-left:0; flex-basis:100%} table.k2 .dim{display:none} }
+table.k2{table-layout:fixed; min-width:880px}
+table.k2 th.ck{width:40px} table.k2 th:nth-child(2){width:27%} table.k2 th[data-ksort="st"]{width:138px} table.k2 th[data-ksort="own"]{width:150px} table.k2 th[data-ksort="open"]{width:104px} table.k2 th[data-ksort="spend"]{width:104px} table.k2 th[data-ksort="la"]{width:124px}
+table.k2 .nx{max-width:none} table.k2 td{overflow-wrap:anywhere}
+@media (max-width:700px){ table.k2{min-width:0; table-layout:auto} table.k2 th[data-ksort="st"],table.k2 td:nth-child(3){display:none} }
+table.k2 td:nth-child(2),table.k2 td:nth-child(1){white-space:normal} table.k2 td:nth-child(3){white-space:nowrap}

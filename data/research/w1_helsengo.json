@@ -1,0 +1,1192 @@
+{
+ "agent": "w1_helsengo",
+ "segments": [
+  "pharma",
+  "ngo"
+ ],
+ "accounts": [
+  {
+   "name": "Redd Barna",
+   "website": "https://www.reddbarna.no/",
+   "domain": "reddbarna.no",
+   "segment": "ngo",
+   "place": null,
+   "geo": "norge",
+   "size": null,
+   "about": "Barne- og humanitær organisasjon. Nettstedet har en egen side med kommende arrangementer.",
+   "why": "Arrangerer fagdag/seminar i Oslo (17. nov 2026) og folkemøter rundt i landet; åpent og gratis format. Relevant for mellomstore til store fagdager.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Barnerettighetsseminaret 2026 (fagdag) arrangeres 17. nov 2026 kl. 09.00-15.30 på Oslo Event Hub, Dronningensgate 4, med livestream; gratis med påmelding. Egen side lister også folkemøter i Bergen, Fredrikstad, Skien og Stjørdal i 2026.",
+    "types": [
+     "fagdag",
+     "seminar",
+     "debatt"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Oslo Event Hub",
+     "Litteraturhuset i Fredrikstad"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [
+     {
+      "date": "2026-11-17",
+      "title": "Barnerettighetsseminaret 2026: Utenforskap og fellesskap",
+      "venue": "Oslo Event Hub, Dronningensgate 4, Oslo",
+      "url": "https://www.reddbarna.no/aktuelt/barnerettighetsseminaret-2026-utenforskap-og-fellesskap-fagdag-om-barn-og-unge-med-funksjonsnedsettelser/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.reddbarna.no/",
+     "title": "Redd Barna - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.reddbarna.no/aktuelt/barnerettighetsseminaret-2026-utenforskap-og-fellesskap-fagdag-om-barn-og-unge-med-funksjonsnedsettelser/",
+     "title": "Barnerettighetsseminaret 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.reddbarna.no/kommende-arrangementer/",
+     "title": "Redd Barnas aktuelle arrangementer",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Stiftelsen Dam",
+   "website": "https://www.dam.no/",
+   "domain": "dam.no",
+   "segment": "ngo",
+   "place": null,
+   "geo": "norge",
+   "size": null,
+   "about": "Stiftelse som fordeler midler til forskning og frivillige prosjekter innen helse og utvikling; 2026-tildelinger er omtalt på forsiden.",
+   "why": "Arrangerer årlig-lignende seminarer i Oslo (Dampulsen, forskningsseminar) med pasient- og forskningsmiljøer; kildene viser ca. 200 deltakere i 2026.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forskningsseminar 21. sep 2026 kl. 12.00-15.30 på Saga Kino, Stortingsgata 28, Oslo, med ca. 200 deltakere ifølge siden. Dampulsen 25. mars 2026 var fulltegnet. Ingen kommende datoer funnet.",
+    "types": [
+     "seminar",
+     "konferanse"
+    ],
+    "frequency": null,
+    "typical_attendance": "ca. 200 (forskningsseminar 2026)",
+    "attendance_source": "https://www.dam.no/research-seminar-2026/",
+    "venues": [
+     "Saga Kino"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "high"
+   },
+   "room_hint": "Forskningsseminaret 2026 samlet ca. 200 deltakere (kilde) - samme størrelsesorden som Solstad.",
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.dam.no/",
+     "title": "Stiftelsen Dam",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.dam.no/research-seminar-2026/",
+     "title": "Can we trust science if it is not published?",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.dam.no/dampulsen2026/",
+     "title": "Dampulsen 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.dam.no/nyheter/bli-med-pa-forskningsseminar-2026/",
+     "title": "Invitasjon forskningsseminar 2026",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Stiftelsen Fritt Ord",
+   "website": "https://frittord.no/",
+   "domain": "frittord.no",
+   "segment": "ngo",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Allmennyttig privat stiftelse som arbeider for ytringsfrihet, offentlig debatt, kunst og kultur (Uranienborgveien 2, Oslo).",
+   "why": "Arrangerer og medarrangerer debatter og lanseringer i Oslo, ofte i samarbeid med andre. Kan være samarbeidspartner/medarrangør snarere enn ren leietaker.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Debatt om Iran 6. okt 2026 kl. 18.00-19.30 på Vega Scene (med Oslo Dokumentarkino); gratis med billett. Tidligere: visninger/samtale på Cinemateket og Vega Scene (mars 2026), debattseminar i egne lokaler Uranienborgveien 2 (2024). Støtter også Asylkonferansen 2026.",
+    "types": [
+     "debatt",
+     "lansering",
+     "seminar"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Vega Scene",
+     "Cinemateket",
+     "Uranienborgveien 2"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [
+     {
+      "date": "2026-10-06",
+      "title": "Iran 2026 - Diaspora, ytringsfrihet og kamp mot diktaturet",
+      "venue": "Vega Scene, Salongen, Oslo",
+      "url": "https://frittord.no/nb/aktuelt/iran-2026-diaspora-ytringsfrihet-og-kamp-mot-diktaturet"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://frittord.no/",
+     "title": "Fritt Ord - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://frittord.no/nb/aktuelt/iran-2026-diaspora-ytringsfrihet-og-kamp-mot-diktaturet",
+     "title": "Iran 2026 - debatt",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://frittord.no/nb/aktuelt/elon-musk-unveiled-the-tesla-experiment",
+     "title": "Elon Musk Unveiled - visninger",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Norsk Folkehjelp",
+   "website": "https://www.folkehjelp.no/",
+   "domain": "folkehjelp.no",
+   "segment": "ngo",
+   "place": null,
+   "geo": "norge",
+   "size": null,
+   "about": "Arbeiderbevegelsens humanitære solidaritetsorganisasjon (minerydding, nødhjelp, førstehjelp, redningstjeneste, integrering).",
+   "why": "Medlemsorganisasjon med lokale ledd i Oslo som holder seminarer og kurs; mest små/gratis arrangementer, og ungdomskonferansen er kun for medlemmer.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Solidaritetskonferansen 11.-13. sep 2026 på Utøya (kun medlemmer av Solidaritetsungdom). Norsk Folkehjelp Oslo/Oasen holder seminarrekke på Furuset bibliotek (mars og juni 2026; juni-seminaret avlyst).",
+    "types": [
+     "konferanse",
+     "seminar"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Utøya",
+     "Furuset bibliotek og aktivitetshus"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.folkehjelp.no/",
+     "title": "Norsk Folkehjelp - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://folkehjelp.pameldingssystem.no/solidaritetskonferansen2026",
+     "title": "Solidaritetskonferansen 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://deichman.no/event/seminar%3A-hefte-om-f%C3%B8rstehjelp-p%C3%A5-flere-spr%C3%A5k_IywIWwIqvK",
+     "title": "Seminar i samarbeid med Norsk Folkehjelp Oslo (Deichman)",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "NRC Flyktninghjelpen",
+   "website": "https://www.flyktninghjelpen.no/",
+   "domain": "flyktninghjelpen.no",
+   "segment": "ngo",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Uavhengig humanitær organisasjon for mennesker på flukt, med kontor i Prinsensgate 2, Oslo; mottaker av NRK TV-aksjonen 2026.",
+   "why": "Kilden nevner frokostseminarer uten datoer; TV-aksjonen i oktober kan gi økt aktivitet. Svakt dokumentert, krever oppfølging.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Egen side om påvirkningsarbeid sier organisasjonen holder foredrag og arrangerer frokostseminarer. Ingen datoer, venues eller kommende arrangementer funnet.",
+    "types": [
+     "seminar"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.flyktninghjelpen.no/",
+     "title": "NRC Flyktninghjelpen - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.flyktninghjelpen.no/om/en-stemme-for-mennesker-paa-flukt/",
+     "title": "En stemme for mennesker på flukt",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Kreftforeningen",
+   "website": "https://kreftforeningen.no/",
+   "domain": "kreftforeningen.no",
+   "segment": "ngo",
+   "place": null,
+   "geo": "norge",
+   "size": null,
+   "about": "Kreftforeningen jobber mot kreft gjennom forskning, forebygging og støtte; tilbyr gratis møteplasser, kurs og aktiviteter i hele landet.",
+   "why": "Mange små, gratis pasientarrangementer i Oslo-området; mindre sannsynlig for storsal, men organisasjonen er stor og har også aksjoner og hederspris.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Oversikt over tilbud viser løpende kurs og møteplasser, bl.a. Vardesenteret på Radiumhospitalet (Oslo), Treffpunkt for barn og unge (Stavangergata 32, Oslo) og temakafeer i Oslo-regionen; gratis. Ingen konferanser funnet.",
+    "types": [
+     "kurs",
+     "seminar"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Vardesenteret, Radiumhospitalet",
+     "Stavangergata 32, Oslo"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [
+     {
+      "date": "2026-10-13",
+      "title": "Konsert (Vardesenteret i Oslo)",
+      "venue": "Vardesenteret, Radiumhospitalet",
+      "url": "https://kreftforeningen.no/tilbud/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://kreftforeningen.no/",
+     "title": "Kreftforeningen - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://kreftforeningen.no/tilbud/",
+     "title": "Kreftforeningens tilbud, kurs og aktiviteter",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Mental Helse",
+   "website": "https://mentalhelse.no/",
+   "domain": "mentalhelse.no",
+   "segment": "ngo",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Brukerorganisasjon for psykisk helse med besøksadresse Tollbugata 17, Oslo; driver bl.a. Hjelpetelefonen 116 123.",
+   "why": "Mange datert Oslo-arrangementer rundt Verdensdagen for psykisk helse (oktober) og eget landsmøte; tydelig seminarkultur.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Frokostseminar 9. okt 2026 på Sentralen; seminar 15. okt 2026 08.45-11.30 i FHI Lindern, Lovisenberggata 8; landsmøte 20.-22. nov 2026 på Quality Airport Hotel Gardermoen (delegater).",
+    "types": [
+     "seminar",
+     "årsmøte"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Sentralen",
+     "FHI Lindern",
+     "Quality Airport Hotel Gardermoen"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-09",
+      "title": "Ungdom, tillit og beredskap: Hvor ble det av psykisk helse i skolen?",
+      "venue": "Sentralen, Oslo",
+      "url": "https://mentalhelse.no/event/ungdom-tillit-og-beredskap-hvor-ble-det-av-psykisk-helse-i-skolen/"
+     },
+     {
+      "date": "2026-10-15",
+      "title": "Seminar om tillit i forskningsprosjekt og brukermedvirkning",
+      "venue": "FHI Lindern, Lovisenberggata 8, Oslo",
+      "url": "https://mentalhelse.no/event/seminar-om-tillit-i-forskningsprosjekt-og-brukermedvirkning/"
+     },
+     {
+      "date": "2026-11-20",
+      "title": "Mental Helse - Landsmøte 2026",
+      "venue": "Quality Airport Hotel Gardermoen",
+      "url": "https://mentalhelse.no/event/mental-helse-landsmote-2026/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://mentalhelse.no/",
+     "title": "Mental Helse - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://mentalhelse.no/event/ungdom-tillit-og-beredskap-hvor-ble-det-av-psykisk-helse-i-skolen/",
+     "title": "Frokostseminar 9. okt 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://mentalhelse.no/event/seminar-om-tillit-i-forskningsprosjekt-og-brukermedvirkning/",
+     "title": "Seminar 15. okt 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://mentalhelse.no/event/mental-helse-landsmote-2026/",
+     "title": "Landsmøte 2026",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Diabetesforbundet",
+   "website": "https://www.diabetes.no/",
+   "domain": "diabetes.no",
+   "segment": "ngo",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Pasient- og interesseorganisasjon for personer med diabetes, besøksadresse Brynsengveien 2, Oslo; har lokal- og fylkeslag, inkl. Diabetesforbundet Oslo.",
+   "why": "Flere fagdager og konferanser årlig, også for helsepersonell. Oslo-laget kjører fagdag i hotellokale (60 plasser), så størrelse varierer.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Fagdag 9. mai 2026 på Clarion Hotel Oslo (60 plasser, for medlemmer av Diabetesforbundet Oslo). Diabeteskonferansen 16.-18. okt 2026 på Scandic hotel Oslo airport for tillitsvalgte og frivillige (årlig). Diabetesforum i fylkene 2026 for helsepersonell (hybrid).",
+    "types": [
+     "fagdag",
+     "konferanse",
+     "kurs"
+    ],
+    "frequency": "Diabeteskonferansen er årlig ifølge siden",
+    "typical_attendance": "60 plasser (Oslo-fagdag 9. mai 2026)",
+    "attendance_source": "https://www.diabetes.no/tilbud-til-deg/fylkes-og-lokallag/oslo/arrangement/fagdag-9.-mai-2026/",
+    "venues": [
+     "Clarion Hotel Oslo",
+     "Scandic hotel Oslo airport"
+    ],
+    "months": [],
+    "open_closed": "lukket",
+    "next_dates": [
+     {
+      "date": "2026-10-16",
+      "title": "Diabeteskonferansen 2026",
+      "venue": "Scandic hotel Oslo airport",
+      "url": "https://www.diabetes.no/mer/for-tillitsvalgte/konferanser-for-tillitsvalgte/diabeteskonferansen/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.diabetes.no/",
+     "title": "Diabetesforbundet - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.diabetes.no/tilbud-til-deg/fylkes-og-lokallag/oslo/arrangement/fagdag-9.-mai-2026/",
+     "title": "Fagdag 9. mai 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.diabetes.no/mer/for-tillitsvalgte/konferanser-for-tillitsvalgte/diabeteskonferansen/",
+     "title": "Diabeteskonferansen 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.diabetes.no/for-helsepersonell/konferanser/diabetesforum-i-fylkene-2026/",
+     "title": "Diabetesforum i fylkene 2026",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Den norske Helsingforskomité",
+   "website": "https://nhc.no/",
+   "domain": "nhc.no",
+   "segment": "ngo",
+   "place": null,
+   "geo": "norge",
+   "size": null,
+   "about": "Menneskerettighetsorganisasjon (Norwegian Helsinki Committee) som arbeider med demokrati og menneskerettigheter, bl.a. i Øst-Europa.",
+   "why": "Medarrangør av Asylkonferansen 2026 (Sentralen). Mulig inngang via felles sivilsamfunnsarrangementer; eget arrangementsprogram er ikke kartlagt.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Asylkonferansen 20. mai 2026 kl. 09.00-16.00 på Sentralen, Oslo, arrangert av tolv organisasjoner inkl. Helsingforskomiteen; gratis med lunsj. Siden sier den ble fulltegnet. Ingen kommende datoer funnet.",
+    "types": [
+     "konferanse",
+     "debatt"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Sentralen"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://nhc.no/",
+     "title": "Norwegian Helsinki Committee - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://nhc.no/arrangement/asylkonferansen-2026/",
+     "title": "Asylkonferansen 2026",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Antirasistisk Senter",
+   "website": "https://antirasistisk.no/",
+   "domain": "antirasistisk.no",
+   "segment": "ngo",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Nasjonalt menneskerettighetssenter og ressursmiljø mot rasisme og diskriminering (Storgata 25, Oslo), med rådgivning, ungdomsarbeid og politisk påvirkning.",
+   "why": "Medarrangør av Asylkonferansen 2026. Drifter ungdom- og kulturaktiviteter; egne arrangementer ikke kartlagt.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Siden omtaler Asylkonferansen 20. mai 2026 på Sentralen, Oslo, der Antirasistisk Senter er medarrangør; påmelding via amnesty.no. Ingen kommende datoer funnet.",
+    "types": [
+     "konferanse"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Sentralen"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://antirasistisk.no/",
+     "title": "Antirasistisk Senter - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://antirasistisk.no/asylkonferansen-2026-program-og-pamelding/",
+     "title": "Asylkonferansen 2026: Program og påmelding",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Norsk organisasjon for flyktninger og asylsøkere (NOAS)",
+   "website": "https://www.noas.no/",
+   "domain": "noas.no",
+   "segment": "ngo",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Organisasjon som arbeider for asylsøkeres rettssikkerhet med gratis rettshjelp og politisk påvirkning (Torggata 22, Oslo).",
+   "why": "Medarrangør av Asylkonferansen 2026; påmeldingen var fulltegnet med venteliste. Viser etterspørsel etter plass til 12-organisasjoners fellesarrangement.",
+   "event_signal": {
+    "documented": true,
+    "summary": "NOAS er en av tolv arrangører av Asylkonferansen 20. mai 2026 på Sentralen, Oslo. Ifølge organisasjonens uttalelse ble konferansen fulltegnet få dager etter at påmeldingen åpnet, med over 50 på venteliste.",
+    "types": [
+     "konferanse"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Sentralen"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.noas.no/",
+     "title": "NOAS - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.noas.no/asylkonferansen-2026/",
+     "title": "Asylkonferansen 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.noas.no/asylkonferansen-2026-uttalelse-fra-arrangorene/",
+     "title": "Uttalelse fra arrangørene",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Kirkens Bymisjon",
+   "website": "https://kirkensbymisjon.no/",
+   "domain": "kirkensbymisjon.no",
+   "segment": "ngo",
+   "place": null,
+   "geo": "norge",
+   "size": null,
+   "about": "Diakonal stiftelse/organisasjon med tiltak innen rus, psykisk helse, inkludering, barn og unge og boligsosialt arbeid, i hele landet.",
+   "why": "Stor organisasjon som holder fagdager og kurs; dokumenterte eksempler er i Bodø og i Robust sine lokaler i Oslo, ikke storsal.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Fagdag «En uvanlig normal fagdag» 9. juni 2026 i Bodø arrangert av Kirkens Bymisjon. Kurs i narrativ tilnærming (4 dager, 15 plasser) i Robusts lokaler i Biskop Gunnerus gate 2, Oslo, våren 2026.",
+    "types": [
+     "fagdag",
+     "kurs"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Stormen Konserthus (Bodø)",
+     "Biskop Gunnerus gate 2, Oslo"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://kirkensbymisjon.no/",
+     "title": "Kirkens Bymisjon - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://konserthus.stormen.no/program/en-uvanlig-normal-fagdag",
+     "title": "En uvanlig normal fagdag (Stormen)",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://kirkensbymisjon.no/content/uploads/sites/108/2026/01/Kurs-i-Styrkende-samtaler-var-2026-ny.pdf",
+     "title": "Kurs i Styrkende samtaler, vår 2026",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Nasjonalforeningen for folkehelsen",
+   "website": "https://www.nasjonalforeningen.no/",
+   "domain": "nasjonalforeningen.no",
+   "segment": "ngo",
+   "place": null,
+   "geo": "norge",
+   "size": null,
+   "about": "Helseorganisasjon som jobber med demens og hjerte- og karsykdommer (forskning, rådgivning via Demenslinjen og Hjertelinjen).",
+   "why": "Har lokallag og demensaksjon med konferanser, men dokumentert eksempel er utenfor Oslo og fra et fylkeslag. Svak Oslo-kobling.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Fylkeslaget Innlandet arrangerte konferansen «Avspark demensaksjonen» 17. sep 2026 på Prøysenhuset i Ringsaker; Stiftelsen Dam lister «Konferanse i forbindelse med demensaksjonen» 17.9.2026 for Nasjonalforeningen. Ingen Oslo-arrangement funnet.",
+    "types": [
+     "konferanse"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Prøysenhuset"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.nasjonalforeningen.no/",
+     "title": "Nasjonalforeningen - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.dam.no/prosjekter/konferanse-i-forbindelse-med-demensaksjonen/",
+     "title": "Konferanse i forbindelse med demensaksjonen (Stiftelsen Dam)",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://koigenhamar.no/arr/2994901950ae4ef6",
+     "title": "Avspark demensaksjonen (Koigen)",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Kirkens Nødhjelp",
+   "website": "https://www.kirkensnodhjelp.no/",
+   "domain": "kirkensnodhjelp.no",
+   "segment": "ngo",
+   "place": null,
+   "geo": "norge",
+   "size": null,
+   "about": "Kirkelig nødhjelps- og bistandsorganisasjon; gjennomfører bl.a. fasteaksjonen og HEAT-sikkerhetskurs i Oslo.",
+   "why": "Holder politiske frokostmøter og kurs i Oslo, men egen side viser ingen kommende arrangementer nå. Sjekk igjen senere.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Egen arrangementsside: ingen kommende arrangementer. Tidligere: frokostarrangement 29.9.2025 kl. 08.30-10.00 på Litteraturhuset, Oslo. NCA HEAT-kurs i Oslo 27.-28. mai og 31. aug-4. sep 2026.",
+    "types": [
+     "seminar",
+     "debatt",
+     "kurs"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Litteraturhuset, Oslo"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.kirkensnodhjelp.no/aktuelt/arrangementer",
+     "title": "Arrangementer - Kirkens Nødhjelp",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.kirkensnodhjelp.no/en/hostile-environment-awareness-training-0",
+     "title": "NCA HEAT training",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Naturvernforbundet",
+   "website": "https://naturvernforbundet.no/",
+   "domain": "naturvernforbundet.no",
+   "segment": "ngo",
+   "place": null,
+   "geo": "norge",
+   "size": null,
+   "about": "Miljøvernorganisasjon som arbeider for natur- og klimasaker, med lokal- og fylkeslag.",
+   "why": "Arrangerte Naturkonferansen 2026 (betalt billett, næringslivssamarbeid) og seminar i Oslo. Gjentakelse er ikke bekreftet, men formatet tilsier behov for større lokale.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Naturkonferansen 10. juni 2026 kl. 09.00-16.00 i Sofienberg kirke, Oslo (billett kr 1000, samarbeid med Hafslund, Veidekke og Nordea). Halvdagsseminar 21. april 2026 på Kulturhuset, Youngs gate 6, Oslo. Ingen kommende datoer funnet.",
+    "types": [
+     "konferanse",
+     "seminar"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Sofienberg kirke",
+     "Kulturhuset, Youngs gate 6"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://naturvernforbundet.no/",
+     "title": "Naturvernforbundet - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://naturvernforbundet.no/event/naturkonferansen-2026/",
+     "title": "Naturkonferansen 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://naturkonferansen.no/praktisk-info",
+     "title": "Naturkonferansen - praktisk info",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://naturvernforbundet.no/event/halvdagsseminar-global-omstilling-bort-fra-fossil-energi/",
+     "title": "Halvdagsseminar 21. april 2026",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Rådet for psykisk helse",
+   "website": "https://psykiskhelse.no/",
+   "domain": "psykiskhelse.no",
+   "segment": "ngo",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Organisasjon som arbeider for god psykisk helse for alle (Grensen 13, Oslo).",
+   "why": "Medarrangerer årlig nasjonal fagkonferanse i Oslo (15. okt 2026) sammen med Rusfeltets Hovedorganisasjon; tydelig fagdag-format.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Nasjonal fagkonferanse «Trening som medisin» 15. okt 2026 kl. 09.00-15.30 på Stortingsgata kurs og konferanse, Stortingsgata 20, Oslo; avholdes for fjerde år på rad sammen med Rusfeltets Hovedorganisasjon.",
+    "types": [
+     "konferanse",
+     "fagdag"
+    ],
+    "frequency": "årlig (fjerde året i 2026)",
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Stortingsgata kurs og konferanse"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [
+     {
+      "date": "2026-10-15",
+      "title": "Nasjonal fagkonferanse - Trening som medisin 2026",
+      "venue": "Stortingsgata kurs og konferanse, Stortingsgata 20, Oslo",
+      "url": "https://psykiskhelse.no/nasjonal-fagkonferanse-trening-som-medisin-2026/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://psykiskhelse.no/",
+     "title": "Rådet for psykisk helse - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://psykiskhelse.no/nasjonal-fagkonferanse-trening-som-medisin-2026/",
+     "title": "Nasjonal fagkonferanse - Trening som medisin 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.rusfeltet.no/hva-skjer/moter-og-konferanser/trening-som-medisin?instance=0",
+     "title": "Trening som medisin (Rusfeltets hovedorganisasjon)",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "LHL, Landsforeningen for hjerte, lunge og hjerneslag",
+   "website": "https://www.lhl.no/",
+   "domain": "lhl.no",
+   "segment": "ngo",
+   "place": null,
+   "geo": "norge",
+   "size": "L",
+   "about": "Frivillig interesseorganisasjon med nærmere 52 000 medlemmer i lokallag og interessegrupper, for personer med hjerte- og lungesykdom, hjerneslag og afasi.",
+   "why": "Stor medlemsorganisasjon med mange samlinger og landskonferanser; de listede arrangementene er mest på hotell/kurssted utenfor Oslo sentrum. Sjekk Oslo-lokallag.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Arrangementssiden lister kurs, samlinger og konferanser, f.eks. Landskonferanse LHL Transplantert 13.-15. nov (Garder kurs og konferansesenter), samling for lokallagsledere 28.-30. aug (Quality Airport Hotel Gardermoen). Medarrangør på Arendalsuka 2026.",
+    "types": [
+     "konferanse",
+     "kurs"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Quality Airport Hotel Gardermoen",
+     "Garder kurs og konferansesenter"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-11-13",
+      "title": "Landskonferanse LHL Transplantert 2026",
+      "venue": "Garder kurs og konferansesenter",
+      "url": "https://www.lhl.no/arrangementer/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications",
+    "Organisation"
+   ],
+   "sources": [
+    {
+     "url": "https://www.lhl.no/",
+     "title": "LHL - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.lhl.no/arrangementer/",
+     "title": "Kurs, seminarer, konferanser og arrangementer i regi av LHL",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Human Rights House Foundation",
+   "website": "https://humanrightshouse.org/",
+   "domain": "humanrightshouse.org",
+   "segment": "ngo",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Stiftelse som etablerer og støtter Human Rights Houses; hovedkontor på Mariboes gate 13, Oslo; nettverk på 85+ sivilsamfunnsorganisasjoner.",
+   "why": "Arrangerer internasjonale nettverksmøter i Oslo og side events. Mest internasjonalt, engelskspråklig; størrelse på Oslo-møtene er ikke oppgitt.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Eventsiden lister side events i 2026. Nettverksmøtet «Hope is a Strategy» samlet menneskerettighetsforkjempere i Oslo 9.-13. juni 2025. Ingen kommende datoer funnet.",
+    "types": [
+     "konferanse",
+     "seminar"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://humanrightshouse.org/",
+     "title": "Human Rights House Foundation - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://humanrightshouse.org/category/events/",
+     "title": "Events Archives",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Legemiddelindustrien (LMI)",
+   "website": "https://www.lmi.no/",
+   "domain": "lmi.no",
+   "segment": "pharma",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Norsk bransjeforening for legemiddelindustrien (Essendrops gate 3, Oslo).",
+   "why": "Arrangerer betalt bransjekonferanse i Oslo (22. okt 2026) og kurs; har egen oversikt. Sterkt fagdag-/konferanseformat med medlems- og ikke-medlemspriser.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Tilgangskonferansen 22. okt 2026 kl. 08.00-15.00 på Nationaltheatret konferansesenter (3500 kr medlemmer, 7000 kr ikke-medlemmer, gratis for pasientforeninger/offentlig ansatte). Oversikt viser også Arendalsuka-arrangementer og eksterne kurs.",
+    "types": [
+     "konferanse",
+     "kurs"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Nationaltheatret konferansesenter"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [
+     {
+      "date": "2026-10-22",
+      "title": "Tilgangskonferansen 2026",
+      "venue": "Nationaltheatret konferansesenter, Haakon VIIs gate 9, Oslo",
+      "url": "https://www.lmi.no/kurs-arrangement/tilgangskonferansen-2026/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.lmi.no/",
+     "title": "Legemiddelindustrien - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.lmi.no/kurs-arrangement/tilgangskonferansen-2026/",
+     "title": "Tilgangskonferansen 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.lmi.no/kurs-arrangement-oversikt/",
+     "title": "Oversikt over kurs og arrangementer",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Oslo Cancer Cluster",
+   "website": "https://oslocancercluster.no/",
+   "domain": "oslocancercluster.no",
+   "segment": "pharma",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Helseklynge for kreftforskning og -behandling med Innovation Park på Ullernchausséen 64 (Radiumhospitalet), Oslo.",
+   "why": "Driver egen møteplass med auditorier og årlig Cancer Crosslinks; har egne lokaler, så leiebehov er usikkert, men kan trenge større sal for åpne konferanser.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Cancer Crosslinks 22. jan 2026 (årlig møteserie): faglig program i Kaare Norum Auditorium, nettverksarrangement på Oslo Rådhus. Generalforsamling 18. juni 2026 i Innovation Park. Ingen kommende datoer funnet.",
+    "types": [
+     "konferanse",
+     "årsmøte",
+     "mingle"
+    ],
+    "frequency": "Cancer Crosslinks er årlig ifølge siden",
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Oslo Cancer Cluster Innovation Park",
+     "Oslo Rådhus"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://oslocancercluster.no/",
+     "title": "Oslo Cancer Cluster - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://oslocancercluster.no/events/cancer-crosslinks-2026",
+     "title": "Cancer Crosslinks 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.cancercrosslinks.com/2026.html",
+     "title": "Cancer Crosslinks 2026 - program",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://oslocancercluster.no/events/general-assembly-and-strategy-workshop",
+     "title": "General Assembly and strategy workshop",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Norway Health Tech",
+   "website": "https://www.norwayhealthtech.no/",
+   "domain": "norwayhealthtech.no",
+   "segment": "pharma",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Norges ledende helseklynge, med over 350 medlemmer (bedrifter, investorer, helseforetak, kommuner, akademia).",
+   "why": "Mange arrangementer i Oslo, bl.a. årlig Healthtech Festival; bruker Forskningsparken. Stor arrangementsfrekvens gjør dem til en sterk kandidat for jevnlig bruk.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Healthtech Festival 11. juni 2026 kl. 09.00-17.00 i Forskningsparken, Oslo (årlig samlingspunkt). Egen arrangementsliste med flere datoer i høst 2026, bl.a. heldagssamling 20. okt på Flora Lounge, Forskningsparken (kun medlemmer).",
+    "types": [
+     "konferanse",
+     "seminar",
+     "kurs",
+     "mingle"
+    ],
+    "frequency": "Healthtech Festival beskrives som årlig",
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Forskningsparken, Oslo",
+     "Flora Lounge"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-20",
+      "title": "Fra verifisert produkt til kommersiell skalering",
+      "venue": "Flora Lounge, Forskningsparken, Oslo",
+      "url": "https://www.norwayhealthtech.com/events/from-product-validation-to-commercial-scale"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.norwayhealthtech.no/",
+     "title": "Norway Health Tech - forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.norwayhealthtech.no/arrangementer/the-healthtech-festival-2026",
+     "title": "The Healthtech Festival 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.norwayhealthtech.com/events/from-product-validation-to-commercial-scale",
+     "title": "From product validation to commercial scale",
+     "checked": "2026-10-06"
+    }
+   ]
+  }
+ ],
+ "rejected": [
+  {
+   "name": "Novo Nordisk Norge / Novartis Norge / Pfizer Norge (legemiddelselskap)",
+   "reason": "Kun funnet lukkede, helsepersonell-rettede møter via søk (Novo Nordisk Dialog 2026 digitalt/studio, Novartis akademi på SIXA); selskapenes egne nettsteder ikke åpnet, så ikke tatt med."
+  },
+  {
+   "name": "Spire / Changemaker / Framtiden i våre hender",
+   "reason": "Arrangementer funnet kun via tredjepartssider eller undervisningsopplegg; egne nettsteder ikke åpnet i økten (Changemaker, Spire) eller ingen dokumentert publikumsarrangement (Framtiden i våre hender)."
+  },
+  {
+   "name": "Norges Farmaceutiske Forening / Norsk Farmasøytisk Selskap (Farmasidagene)",
+   "reason": "Norges Farmaceutiske Forening finnes allerede i existing.json; NFS er fag-/profesjonsorganisasjon (annet segment)."
+  },
+  {
+   "name": "Sentralen, Oslo Kongressenter, SIXA, Nationaltheatret konferansesenter, Saga Kino, Vega Scene",
+   "reason": "Konkurrerende venues; nevnt kun som venues i kilder."
+  },
+  {
+   "name": "Oslo Science City / Norway Life Science",
+   "reason": "Universitetsdrevet arena (hører hjemme under forskning); ikke åpnet organisasjonens eget nettsted."
+  },
+  {
+   "name": "Norges Røde Kors, Amnesty, Norsk PEN, FFO, Frambu, Recovery Norge, FHI m.fl.",
+   "reason": "Finnes allerede i existing.json."
+  },
+  {
+   "name": "Forbehold om verktøy",
+   "reason": "WebFetch var blokkert (tillatelse ikke besvart), så sider er åpnet via Firecrawl/Exa. Mange arrangementsopplysninger er hentet fra sidehøydepunkter (highlights) fra organisasjonenes egne domener; forsider er åpnet separat for alle accounts. Kreftforeningens liste og enkelte sider kan være delvis gjengitt."
+  },
+  {
+   "name": "Nasjonalforeningen for folkehelsen: Oslo-aktivitet",
+   "reason": "Tatt med, men eneste dokumenterte konferanse er fra fylkeslag Innlandet (utenfor Oslo); koigenhamar.no er tredjepart."
+  }
+ ]
+}

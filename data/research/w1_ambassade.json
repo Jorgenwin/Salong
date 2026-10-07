@@ -1,0 +1,770 @@
+{
+ "agent": "w1_ambassade",
+ "segments": [
+  "ambassade"
+ ],
+ "accounts": [
+  {
+   "name": "Istituto Italiano di Cultura di Oslo",
+   "website": "https://iicoslo.esteri.it/",
+   "domain": "iicoslo.esteri.it",
+   "segment": "ambassade",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Kulturkontoret ved Italias ambassade; ifølge esteri.it fremmer det italiensk språk og kultur i Norge og er vertskap for filmvisninger, utstillinger, konserter, konferanser og seminarer.",
+   "why": "Fullt eventkalender med foredrag og konserter; trolig behov for mellomstore saler til foredrag/seminarer. Ikke vurdert mot Solstad-størrelse.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Eventkalenderen viser flere datert arrangementer høsten 2026 (foredrag, konserter, kultur- og matuke, dansefestival-samarbeid).",
+    "types": [
+     "seminar",
+     "debatt"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-14",
+      "title": "Commemorando San Francesco (foredrag)",
+      "venue": "",
+      "url": "https://iicoslo.esteri.it/it/gli_eventi/calendario/in-memoria-di-san-francesco/"
+     },
+     {
+      "date": "2026-10-25",
+      "title": "Love Songs from the Renaissance: Italy",
+      "venue": "",
+      "url": "https://iicoslo.esteri.it/it/gli_eventi/calendario/love-songs-from-the-renaissance-italy/"
+     },
+     {
+      "date": "2026-12-02",
+      "title": "Il Rinascimento – il crogiuolo della modernità (konferanse/foredrag)",
+      "venue": "",
+      "url": "https://iicoslo.esteri.it/it/gli_eventi/calendario/renessansen-modernitetens-smeltedigel/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Programme Manager",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://iicoslo.esteri.it/it/gli_eventi/",
+     "title": "Eventi – Istituto Italiano di Cultura di Oslo",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://italiana.esteri.it/italiana/sedi/istituto-italiano-di-cultura-di-oslo/",
+     "title": "Istituto Italiano di Cultura di Oslo (esteri.it)",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Norsk-Tysk Handelskammer (AHK Norwegen)",
+   "website": "https://norwegen.ahk.de/no/",
+   "domain": "norwegen.ahk.de",
+   "segment": "ambassade",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Tysk-norsk handelskammer («Din partner i Norge og Tyskland»). Eventsiden lister seminarer, workshops, frokostmøter og delegasjoner.",
+   "why": "Jevnlig program med frokostmøter, workshops og konferanser på kort frist; kilden oppgir ikke venue, så Oslo-tilknytning per arrangement er uavklart.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Eventsiden lister datert program fra oktober 2026 til mars 2027, inkl. keynote/frokost, juridisk workshop, konferanse og julefrokost.",
+    "types": [
+     "seminar",
+     "konferanse",
+     "kurs",
+     "mingle"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-08",
+      "title": "Keynote & Coffee: Norwegian Industry Cooperation or Offset",
+      "venue": "",
+      "url": "https://norwegen.ahk.de/de/events-hub"
+     },
+     {
+      "date": "2026-10-14",
+      "title": "Legal Workshop with Arntzen Grette: Doing Business in Norway",
+      "venue": "",
+      "url": "https://norwegen.ahk.de/de/events-hub"
+     },
+     {
+      "date": "2026-11-19",
+      "title": "Nordics Go Germany: Digital Resilience",
+      "venue": "",
+      "url": "https://norwegen.ahk.de/de/events-hub"
+     },
+     {
+      "date": "2026-12-08",
+      "title": "Christmas Breakfast",
+      "venue": "",
+      "url": "https://norwegen.ahk.de/de/events-hub"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications",
+    "Membership"
+   ],
+   "sources": [
+    {
+     "url": "https://norwegen.ahk.de/de/events-hub",
+     "title": "Events Hub – Deutsch-Norwegische Handelskammer",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://norwegen.ahk.de/no/",
+     "title": "Norsk-Tysk Handelskammer (www.handelskammer.no omdirigerer hit)",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "AmCham Norway (American Chamber of Commerce in Norway)",
+   "website": "https://amcham.no/",
+   "domain": "amcham.no",
+   "segment": "ambassade",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Ideell næringslivs- og møteorganisasjon for amerikansk-norske forbindelser («non-profit business advocacy, services and meeting organization»).",
+   "why": "Hyppige datert arrangementer i Oslo, også tilbakevendende (CFO-forum, Thanksgiving-middag); relevant for både seminar og middag/mingle.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forsiden lister 13 kommende arrangementer okt 2026–jun 2027, flere i Oslo og flere arrangert av AmCham selv. Et tidligere medlemsmottak er omtalt som «fully-subscribed».",
+    "types": [
+     "seminar",
+     "konferanse",
+     "mingle",
+     "fagdag"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Wikborg Rein, Oslo",
+     "AIG, Oslo",
+     "Villa Otium (amerikansk ambassadørresidens)"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-26",
+      "title": "Doing Business in Delaware",
+      "venue": "Wikborg Rein, Dronning Mauds gate 11, Oslo",
+      "url": "https://amcham.no/"
+     },
+     {
+      "date": "2026-10-27",
+      "title": "AmCham Financial Forum",
+      "venue": "AIG, Oslo",
+      "url": "https://amcham.no/"
+     },
+     {
+      "date": "2026-11-23",
+      "title": "AmCham Thanksgiving Charity Dinner",
+      "venue": "Oslo",
+      "url": "https://amcham.no/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications",
+    "Membership"
+   ],
+   "sources": [
+    {
+     "url": "https://amcham.no/",
+     "title": "AmCham Norway – forside med kommende arrangementer",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://amcham.no/event-summary-ambassadors-reception",
+     "title": "Event summary: Ambassadors Reception",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Oslo Chamber of Commerce / ICC Norway",
+   "website": "https://chamber.no/",
+   "domain": "chamber.no",
+   "segment": "ambassade",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Handelskammer og ICC Norway som bistår norske bedrifter i internasjonal handel; tilbyr bl.a. ATA Carnet, opprinnelsesbevis og nettverk.",
+   "why": "Ikke bilateralt kammer, men tett koblet til ambassade- og kammernettverket. Seminarer, forum og årlig sommertreff gir løpende lokalbehov.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forsiden lister kommende kurs, seminarer og forum (datoer uten årstall; rekkefølgen tilsier 2026). Sommertreffet juni 2026 var hos Rederiforbundet i Oslo med medlemmer og ambassadenettverk.",
+    "types": [
+     "seminar",
+     "kurs",
+     "konferanse",
+     "mingle"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Norges Rederiforbund, Oslo (sommertreff 2026)"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-28",
+      "title": "From Pilot to Deployment: Norway-El Salvador Tech Dialogue",
+      "venue": "",
+      "url": "https://chamber.no/"
+     },
+     {
+      "date": "2026-11-04",
+      "title": "Exploring Investment and Trade Opportunities in Peru",
+      "venue": "",
+      "url": "https://chamber.no/"
+     },
+     {
+      "date": "2026-12-08",
+      "title": "Global Economic Outlook",
+      "venue": "",
+      "url": "https://chamber.no/"
+     }
+    ],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://chamber.no/",
+     "title": "Oslo Chamber of Commerce / ICC Norway",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://chamber.no/oslo-chamber-of-commerce-icc-norway-summer-gathering/",
+     "title": "OCC / ICC Norway Summer Gathering",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Norsk-Svensk Handelskammer (NSHK) i Oslo",
+   "website": "https://norsksvenskahandelskammaren.com/",
+   "domain": "norsksvenskahandelskammaren.com",
+   "segment": "ambassade",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Norsk-svensk handelskammer med kontorer i Oslo, Stockholm og Göteborg; nettverk, rådgivning og kontaktformidling mellom Norge og Sverige.",
+   "why": "Oslo-kapittelet har eget årsmøte og nettverksarrangementer; mange arrangementer ligger i Göteborg, så Oslo-andelen er begrenset.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forsiden lister kommende arrangementer (flere i Göteborg, ett i Oslo) og omtaler årsmøte for NSHK Oslo i Sveriges ambassade i juni 2026.",
+    "types": [
+     "årsmøte",
+     "seminar",
+     "debatt",
+     "mingle"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Sveriges ambassade i Oslo (årsmøte juni 2026)"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-11-03",
+      "title": "NSHK Ungt Ledernettverk – Alumni – Fireside med ambassadør Aud Kolberg (Oslo)",
+      "venue": "Oslo",
+      "url": "https://norsksvenskahandelskammaren.com/events/nshk-ungt-ledernettverk-alumni-fireside-med-ambassador-aud-kolberg/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Membership"
+   ],
+   "sources": [
+    {
+     "url": "https://norsksvenskahandelskammaren.com/",
+     "title": "Norsk-Svenska Handelskammaren (nshk.no)",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "British-Norwegian Chamber of Commerce (BNCC)",
+   "website": "https://bncc.no/",
+   "domain": "bncc.no",
+   "segment": "ambassade",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Uavhengig, medlemsbasert ideell organisasjon for UK–Norge-handel; nettverk i Oslo og London, events og delegasjoner.",
+   "why": "Seminarer på morgenen (08:00–10:00) tyder på mindre formater; relevant for Skram/Wergeland-størrelse snarere enn Solstad.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Siden viser kommende arrangementer med klokkeslett og nevner «engaging events» og nettverk i Oslo og London.",
+    "types": [
+     "seminar",
+     "mingle"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-21",
+      "title": "Shared Waters Shared Challenges: Shadow Fleet (08:00–10:00)",
+      "venue": "",
+      "url": "https://bncc.no/event/shared-waters-shared-challenges-shadow-fleet/"
+     },
+     {
+      "date": "2026-11-09",
+      "title": "Baltic–Nordic BritCham Forum, Riga",
+      "venue": "Riga",
+      "url": "https://bncc.no/event/baltic-nordic-britcham-forum-riga-9-november/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://bncc.no/",
+     "title": "British Norwegian Chamber of Commerce",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "CCI France Norvège (Fransk-Norsk Handelskammer, CCFN)",
+   "website": "https://www.ccfn.no/",
+   "domain": "ccfn.no",
+   "segment": "ambassade",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Fransk-norsk handelskammer som beskrives som profesjonell mellomledd mellom franske og norske bedrifter; 150 medlemmer ifølge siden.",
+   "why": "Årlig Journée Franco-Norvégienne og temadager (forsvar, grønn industri) peker på gjentakende Oslo-arrangementer; datoer og venue er ikke oppgitt på siden jeg leste.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Siden «Évènements passés» lister bl.a. Journée Franco-Norvégienne (årlig siden 2005, samler medlemmer og partnere i Oslo), forsvars- og sikkerhetsdag og Green Industry Forum. Ingen datoer oppgitt.",
+    "types": [
+     "konferanse",
+     "seminar"
+    ],
+    "frequency": "årlig (Journée Franco-Norvégienne, ifølge siden)",
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Membership"
+   ],
+   "sources": [
+    {
+     "url": "https://www.ccfn.no/evenements/evenements-passes.html",
+     "title": "CCFN – Évènements passés",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "NICCI – Norway India Chamber of Commerce and Industry",
+   "website": "https://www.nicci.no/",
+   "domain": "nicci.no",
+   "segment": "ambassade",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Handelskammer som knytter norske og indiske bedrifter gjennom nettverk, markedsinnsikt, events og delegasjoner.",
+   "why": "Datert program, men venue er ikke oppgitt; sannsynligvis midlertidige leieforhold for halvdags-toppmøter.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forsiden lister toppmøtet «2nd India–EFTA Prosperity Summit 2026» (7. okt, 14:00–18:30) og en delegasjon til India 17.–20. nov.",
+    "types": [
+     "konferanse",
+     "seminar"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-07",
+      "title": "2nd India–EFTA Prosperity Summit 2026",
+      "venue": "",
+      "url": "https://www.nicci.no/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Membership"
+   ],
+   "sources": [
+    {
+     "url": "https://www.nicci.no/",
+     "title": "NICCI | Norway India Chamber of Commerce and Industry",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Norwegian Chinese Chamber of Commerce (NCCC)",
+   "website": "https://nccc.no/",
+   "domain": "nccc.no",
+   "segment": "ambassade",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Kammer som knytter selskaper, fagfolk og studenter innen handel, investering og forretningsforbindelser mellom Norge og Kina.",
+   "why": "Kveldsarrangementer i Oslo hos medlemmer (Rederiforbundet, DNB); typiske kandidater til et eksternt, nøytralt lokale.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forsiden lister to datert arrangementer i Oslo høsten 2026, med venue og adresse.",
+    "types": [
+     "seminar",
+     "mingle"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Norges Rederiforbund, Oslo",
+     "DNB, Oslo"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-20",
+      "title": "Green Shipping (16:30–20:00)",
+      "venue": "Norges Rederiforbund, Rådhusgaten 25, Oslo",
+      "url": "https://nccc.no/"
+     },
+     {
+      "date": "2026-11-25",
+      "title": "Norway-China Industrial Cooperation",
+      "venue": "DNB, Dronning Eufemias gate 30, Oslo",
+      "url": "https://nccc.no/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Membership"
+   ],
+   "sources": [
+    {
+     "url": "https://nccc.no/",
+     "title": "Norwegian Chinese Chamber of Commerce",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "EUs delegasjon til Norge (EU Delegation to Norway)",
+   "website": "https://www.eeas.europa.eu/delegations/norway_en",
+   "domain": "eeas.europa.eu",
+   "segment": "ambassade",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "EUs delegasjon i Oslo (Klingenberggaten 7A); arbeider med EU–Norge-forhold og utenrikspolitiske prioriteringer.",
+   "why": "Markerer Europadagen og andre offentlige hendelser med eksterne venues; kilden oppgir ikke nyere program, kun 'More events coming soon'.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Delegasjonens side om Europadagen 2022: markering mandag 5. mai 2022 i Nobels Fredssenter i Oslo med musikere. Hovedsiden har «SAVE THE DATE – More events coming soon» uten konkrete datoer.",
+    "types": [
+     "mingle"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Nobels Fredssenter (Europadagen 2022)"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Communications",
+    "Public Diplomacy",
+    "Events"
+   ],
+   "sources": [
+    {
+     "url": "https://www.eeas.europa.eu/delegations/norway/markering-av-europadagen-2022_en",
+     "title": "Markering av Europadagen 2022",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.eeas.europa.eu/delegations/norway_en",
+     "title": "Delegation of the European Union to Norway",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Embassy of Japan in Norway",
+   "website": "https://www.no.emb-japan.go.jp/",
+   "domain": "no.emb-japan.go.jp",
+   "segment": "ambassade",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Japans ambassade i Norge.",
+   "why": "Arrangerer representasjon/mottak (keiserens fødselsdag) med bred gjesteliste; trolig lukkede, invitasjonsbaserte formater. Kun ett arrangement dokumentert.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Siden om mottaket 13. februar 2025: ambassadøren var vert for en reception med norske og japanske gjester fra politikk, næringsliv, akademia og kultur samt diplomatkorps.",
+    "types": [
+     "mingle"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [
+     "februar"
+    ],
+    "open_closed": "lukket",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Public Diplomacy",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.no.emb-japan.go.jp/itpr_nb/ebr_2025.html",
+     "title": "Reception to celebrate the Birthday of His Majesty the Emperor of Japan, 13 February 2025",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Sveriges ambassad i Oslo",
+   "website": "https://www.swedenabroad.se/sv/utlandsmyndigheter/norge-oslo/om-oss/",
+   "domain": "swedenabroad.se",
+   "segment": "ambassade",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Sveriges ambassade i Oslo (Inkognitogata 27).",
+   "why": "Åpner ambassaden for designarrangement og samtaler; eget lokale, men viser behov for programinnhold i samarbeid med eksterne. Kun ett arrangement dokumentert.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Ambassaden var vert for «Designers Saturday 2025 – Embassy Sessions» 12.–13. sept. 2025 med et moderert panel; adgang for registrerte besøkende.",
+    "types": [
+     "debatt"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Sveriges ambassade, Inkognitogata 27, Oslo"
+    ],
+    "months": [
+     "september"
+    ],
+    "open_closed": "lukket",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Communications",
+    "Cultural Affairs"
+   ],
+   "sources": [
+    {
+     "url": "https://www.swedenabroad.se/sv/utlandsmyndigheter/norge-oslo/aktuellt/nyheter/designers-saturday---showroom-sveriges-ambassad/",
+     "title": "Designers Saturday – showroom Sveriges ambassad",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Ambasada RP w Norwegii (Polens ambassade i Oslo)",
+   "website": "https://www.gov.pl/web/norwegia",
+   "domain": "gov.pl",
+   "segment": "ambassade",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Polens ambassade i Oslo (offisielt nettsted på gov.pl).",
+   "why": "Nyhetssiden jeg leste viste kulturarrangementer og markeringer i Oslo, men siste oppføring var fra 2022; aktualitet må sjekkes.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Nyhetsoppføringer fra september–oktober 2022: utstillingsåpning, festival (We Do – polsk kultur og kunst) på Hoymagasinet, konsert på Cosmopolite Scene og minnemarkering i Oslo.",
+    "types": [
+     "mingle"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Hoymagasinet, Oslo (2022)",
+     "Cosmopolite Scene, Oslo (2022)"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Cultural Affairs",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.gov.pl/web/norwegia/aktualnosci",
+     "title": "Ambasada RP w Norwegii – aktualności",
+     "checked": "2026-10-06"
+    }
+   ]
+  }
+ ],
+ "rejected": [
+  {
+   "name": "Goethe-Institut Norwegen",
+   "reason": "finnes allerede (existing.json)"
+  },
+  {
+   "name": "Alliance Française i Oslo",
+   "reason": "finnes allerede (existing.json)"
+  },
+  {
+   "name": "Latvias ambassade i Oslo",
+   "reason": "finnes allerede (existing.json)"
+  },
+  {
+   "name": "Norwegian-British Chamber of Commerce (nbccuk.com)",
+   "reason": "London/Aberdeen-basert, ingen Norge-tilstedeværelse på siden; norsk BNCC er tatt med i stedet"
+  },
+  {
+   "name": "Norsk-Sveitsisk Handelskammer (swisscham.no)",
+   "reason": "Nettsted åpnet, men ingen arrangementer synlige"
+  },
+  {
+   "name": "Norwegian-Polish Chamber of Commerce (npcc.no)",
+   "reason": "Nettsted åpnet, ingen arrangementer funnet"
+  },
+  {
+   "name": "Spanish-Norwegian Chamber of Commerce (snhk.no)",
+   "reason": "Nettsted åpnet, ingen arrangementer funnet"
+  },
+  {
+   "name": "Norwegian-Ukrainian Chamber of Commerce (nucc.no)",
+   "reason": "Ingen fysiske Oslo-arrangementer dokumentert (kun paviljong på Rebuild Ukraine)"
+  },
+  {
+   "name": "Canadian Norwegian Business Association (cnba.no)",
+   "reason": "Siste dokumenterte arrangementer er fra 2022; fremstår inaktiv"
+  },
+  {
+   "name": "Finlands ambassade i Oslo",
+   "reason": "Nettsted åpnet, men ingen arrangementer funnet, kun nyheter"
+  },
+  {
+   "name": "Irlands ambassade i Norge",
+   "reason": "ireland.ie-siden åpnet, ingen arrangementer funnet; dfa.ie-nyhetssiden omdirigerte"
+  },
+  {
+   "name": "Sveits' ambassade i Norge",
+   "reason": "Nettsted åpnet, ingen arrangementer synlige; kun tjenestesider"
+  },
+  {
+   "name": "Nordisk ministerråd",
+   "reason": "Hovedkontor København; kun ett Oslo-arrangement funnet (2019)"
+  },
+  {
+   "name": "UNDP Nordic Representation Office (Oslo)",
+   "reason": "Kun pressemelding om utnevnelse, ingen fysiske arrangementer dokumentert"
+  },
+  {
+   "name": "British Council Norway",
+   "reason": "Kunne ikke finne eget nettsted/arrangementer via søk"
+  },
+  {
+   "name": "Instituto Cervantes",
+   "reason": "Fant ingen filial i Oslo; ikke verifisert"
+  },
+  {
+   "name": "USAs ambassade i Oslo",
+   "reason": "Åpnet ingen offisiell arrangementsside; ikke verifisert"
+  },
+  {
+   "name": "Polsk institutt i Oslo",
+   "reason": "Søk ga ingen treff på eget nettsted"
+  },
+  {
+   "name": "Teknisk forbehold",
+   "reason": "WebFetch avviste flere URL-er (provenance/permission); disse ble hentet via Firecrawl i stedet. NSHK/OCC/BNCC-datoer vises uten årstall på sidene, 2026 er utledet av rekkefølge og publiseringsdatoer."
+  }
+ ]
+}

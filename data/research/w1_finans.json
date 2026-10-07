@@ -1,0 +1,735 @@
+{
+ "agent": "w1_finans",
+ "segments": ["finans", "konsulent", "bedrift"],
+ "accounts": [
+  {
+   "name": "Finans Norge",
+   "website": "https://www.finansnorge.no",
+   "domain": "finansnorge.no",
+   "segment": "finans",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Organisasjon for finansnæringen med medlemsbedrifter innen bank, forsikring og øvrige finansforetak. Besøksadresse Finansnæringens Hus, Hansteens gate 2, Oslo.",
+   "why": "Har en egen eventavdeling og et tungt konferanseprogram, men bruker hotell/konferansesentre. Aktuell for mindre fagdager, kapitalkrav- og HR-seminarer eller debattkvelder.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Arrangementssiden lister 8 arrangementer for 2026, bl.a. Pensjonskonferansen (Nationaltheatret Konferansesenter), Juskonferansen, Arbeidslivsdagen (Ingeniørenes Hus), Betaling- og digitaliseringskonferansen og Kapitalkravseminaret. Noen er rettet mot medlemsbedrifter.",
+     "types": ["konferanse", "seminar", "debatt"],
+     "frequency": "8 arrangementer oppført for 2026 på arrangementssiden",
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["Nationaltheatret Konferansesenter", "Quality Hotel Expo, Fornebu", "Soria Moria Hotell", "Ingeniørenes Hus Møtesenter", "Clarion Hotel Oslo Airport", "Holmen Fjordhotell, Asker"],
+     "months": [],
+     "open_closed": "åpent",
+     "next_dates": [
+       {"date": "2026-10-14", "title": "Juskonferansen 2026 (14.-15. okt)", "venue": "Soria Moria Hotell", "url": "https://www.finansnorge.no/arrangementer/"},
+       {"date": "2026-10-29", "title": "Arbeidslivsdagen 2026", "venue": "Ingeniørenes Hus Møtesenter", "url": "https://www.finansnorge.no/arrangementer/2026/arbeidslivsdagen-2026/"},
+       {"date": "2026-11-05", "title": "Betaling- og digitaliseringskonferansen 2026 (5.-6. nov)", "venue": "Quality Hotel Expo, Fornebu", "url": "https://www.finansnorge.no/arrangementer/2026/betaling--og-digitaliseringskonferansen-2026/"},
+       {"date": "2026-11-12", "title": "Hvitvaskingskonferansen 2026 (12.-13. nov)", "venue": "Clarion Hotel Oslo Airport", "url": "https://www.finansnorge.no/arrangementer/"},
+       {"date": "2026-11-19", "title": "Kapitalkravseminaret 2026", "venue": "Nationaltheatret Konferansesenter", "url": "https://www.finansnorge.no/arrangementer/"}
+     ],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Communications"],
+   "sources": [
+     {"url": "https://www.finansnorge.no/arrangementer/", "title": "Finans Norge - Arrangementer", "checked": "2026-10-06"},
+     {"url": "https://www.finansnorge.no/arrangementer/2026/arbeidslivsdagen-2026/", "title": "Arbeidslivsdagen 2026", "checked": "2026-10-06"},
+     {"url": "https://www.finansnorge.no/arrangementer/2026/pensjonskonferansen-2026/", "title": "Pensjonskonferansen 2026", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "Norsk Venturekapitalforening (NVCA)",
+   "website": "https://www.nvca.no",
+   "domain": "nvca.no",
+   "segment": "finans",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Representerer aktive eierfond i Norge (såkorn, venture, vekst og oppkjøpsfond) med over 100 medlemmer. Adresse Finansnæringens Hus, Hansteens gate 2, Oslo.",
+   "why": "Mange mindre frokost- og nettverksarrangementer, ofte i samarbeid med advokatfirmaer. Passer for Litteraturhusets mindre rom; Solstad er mer usikkert.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Arrangementssiden lister kommende og tidligere arrangementer (Forsvarsfrokost 6. okt, Nordic Buyout Forum og julebord 3. des, Venturekonferansen 2027 i Trondheim 21. jan) samt mange tidligere seminarer. Siden sier også at medlemmer får invitasjoner til eksklusive arrangementer som ikke er listet.",
+     "types": ["konferanse", "seminar", "mingle", "debatt"],
+     "frequency": null,
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["Advokatfirmaet CLP, Sommerrogata 13-15, Oslo", "Britannia, Trondheim"],
+     "months": [],
+     "open_closed": "ukjent",
+     "next_dates": [
+       {"date": "2026-10-06", "title": "Forsvarsfrokost: Ukraina, kapital og norsk forsvarsevne", "venue": null, "url": "https://www.nvca.no/arrangementer"},
+       {"date": "2026-12-03", "title": "Nordic Buyout Forum 2026 (påmelding via invitasjon)", "venue": null, "url": "https://www.nvca.no/arrangementer"},
+       {"date": "2026-12-03", "title": "NVCAs julebord (kun medlemmer ifølge 2025-utgaven)", "venue": null, "url": "https://www.nvca.no/arrangementer"}
+     ],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Communications"],
+   "sources": [
+     {"url": "https://www.nvca.no/", "title": "Norsk Venturekapitalforening - forside", "checked": "2026-10-06"},
+     {"url": "https://www.nvca.no/arrangementer", "title": "NVCA - Arrangementer", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "Verdipapirfondenes forening (VFF)",
+   "website": "https://www.vff.no",
+   "domain": "vff.no",
+   "segment": "finans",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Bransjeforening for verdipapirfond med adresse Hansteens gate 2, Oslo. Publiserer markedsstatistikk og høringssvar for fondsbransjen.",
+   "why": "Årlig fagseminar og tidligere årskonferanse (Fondsdagen) viser at de leier eksterne lokaler. Smal bransje, men faste, forutsigbare arrangementer.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Arrangementssiden viser heldagsseminar om compliance og operasjonell risiko 2023, 2024, 2025 og 26. oktober 2026, samt Fondsdagen (fondsbransjens årskonferanse) 14. mars 2024 på Hotel Bristol i Oslo.",
+     "types": ["konferanse", "seminar", "kurs"],
+     "frequency": "Complianceseminar oppført for 2023, 2024, 2025 og 2026",
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["Hotel Bristol, Oslo (Fondsdagen 2024)"],
+     "months": [],
+     "open_closed": "ukjent",
+     "next_dates": [
+       {"date": "2026-10-26", "title": "Complianceseminar 2026", "venue": null, "url": "https://www.vff.no/arrangementer"}
+     ],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Communications"],
+   "sources": [
+     {"url": "https://www.vff.no/", "title": "Verdipapirfondenes forening - forside", "checked": "2026-10-06"},
+     {"url": "https://www.vff.no/arrangementer", "title": "VFF - Arrangementer", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "Den norske Forsikringsforening",
+   "website": "https://www.forsikringsforeningen.no",
+   "domain": "forsikringsforeningen.no",
+   "segment": "finans",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": "M",
+   "about": "Forening stiftet 1900 med over 1 000 enkeltpersoner og 10 norske forsikringsselskaper som medlemmer. Arrangerer årlig forsikringskonferanse og fire medlemsmøter i året.",
+   "why": "Fast årlig konferanse i januar pluss medlemsmøter med debatt gir forutsigbart behov. Konferansen 2026 ble holdt i Stortingsgata Kurs&Konferansesenter.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Foreningen sier selv at den arrangerer en stor forsikringskonferanse årlig og fire medlemsmøter med debatt. Forsikringskonferansen 2026 ble holdt 27. januar 2026 i Stortingsgata Kurs&Konferansesenter, Stortingsgata 20, Oslo. Neste konferanse 19. januar 2027.",
+     "types": ["konferanse", "debatt", "årsmøte"],
+     "frequency": "Én årlig konferanse og fire medlemsmøter per år (ifølge foreningen)",
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["Stortingsgata Kurs&Konferansesenter, Stortingsgata 20, Oslo"],
+     "months": ["januar"],
+     "open_closed": "ukjent",
+     "next_dates": [
+       {"date": "2026-11-18", "title": "Medlemsmøte 18. november 2026 (liv/pensjon)", "venue": null, "url": "https://www.forsikringsforeningen.no/"},
+       {"date": "2027-01-19", "title": "Forsikringskonferansen 2027", "venue": null, "url": "https://www.forsikringsforeningen.no/"}
+     ],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Secretary General"],
+   "sources": [
+     {"url": "https://www.forsikringsforeningen.no/", "title": "Den norske Forsikringsforening - forside", "checked": "2026-10-06"},
+     {"url": "https://www.forsikringsforeningen.no/konferanse/forsikringskonferansen-2026/", "title": "Forsikringskonferansen 2026", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "Stiftelsen AksjeNorge",
+   "website": "https://aksjenorge.no",
+   "domain": "aksjenorge.no",
+   "segment": "finans",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Stiftelse som bidrar til økt kunnskap om langsiktig sparing i aksjer og verdipapirmarkedene. Tilbyr webinarer og fysiske aksjekvelder.",
+   "why": "Åpne publikumskvelder med eksterne samarbeidspartnere (Nordnet, DNB) og flere byer. Passer som kveldsformat; størrelse på publikum er ikke dokumentert.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Forsiden viser høstens aksjekvelder og arrangementer. Aksjekvelden 9. mars 2026 kl. 17.00-18.30 arrangeres i samarbeid med Nordnet og DNB i Dronning Eufemias gate 8, Oslo. Egen side omtaler også en stor aksjekveld i Bergen.",
+     "types": ["seminar", "mingle"],
+     "frequency": null,
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["Dronning Eufemias gate 8, Bjørvika, Oslo"],
+     "months": [],
+     "open_closed": "åpent",
+     "next_dates": [],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Managing Director", "Events"],
+   "sources": [
+     {"url": "https://aksjenorge.no/", "title": "AksjeNorge - forside", "checked": "2026-10-06"},
+     {"url": "https://aksjenorge.no/arrangementer/kvinnedag26_beginner/", "title": "Kvinnedagen #1: Aksjekveld med markedsoppdatering", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "DNB Næringsmegling",
+   "website": "https://dnbnaringsmegling.no",
+   "domain": "dnbnaringsmegling.no",
+   "segment": "finans",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Beskriver seg som Norges største næringseiendomsmiljø. Publiserer markedsoppdateringer og webinarer.",
+   "why": "Arrangerer frokostseminar i eget hus og webinarer; kan ha behov for større rom ved kundearrangementer, men det er ikke dokumentert.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Invitasjon til frokostseminar tirsdag 5. mai 2026 kl. 09.00-10.30 hos DNB Bjørvika, Dronning Eufemias gate 30, Oslo, med registrering fra 08.30. Forsiden omtaler også et live webinar 17. juni 2026 (digitalt).",
+     "types": ["seminar"],
+     "frequency": null,
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["DNB Bjørvika, Dronning Eufemias gate 30, Oslo"],
+     "months": [],
+     "open_closed": "ukjent",
+     "next_dates": [],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Marketing"],
+   "sources": [
+     {"url": "https://dnbnaringsmegling.no/", "title": "DNB Næringsmegling - forside", "checked": "2026-10-06"},
+     {"url": "https://dnbnaringsmegling.no/invitasjon-frokostseminar-tirsdag-5-mai/", "title": "Invitasjon Frokostseminar - tirsdag 5. mai", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "Advokatfirmaet Thommessen",
+   "website": "https://www.thommessen.no",
+   "domain": "thommessen.no",
+   "segment": "konsulent",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Forretningsjuridisk advokatfirma med kontorer i Oslo (Ruseløkkveien 38), Bergen, Stavanger og London.",
+   "why": "Har egen eventside med frokostseminarer på flere kontorer. Større felles seminarer kan være aktuelle for eksterne lokaler.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Egen eventside viser frokostseminar 15. oktober 2026 kl. 08.30-10.00 om overtidsbetaling (Oslo, Bergen og Stavanger), med påmelding via lenke.",
+     "types": ["seminar"],
+     "frequency": null,
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": [],
+     "months": [],
+     "open_closed": "ukjent",
+     "next_dates": [
+       {"date": "2026-10-15", "title": "Frokostseminar: Avklaring fra Høyesterett om rett til overtidsbetaling", "venue": "Oslo, Bergen og Stavanger", "url": "https://www.thommessen.no/eventer/frokostseminar-avklaring-fra-hoyesterett-om-rett-til-overtidsbetaling-hva-bor-arbeidsgivere-gjore-na"}
+     ],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Marketing"],
+   "sources": [
+     {"url": "https://www.thommessen.no/", "title": "Advokatfirmaet Thommessen - forside", "checked": "2026-10-06"},
+     {"url": "https://www.thommessen.no/eventer/frokostseminar-avklaring-fra-hoyesterett-om-rett-til-overtidsbetaling-hva-bor-arbeidsgivere-gjore-na", "title": "Frokostseminar: Avklaring fra Høyesterett om rett til overtidsbetaling", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "Wikborg Rein",
+   "website": "https://www.wr.no",
+   "domain": "wr.no",
+   "segment": "konsulent",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Fullservice advokatfirma som beskriver seg som Norges mest internasjonale. Har kontor i Oslo (Dronning Mauds gate 11) og Bergen.",
+   "why": "Ny seminarserie med 150+ påmeldte og stor interesse tyder på at egne lokaler kan bli for små. Gratis lunsjseminarer, og en av få aktører med dokumentert påmeldingstall.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Wikborg Rein Compliance Series ble lansert 24. september 2026 med mer enn 150 påmeldte; fortsetter utover høsten og inn i 2027 som gratis lunsjseminarer i egne lokaler i Oslo. Arrangementssiden viser også Annual Shipping Offshore Seminar 22. september 2026 i Oslo. BAHR og Wikborg Rein arrangerer årlig voldgiftsseminar (17. september).",
+     "types": ["seminar", "konferanse"],
+     "frequency": "Compliance Series fortsetter utover høsten og inn i 2027 (ifølge firmaet)",
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["Wikborg Rein, 11. etasje, Dronning Mauds gate 11, Oslo"],
+     "months": [],
+     "open_closed": "åpent",
+     "next_dates": [],
+     "confidence": "high"
+   },
+   "room_hint": "Mer enn 150 påmeldte til Compliance Series-lanseringen 24.9.2026 i egne lokaler (kilde: wr.no).",
+   "contact_roles": ["Events", "Marketing"],
+   "sources": [
+     {"url": "https://www.wr.no/", "title": "Wikborg Rein - forside", "checked": "2026-10-06"},
+     {"url": "https://www.wr.no/arrangementer", "title": "Wikborg Reins arrangementer", "checked": "2026-10-06"},
+     {"url": "https://www.wr.no/aktuelt/wikborg-rein-compliance-series-lansert-med-rekordstor-interesse", "title": "Wikborg Rein Compliance Series lansert med rekordstor interesse", "checked": "2026-10-06"},
+     {"url": "https://www.wr.no/aktuelt/kommende-arrangementer-nytt-fra-domstolene-og-ny-litteratur", "title": "Kommende arrangementer, nytt fra domstolene og ny litteratur", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "Codex Advokat",
+   "website": "https://codex.no",
+   "domain": "codex.no",
+   "segment": "konsulent",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Advokatfirma som bistår bedrifter og privatpersoner. Besøksadresse Akersgata 51, Oslo. Forsiden har egen seksjon for kurs og arrangementer.",
+   "why": "Gjentakende åpne frokostseminarer i egen adresse. Mindre format, trolig ikke et Solstad-behov, men kan passe for småsalene.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Arbeidsrettslig årskavalkade 1. desember 2026 kl. 08.00-10.00 i Akersgata 51, beskrevet som åpent for alle. Egen side for frokostseminar om overtid for deltidsansatte i oktober 2026 (siden oppgir både 07.10.2026 og 1. oktober 2026). Forsiden lister 01.12.26 som Frokostseminar: Varsling i virksomheten.",
+     "types": ["seminar"],
+     "frequency": null,
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["Codex Advokat, Akersgata 51, Oslo"],
+     "months": [],
+     "open_closed": "åpent",
+     "next_dates": [
+       {"date": "2026-12-01", "title": "Frokostseminar: Arbeidsrettslig årskavalkade 2026", "venue": "Akersgata 51, Oslo", "url": "https://codex.no/arrangementer/frokostseminar-arbeidsrettslig-arskavalkade-2026/"}
+     ],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Marketing"],
+   "sources": [
+     {"url": "https://codex.no/", "title": "Codex Advokat - forside", "checked": "2026-10-06"},
+     {"url": "https://codex.no/arrangementer/frokostseminar-arbeidsrettslig-arskavalkade-2026/", "title": "Frokostseminar: Arbeidsrettslig årskavalkade 2026", "checked": "2026-10-06"},
+     {"url": "https://codex.no/arrangementer/seminar-oktober-2026-overtid-for-deltidsansatte/", "title": "Frokostseminar: Overtid for deltidsansatte", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "SANDS Advokatfirma",
+   "website": "https://www.sands.no",
+   "domain": "sands.no",
+   "segment": "konsulent",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": "L",
+   "about": "Beskriver seg som et av Norges største fullservice advokatfirmaer med over 220 medarbeidere. Forsiden har seksjon for kommende seminarer.",
+   "why": "Mange gratis seminarer i flere byer og i egne lokaler. Størst potensial om de vil ha et større felles format; ellers småsaler.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Seminar 29. oktober 2026 kl. 09.00-10.15 i SANDS-lokaler i Tollbugata 3 (ingen deltakeravgift, begrenset antall plasser). Frokostseminar 18. juni 2026 i Cort Adelers gate 33. Forsiden lister kommende seminarer også utenfor Oslo.",
+     "types": ["seminar"],
+     "frequency": null,
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["SANDS, Tollbugata 3, Oslo", "SANDS Advokatfirma AS, Cort Adelers gate 33, Oslo"],
+     "months": [],
+     "open_closed": "åpent",
+     "next_dates": [
+       {"date": "2026-10-29", "title": "Nye spilleregler for arbeidstid: Er din virksomhet forberedt?", "venue": "Tollbugata 3, Oslo", "url": "https://www.sands.no/seminarer/nye-spilleregler-for-arbeidstid-er-din-virksomhet-forberedt/"}
+     ],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Marketing"],
+   "sources": [
+     {"url": "https://www.sands.no/", "title": "SANDS Advokatfirma - forside", "checked": "2026-10-06"},
+     {"url": "https://www.sands.no/seminarer/nye-spilleregler-for-arbeidstid-er-din-virksomhet-forberedt/", "title": "Nye spilleregler for arbeidstid", "checked": "2026-10-06"},
+     {"url": "https://www.sands.no/seminarer/oslo-endringshandtering-i-ais-tidsalder/", "title": "Oslo | Endringshåndtering i AIs tidsalder", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "Advokatfirmaet Haavind",
+   "website": "https://haavind.no",
+   "domain": "haavind.no",
+   "segment": "konsulent",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Fullservice advokatfirma som sier de har mange av Norges største selskaper som kunder. Hovedkontor i Haakon VIIs gate 10, Oslo.",
+   "why": "Fast seminarserie for konsernadvokater som ble fulltegnet. Eget hus rommer ikke nødvendigvis en vekst; mulig leietaker for kveldsseminar med mingling.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Konsernadvokatseminaret våren 2026 ble holdt 10. mars 2026 kl. 14.30-20.00 i Haakon VIIs gate 10 (møteplass for konsernadvokater siden 2016); siden melder at seminaret var fullt og tilbyr venteliste. Anskaffelser24 omtaler et gratis seminar 8. oktober 2026 arrangert sammen med KPMG og Wiersholm.",
+     "types": ["seminar", "mingle"],
+     "frequency": "Konsernadvokatseminaret nevnes med vårutgave 2026 og har eksistert siden 2016",
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["Haavind, Haakon VIIs gate 10, Oslo", "KPMG, Dronning Eufemias gate 6A, Oslo (felles seminar)"],
+     "months": [],
+     "open_closed": "ukjent",
+     "next_dates": [
+       {"date": "2026-10-08", "title": "Gratis seminar om forslag til nytt anskaffelsesregelverk (Anskaffelser24, KPMG, Wiersholm og Haavind)", "venue": "KPMG, Dronning Eufemias gate 6A, Oslo", "url": "https://anskaffelser24.no/2026/09/26/de-store-konsekvensene-for-norske-anskaffelser-presenteres-8-oktober/"}
+     ],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Marketing"],
+   "sources": [
+     {"url": "https://haavind.no/", "title": "Haavind - forside", "checked": "2026-10-06"},
+     {"url": "https://haavind.no/arrangementer/konsernadvokatseminaret-var-2026/", "title": "Konsernadvokatseminaret våren 2026", "checked": "2026-10-06"},
+     {"url": "https://anskaffelser24.no/2026/09/26/de-store-konsekvensene-for-norske-anskaffelser-presenteres-8-oktober/", "title": "Anskaffelser24: seminar 8. oktober", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "Advokatfirmaet Wiersholm",
+   "website": "https://wiersholm.no",
+   "domain": "wiersholm.no",
+   "segment": "konsulent",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Fullservice advokatfirma innen forretningsjus med kontorer i Oslo (Dokkveien 1), Trondheim og London.",
+   "why": "Åpen, betalt årlig konferanse som leies på hotell (Grand Hotel). Tydelig leietaker-profil for et konferansearrangement; Solstad kan være aktuelt for større format.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Transfer Pricing Forum 2026, niende utgave av den årlige konferansen, 18. september 2026 på Grand Hotel i Oslo. Beskrevet som åpent seminar, pris 5 900 kroner. Medarrangør av seminar 8. oktober 2026 hos KPMG.",
+     "types": ["konferanse", "seminar"],
+     "frequency": "Årlig (Transfer Pricing Forum, niende utgave i 2026)",
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["Grand Hotel, Oslo"],
+     "months": [],
+     "open_closed": "åpent",
+     "next_dates": [
+       {"date": "2026-10-08", "title": "Gratis seminar om forslag til nytt anskaffelsesregelverk (sammen med KPMG, Haavind og Anskaffelser24)", "venue": "KPMG, Dronning Eufemias gate 6A, Oslo", "url": "https://anskaffelser24.no/2026/09/26/de-store-konsekvensene-for-norske-anskaffelser-presenteres-8-oktober/"}
+     ],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Marketing"],
+   "sources": [
+     {"url": "https://wiersholm.no/", "title": "Advokatfirmaet Wiersholm - forside", "checked": "2026-10-06"},
+     {"url": "https://wiersholm.no/arrangementer/transfer-pricing-forum-2026/", "title": "Transfer Pricing Forum 2026", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "KPMG Norge",
+   "website": "https://kpmg.com/no/nb/home.html",
+   "domain": "kpmg.com",
+   "segment": "konsulent",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Multidisiplinært selskap innen revisjon, rådgivning og skatt/juss. Arrangerer seminarer og konferanser i egne lokaler i SIXA, Dronning Eufemias gate 6A, Oslo.",
+   "why": "Avholder store gratis arrangementer i eget auditorium, noe som kan bety at de vokser ut av det. AI-konferansen ble fulltegnet med venteliste.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Seminar 21. oktober 2026 (IFRS 18) og arbeidsgiverseminar 17. november 2026 i KPMG Oslo - SIXA, gratis. AI-konferansen 22. april 2026 i Sixa var fulltegnet. Anskaffelser24 melder om nær 200 påmeldte til seminar 8. oktober 2026 i KPMGs auditorium (plass til inntil 180).",
+     "types": ["konferanse", "seminar"],
+     "frequency": null,
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["KPMG Oslo - SIXA, Dronning Eufemias gate 6A, Oslo"],
+     "months": [],
+     "open_closed": "åpent",
+     "next_dates": [
+       {"date": "2026-10-08", "title": "Gratis seminar om forslag til nytt anskaffelsesregelverk (Anskaffelser24 m.fl.)", "venue": "KPMG Oslo - SIXA, Dronning Eufemias gate 6A", "url": "https://anskaffelser24.no/2026/09/26/de-store-konsekvensene-for-norske-anskaffelser-presenteres-8-oktober/"},
+       {"date": "2026-10-21", "title": "IFRS 18 i praksis", "venue": "KPMG Oslo - SIXA, Dronning Eufemias gate 6A", "url": "https://kpmg.com/no/nb/event/2026/10/ifrs-18-i-praksis.html"},
+       {"date": "2026-11-17", "title": "KPMGs Arbeidsgiverseminar 2026", "venue": "KPMG Oslo - SIXA, Dronning Eufemias gate 6A", "url": "https://kpmg.com/no/nb/event/2026/11/kpmgs-arbeidsgiverseminar.html"}
+     ],
+     "confidence": "high"
+   },
+   "room_hint": "Nær 200 påmeldte til seminar 8.10.2026 og auditorium med plass til inntil 180 (kilde: Anskaffelser24, ikke KPMG).",
+   "contact_roles": ["Events", "Marketing"],
+   "sources": [
+     {"url": "https://kpmg.com/no/nb/home.html", "title": "KPMG Norge - forside", "checked": "2026-10-06"},
+     {"url": "https://kpmg.com/no/nb/event/2026/11/kpmgs-arbeidsgiverseminar.html", "title": "KPMGs Arbeidsgiverseminar 2026", "checked": "2026-10-06"},
+     {"url": "https://kpmg.com/no/nb/event/2026/10/ifrs-18-i-praksis.html", "title": "IFRS 18 i praksis", "checked": "2026-10-06"},
+     {"url": "https://kpmg.com/no/nb/ai-konferansen-2026.html", "title": "AI-konferansen 2026", "checked": "2026-10-06"},
+     {"url": "https://anskaffelser24.no/2026/09/26/de-store-konsekvensene-for-norske-anskaffelser-presenteres-8-oktober/", "title": "Anskaffelser24: seminar 8. oktober", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "EY Norge",
+   "website": "https://www.ey.com/no_no",
+   "domain": "ey.com",
+   "segment": "konsulent",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Konsulent-, revisjons-, skatte- og transaksjonstjenester. Har egen arrangementsoversikt med seminarer og konferanser; Oslo-kontor på Stortorvet 7.",
+   "why": "Flere betalte og gratis konferanser på hotell (Thon Hotel Bristol), blant annet årlig Børs- og IFRS-konferanse over to dager. Naturlig leietaker for større format.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Børs- og IFRS-konferansen 23.-24. september 2026 på Thon Hotel Bristol (årlig). Finansdagen 2026 i Oslo (S7, Stortorvet 7) gjenopptatt etter flere år. Avgiftsuken 2026 med kurs hos EY, Stortorvet 7. Vekstseminar 15. oktober 2026 i Trondheim.",
+     "types": ["konferanse", "seminar", "kurs"],
+     "frequency": "Børs- og IFRS-konferansen beskrives som årlig",
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["Thon Hotel Bristol, Kristian IVs gate 7, Oslo", "S7, Stortorvet 7, Oslo", "EY, Stortorvet 7, Oslo"],
+     "months": [],
+     "open_closed": "åpent",
+     "next_dates": [],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Marketing"],
+   "sources": [
+     {"url": "https://www.ey.com/no_no", "title": "EY Norge - forside", "checked": "2026-10-06"},
+     {"url": "https://www.ey.com/no_no/events/2026/09/bors-og-ifrs-konferansen-2026-finansiell-rapportering", "title": "Børs- og IFRS-konferansen 2026", "checked": "2026-10-06"},
+     {"url": "https://www.ey.com/no_no/events/2026/06/finansdagen-2026-tall-trender-og-teknologi", "title": "Finansdagen 2026: Tall, trender og teknologi", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "Deloitte Norge",
+   "website": "https://www.deloitte.com/no/no.html",
+   "domain": "deloitte.com",
+   "segment": "konsulent",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Revisjon, rådgivning, finans, risikostyring og skatt. Har egen eventside for fysiske seminarer under rådgivningstjenester.",
+   "why": "Kjører seminarserier på flere steder i landet og leier eksterne lokaler (Munch). Kan være aktuell for rundturer med flere byer eller større Oslo-dag.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Teknologitrendene for 2026: fysiske seminarer 10., 12., 18. februar og 10. mars 2026 i Oslo, Stavanger, Bergen og Trondheim. Oslo 10. februar kl. 09.00-10.00 i Festsalen på Munch, Edvard Munchs Plass 1.",
+     "types": ["seminar"],
+     "frequency": null,
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["Festsalen på Munch, Edvard Munchs Plass 1, Oslo"],
+     "months": [],
+     "open_closed": "ukjent",
+     "next_dates": [],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Marketing"],
+   "sources": [
+     {"url": "https://www.deloitte.com/no/no.html", "title": "Deloitte Norge - forside", "checked": "2026-10-06"},
+     {"url": "https://www.deloitte.com/no/no/services/consulting/events/tech-trends-2026.html", "title": "Teknologitrendene for 2026", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "PwC Norge",
+   "website": "https://www.pwc.no",
+   "domain": "pwc.no",
+   "segment": "konsulent",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Revisjon, rådgivning og skatt. Har egen eventkalender og et eget eventteam (Head of Event, eventkoordinator) ifølge eventsiden.",
+   "why": "Eget eventteam og tett program med både fysiske og digitale arrangementer. Flere av arrangementene lagt til Oslo; stedene er ikke oppgitt.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Eventsiden lister Oslo-arrangementer i september 2026: Merverdiavgift i fast eiendom (1.9), Bærekraftsdagene (7.-8.9), GRC i utvikling (14.9), AML-seminar (17.9) og CFO-dagen 2026 (22.9, Oslo/webinar), samt webinarserier. Stedene utover «Oslo» oppgis ikke.",
+     "types": ["konferanse", "seminar"],
+     "frequency": null,
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": [],
+     "months": [],
+     "open_closed": "ukjent",
+     "next_dates": [],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Head of Event", "Event Coordinator"],
+   "sources": [
+     {"url": "https://www.pwc.no/no/event.html", "title": "PwC Norge - Event", "checked": "2026-10-06"},
+     {"url": "https://www.pwc.no/no/event/cfo-og-controllerdagen-2026.html", "title": "CFO og Controllerdagen 2026 (Bergen)", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "Sopra Steria Norge",
+   "website": "https://www.soprasteria.no",
+   "domain": "soprasteria.no",
+   "segment": "konsulent",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": "L",
+   "about": "Beskriver seg som Norges ledende konsulentselskap innen digitalisering, innovasjon og bærekraft, med 3 700 medarbeidere i Norge.",
+   "why": "Tett serie gratis frokostseminarer i eget lokale (26. etasje) i oktober, så et fast behov. Avgjørende om de vil flytte ut for større format.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Faglig påfyll-seksjonen viser gratis frokostseminarer i Momentum Arena, Biskop Gunnerus' gate 14, Oslo (26. etasje) 8. oktober, 14. oktober og 15. oktober 2026.",
+     "types": ["seminar"],
+     "frequency": "Tre seminarer oppført i oktober 2026",
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["Momentum Arena, Biskop Gunnerus' gate 14, Oslo (26. etasje)"],
+     "months": [],
+     "open_closed": "åpent",
+     "next_dates": [
+       {"date": "2026-10-08", "title": "Oslo: Produktorientering og KI, hva gjør vi nå?", "venue": "Momentum Arena, Biskop Gunnerus' gate 14", "url": "https://www.soprasteria.no/kurs/faglig-pafyll/detail/2026/10/08/default-calendar/oslo-produktorientering-og-ki"},
+       {"date": "2026-10-14", "title": "Oslo: Produkter som påvirker adferd og beslutninger", "venue": "Momentum Arena, Biskop Gunnerus' gate 14", "url": "https://www.soprasteria.no/kurs/faglig-pafyll/detail/2026/10/14/default-calendar/oslo--produkter-som-pavirker-adferd-og-beslutninger---nar-sma-valg-gir-stor-miljpavirkning"},
+       {"date": "2026-10-15", "title": "Oslo: KI som strategisk virkemiddel: CFOens og virksomhetens veivalg", "venue": "Momentum Arena, Biskop Gunnerus' gate 14", "url": "https://www.soprasteria.no/kurs/faglig-pafyll/detail/2026/10/15/default-calendar/oslo--ki-som-strategisk-virkemiddel--cfoens-og-virksomhetens-veivalg"}
+     ],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Marketing"],
+   "sources": [
+     {"url": "https://www.soprasteria.no/", "title": "Sopra Steria Norge - forside", "checked": "2026-10-06"},
+     {"url": "https://www.soprasteria.no/kurs/faglig-pafyll/detail/2026/10/08/default-calendar/oslo-produktorientering-og-ki", "title": "Oslo: Produktorientering og KI", "checked": "2026-10-06"},
+     {"url": "https://www.soprasteria.no/kurs/faglig-pafyll/detail/2026/10/15/default-calendar/oslo--ki-som-strategisk-virkemiddel--cfoens-og-virksomhetens-veivalg", "title": "Oslo: KI som strategisk virkemiddel", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "Equinor",
+   "website": "https://www.equinor.com/no",
+   "domain": "equinor.com",
+   "segment": "bedrift",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Energiselskap som arrangerer Høstkonferansen i Oslo Spektrum, og leverandørdager i Stavanger og Harstad ifølge egne sider.",
+   "why": "Har en etablert egen konferanse på stor scene (Oslo Spektrum) og flere leverandørdager. Mest relevant for mindre fag- eller leverandørarrangementer i Oslo.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Høstkonferansen 2026 i Oslo Spektrum tirsdag 24. november kl. 09.00-12.30; har samlet politiske ledere, næringsliv og internasjonale organisasjoner «i snart to tiår» og overføres direkte. Global Supplier Day 2026 i Stavanger og leverandørdag i Harstad 28. oktober 2026 (sammen med Aker BP).",
+     "types": ["konferanse", "seminar"],
+     "frequency": "Høstkonferansen arrangert i snart to tiår (ifølge Equinor)",
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["Oslo Spektrum", "IMI Forum, Stavanger (ONS 2026)", "Quality Hotel Harstad"],
+     "months": [],
+     "open_closed": "ukjent",
+     "next_dates": [
+       {"date": "2026-10-28", "title": "Equinor og Aker BPs leverandørdag - Harstad 2026", "venue": "Quality Hotel Harstad", "url": "https://www.equinor.com/no/om-oss/equinor-og-aker-bps-leverandordag-harstad-2026"},
+       {"date": "2026-11-24", "title": "Høstkonferansen 2026", "venue": "Oslo Spektrum", "url": "https://www.equinor.com/no/om-oss/hostkonferansen"}
+     ],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Communications"],
+   "sources": [
+     {"url": "https://www.equinor.com/no/om-oss/hostkonferansen", "title": "Høstkonferansen 2026", "checked": "2026-10-06"},
+     {"url": "https://www.equinor.com/no/om-oss/equinor-og-aker-bps-leverandordag-harstad-2026", "title": "Equinor og Aker BPs leverandørdag - Harstad 2026", "checked": "2026-10-06"},
+     {"url": "https://www.equinor.com/no/om-oss/global-supplier-day-2026", "title": "Equinor's Global Supplier Day 2026", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "DNV (Høvik)",
+   "website": "https://www.dnv.no",
+   "domain": "dnv.no",
+   "segment": "bedrift",
+   "place": "Høvik",
+   "geo": "oslo",
+   "size": null,
+   "about": "Selskap innen sertifisering, rådgivning og klasse (maritim, energi, cyber m.m.). Arrangerer seminarer og lanseringer på hovedkontoret i Veritasveien, Høvik.",
+   "why": "Åpne lanseringer og fagseminarer med politikere og næringsliv. De bruker eget hus på Høvik, så leie vil kreve en grunn (sentral beliggenhet eller større format).",
+   "event_signal": {
+     "documented": true,
+     "summary": "Fagseminar på Høvik 16. november 2026 kl. 09.00-15.00. Årlig lansering av Energy Transition Outlook Norway sammen med Norsk Industri (28. november 2024 på DNV, Veritasveien 14, Høvik, eller online) og et energisektor-seminar med begrenset antall plasser.",
+     "types": ["seminar", "lansering", "konferanse"],
+     "frequency": "Energy Transition Outlook Norway omtales som årlig framskriving",
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["DNV, Veritasveien 14, Høvik", "DNV, Veritasveien 1, Høvik"],
+     "months": [],
+     "open_closed": "åpent",
+     "next_dates": [
+       {"date": "2026-11-16", "title": "DNV fagseminar Høvik", "venue": "DNV, Veritasveien 1, Høvik", "url": "https://www.dnv.no/maritime/contact-form/dnv-technical-seminar-hovik/"}
+     ],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Communications"],
+   "sources": [
+     {"url": "https://www.dnv.no/", "title": "DNV.no - forside", "checked": "2026-10-06"},
+     {"url": "https://www.dnv.no/maritime/contact-form/dnv-technical-seminar-hovik/", "title": "DNV fagseminar Høvik", "checked": "2026-10-06"},
+     {"url": "https://www.dnv.no/events/norges-energiomstilling-lansering-av-energy-transition-outlook-norway/", "title": "Norges energiomstilling: Lansering av Energy Transition Outlook Norway", "checked": "2026-10-06"},
+     {"url": "https://www.dnv.no/events/cybersikkerhet-for-energisektoren/", "title": "Seminar: Cybersikkerhet for energisektoren", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "Vipps MobilePay",
+   "website": "https://vippsmobilepay.com/en-NO/events",
+   "domain": "vippsmobilepay.com",
+   "segment": "bedrift",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Betalingsselskap. Eventsiden omtaler Pay & Play 2026 for kunder og partnere i Norden, med Oslo-arrangement i egne lokaler i Robert Levins gate 5.",
+   "why": "Kundearrangement med breakout-sesjoner og middag i eget hus. Kan ha vokst ut av lokalene, men det er ikke dokumentert og de er lukket for kunder.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Oslo-siden beskriver Pay & Play torsdag 18. september kl. 13.00-18.30 hos Vipps, Robert Levins gate 5, for kunder, partnere og kolleger, med breakout-sesjoner og middag. Årstall står ikke på siden. Eventsiden omtaler Pay & Play 2026.",
+     "types": ["konferanse", "mingle"],
+     "frequency": "Årlig Pay & Play (eventsiden omtaler 2025 og 2026)",
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["Vipps, Robert Levins gate 5, Oslo"],
+     "months": [],
+     "open_closed": "lukket",
+     "next_dates": [],
+     "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Marketing"],
+   "sources": [
+     {"url": "https://vippsmobilepay.com/en-NO/events", "title": "Vipps MobilePay Events", "checked": "2026-10-06"},
+     {"url": "https://www.vippsmobilepay.com/en-NO/oslo", "title": "Oslo event | Vipps MobilePay", "checked": "2026-10-06"},
+     {"url": "https://vippsmobilepay.com/en-NO/pay-and-play", "title": "Event - Pay & Play", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "Telenor IoT",
+   "website": "https://iot.telenor.com",
+   "domain": "iot.telenor.com",
+   "segment": "bedrift",
+   "place": "Fornebu",
+   "geo": "oslo",
+   "size": null,
+   "about": "Telenors IoT-virksomhet. Arrangerer IoT Think Tank for kunder og partnere, 7.-8. mai 2026 på Fornebu, Oslo.",
+   "why": "Lukket kundearrangement som ble fulltegnet; lav relevans for åpen utleie, men viser at de arrangerer to dager på Fornebu.",
+   "event_signal": {
+     "documented": true,
+     "summary": "IoT Think Tank 2026 (7.-8. mai, Fornebu, Oslo) beskrives som en eksklusiv samling for kunder og nære kontakter, den årlige samlingen for Telenor IoT-kunder og partnere. Arrangementet er fulltegnet.",
+     "types": ["konferanse"],
+     "frequency": "Beskrives som årlig",
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": [],
+     "months": ["mai"],
+     "open_closed": "lukket",
+     "next_dates": [],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Marketing"],
+   "sources": [
+     {"url": "https://iot.telenor.com/event/iot-think-tank-2026/", "title": "IoT Think Tank 2026 | Telenor IoT", "checked": "2026-10-06"}
+   ]
+  },
+  {
+   "name": "Schibsted (Schibsted for Business)",
+   "website": "https://schibstedforbusiness.com/no/en/",
+   "domain": "schibstedforbusiness.com",
+   "segment": "bedrift",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Schibsteds annonse- og forretningsside for merkene VG, Aftenposten, E24, FINN m.fl. Arrangerer inviterte kundedager i Akersgata 55, Oslo.",
+   "why": "Kundedag i eget hus med middag og sosialt program, kun på invitasjon. Lite behov for ekstern leie, men viser stor arrangementsevne.",
+   "event_signal": {
+     "documented": true,
+     "summary": "Schibsted: All Access 7. oktober 2025 kl. 09.00-16.00 i Akersgata 55 med middag og sosialt program; invitasjonen er privat og begrenset. Ingen 2026-utgave funnet.",
+     "types": ["konferanse", "mingle"],
+     "frequency": null,
+     "typical_attendance": null,
+     "attendance_source": null,
+     "venues": ["Akersgata 55, Oslo"],
+     "months": [],
+     "open_closed": "lukket",
+     "next_dates": [],
+     "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": ["Events", "Marketing"],
+   "sources": [
+     {"url": "https://schibstedforbusiness.com/no/en/", "title": "Advertising in Schibsted - Schibsted for Business", "checked": "2026-10-06"},
+     {"url": "https://schibstedforbusiness.com/no/en/schibsted-all-access/", "title": "SCHIBSTED : ALL ACCESS", "checked": "2026-10-06"}
+   ]
+  }
+ ],
+ "rejected": [
+  {"name": "Storebrand", "reason": "Storebrand-konferansen 2026 (10. juni) er digital og gratis; ingen fysiske arrangementer dokumentert på sidene jeg leste."},
+  {"name": "Nordea Norge", "reason": "Kunnskapskvelder kun sett via tredjepartssider (Delta, Norsk Tollerforbund); egen nettside ikke åpnet."},
+  {"name": "BAHR", "reason": "Medarrangør av voldgiftsseminar (omtalt på wr.no), men BAHRs eget nettsted ikke åpnet."},
+  {"name": "Advokatfirmaet Føyen", "reason": "Verifisert (FøyenFrokost 29. okt 2025, Dronning Eufemias gate 8), men utelatt for å holde maks 22; kun eldre 2025-event."},
+  {"name": "CMS Kluge", "reason": "Verifisert (frokostseminarer med DFØ, 7. okt 2025, Bryggegata 6), men utelatt for å holde maks 22; Oslo-event er fra 2025."},
+  {"name": "BÅ Advokatfirma", "reason": "Verifisert (frokostseminar 7. mai 2026, Hospitalgata 6), men utelatt for å holde maks 22."},
+  {"name": "Oslo Economics", "reason": "Verifisert (omtaler W@Competition Nordics Conference i Oslo og seminar med UiO), men uten dato/venue; utelatt for å holde maks 22."},
+  {"name": "Menon Economics", "reason": "Forside og nyheter åpnet; ingen arrangementer dokumentert."},
+  {"name": "Vista Analyse", "reason": "Forside åpnet; ingen arrangementer dokumentert."},
+  {"name": "KLP", "reason": "Forside åpnet; ingen arrangementer dokumentert."},
+  {"name": "Gjensidige, Fremtind, Folketrygdfondet", "reason": "Ikke funnet egen eventside i denne økten."},
+  {"name": "Kongsberg (Leverandørkonferansen)", "reason": "Arrangeres på Magazinet Kongsberg, ikke Oslo/Akershus."},
+  {"name": "Finago, Atea, NTT DATA Business Solutions, Tieto", "reason": "Dokumenterte kundeeventer (f.eks. Finago CloudCamp 15. okt 2026, Clarion The Hub, rundt 800 deltakere i fjor), men tilhører segment saas/tech."},
+  {"name": "Pareto, Finansavisen (Investordagen), Europower m.fl.", "reason": "Hovedsakelig mediehus/konferansearrangører eller kun sett via tredjepartssider; ikke åpnet egen side."},
+  {"name": "Forbehold: verktøy", "reason": "WebFetch ble blokkert (ingen tillatelse); alle sider er lest via Exa. Mange arrangementssider er lest som søketreff-utdrag, hovedsider åpnet separat for de fleste; PwC, Equinor og Finans Norge sine arrangementssider er åpnet direkte."}
+ ]
+}

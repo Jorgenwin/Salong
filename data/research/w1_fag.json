@@ -1,0 +1,1252 @@
+{
+ "agent": "w1_fag",
+ "segments": [
+  "fag"
+ ],
+ "accounts": [
+  {
+   "name": "Advokatforeningen",
+   "website": "https://www.advokatforeningen.no/",
+   "domain": "advokatforeningen.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Profesjons- og interesseorganisasjon for advokater og advokatfullmektiger i Norge, med mål om høy faglig standard og god yrkesetikk.",
+   "why": "Fagseminarer for en samlet yrkesgruppe. Antihvitvaskingsdagen 2027 er allerede lagt til et eksternt konferansesenter, så konkurrerende booking er aktuell. Kretser og faggrupper kan arrangere egne møter.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Nyhetssak 28.09.2026: Advokatforeningen arrangerer Antihvitvaskingsdagen 18. januar 2027 på Stortingsgata kurs og konferansesenter i Oslo; påmelding åpen, program kommer. Siden sier arrangementet gjentas ('gjentar suksessen').",
+    "types": [
+     "fagdag",
+     "seminar"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Stortingsgata kurs og konferansesenter"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2027-01-18",
+      "title": "Antihvitvaskingsdagen 2027",
+      "venue": "Stortingsgata kurs og konferansesenter, Oslo",
+      "url": "https://www.advokatforeningen.no/aktuelt/nyheter/2026/september/velkommen-til-advokatforeningens-antihvitvaskingsdag/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Kurs og konferanser",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.advokatforeningen.no/",
+     "title": "Advokatforeningen, forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.advokatforeningen.no/aktuelt/nyheter/2026/september/velkommen-til-advokatforeningens-antihvitvaskingsdag/",
+     "title": "Velkommen til Advokatforeningens antihvitvaskingsdag",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Samfunnsøkonomene",
+   "website": "https://samfunnsokonomene.no/",
+   "domain": "samfunnsokonomene.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Fagforening eksklusivt for samfunnsøkonomer (mastergrad i samfunnsøkonomi eller student), med adresse i Akersgata 51, Oslo.",
+   "why": "Flere Oslo-arrangementer i høst og vinter, men bruker eksterne lokaler (Polyteknisk forening, Oslo Militære Samfund, Thon Hotel Bristol). Et fagseminar med 9 innledere tyder på behov for sal med scene.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Kurs- og konferanseoversikten viser flere Oslo-arrangementer: Dybdesamtale om statsbudsjettet (15. okt, Polyteknisk forening, gratis for medlemmer, 239 kr for ikke-medlem), kurs for tillitsvalgte 11. nov (Thon Hotel Bristol), Valutaseminar 28. jan (Oslo Militære Samfund) og forskermøte 23. nov (Kristiansand). Dybdesamtalen omtales som 'årlig'.",
+    "types": [
+     "seminar",
+     "konferanse",
+     "kurs",
+     "debatt"
+    ],
+    "frequency": "Dybdesamtalen om statsbudsjettet beskrives som årlig",
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Polyteknisk forening",
+     "Oslo Militære Samfund",
+     "Thon Hotel Bristol"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [
+     {
+      "date": "2026-10-15",
+      "title": "Dybdesamtale om statsbudsjettet 2027",
+      "venue": "Polyteknisk forening, Rosenkrantz' gate 7, Oslo",
+      "url": "https://samfunnsokonomene.no/kurs-og-konferanser/dybdesamtale-om-statsbudsjettet-2027/"
+     },
+     {
+      "date": "2026-11-11",
+      "title": "Kurs i ansettelsesprosesser for tillitsvalgt i stat og kommune",
+      "venue": "Thon Hotel Bristol, Oslo",
+      "url": "https://samfunnsokonomene.no/kurs-og-konferanser/kurs-i-ansettelsesprosesser-for-deg-som-er-tillitsvalgt-i-stat-og-kommune/"
+     },
+     {
+      "date": "2027-01-28",
+      "title": "Samfunnsøkonomenes valutaseminar 2027",
+      "venue": "Oslo Militære Samfund, Myntgata 3, Oslo",
+      "url": "https://samfunnsokonomene.no/kurs-og-konferanser/samfunnsokonomenes-valutaseminar-2027/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Kurs og konferanser"
+   ],
+   "sources": [
+    {
+     "url": "https://samfunnsokonomene.no/",
+     "title": "Samfunnsøkonomene, forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://samfunnsokonomene.no/kurs-og-konferanser/samfunnsokonomenes-valutaseminar-2027/",
+     "title": "Samfunnsøkonomenes valutaseminar 2027",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://samfunnsokonomene.no/kurs-og-konferanser/dybdesamtale-om-statsbudsjettet-2027/",
+     "title": "Dybdesamtale om statsbudsjettet 2027",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Akademikerne",
+   "website": "https://akademikerne.no/",
+   "domain": "akademikerne.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": "L",
+   "about": "Hovedorganisasjon for folk med høyere utdanning. 13 medlemsforeninger med til sammen nesten 300 000 medlemmer.",
+   "why": "Hovedorganisasjon som oppgir at den arrangerer kurs, konferanser og seminarer for tillitsvalgte, medlemmer og opinion. Høstkonferansen holdes i dag i et eksternt lokale (Edderkoppen).",
+   "event_signal": {
+    "documented": true,
+    "summary": "Kurs- og konferanseside: Akademikerne arrangerer kurs, konferanser og seminarer for tillitsvalgte, medlemmer, samfunnsaktører og opinion. Høstkonferansen 22. okt kl. 08-12 i Edderkoppen, St Olavs plass 1, Oslo (tema omstilling). Datoens år er ikke oppgitt på selve linjen, men siden omtaler høsten 2026 for øvrige kurs.",
+    "types": [
+     "konferanse",
+     "seminar",
+     "kurs"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Edderkoppen, St Olavs plass 1"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [
+     {
+      "date": "2026-10-22",
+      "title": "Akademikernes høstkonferanse (tema: omstilling)",
+      "venue": "Edderkoppen, St Olavs plass 1, Oslo",
+      "url": "https://akademikerne.no/kurs-og-konferanser/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://akademikerne.no/",
+     "title": "Akademikerne, forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://akademikerne.no/kurs-og-konferanser/",
+     "title": "Kurs og konferanser | Akademikerne",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Norsk Sykepleierforbund (NSF)",
+   "website": "https://www.nsf.no/",
+   "domain": "nsf.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Organiserer sykepleierstudenter, sykepleiere og jordmødre. Hovedkontor i Tollbugata 22, Oslo.",
+   "why": "Mye kurs for tillitsvalgte i eget hus og på hoteller. Lederkonferansen 4.-5. nov. er lagt til Gardermoen, så en Oslo-sentrum-sal kan være et alternativ for fremtidige konferanser.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forsiden lister 'Kurs og konferanser': NSFs lederkonferanse 04.-05.11.26 på Thon Hotel Oslo Airport. Kursoversikten viser mange kurs i Oslo-området (Sykepleiernes Hus, Scandic Sjølyst, Scandic Lillestrøm) og i andre fylker.",
+    "types": [
+     "konferanse",
+     "kurs"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Thon Hotel Oslo Airport",
+     "Sykepleiernes Hus",
+     "Scandic Sjølyst",
+     "Scandic Lillestrøm"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-11-04",
+      "title": "NSFs lederkonferanse 2026 (04.-05.11.)",
+      "venue": "Thon Hotel Oslo Airport",
+      "url": "https://www.nsf.no/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Kurs og konferanser"
+   ],
+   "sources": [
+    {
+     "url": "https://www.nsf.no/",
+     "title": "Norsk Sykepleierforbund - NSF",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.nsf.no/kurs-og-konferanser",
+     "title": "Kurs og arrangementer, NSF",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Norsk Journalistlag (NJ)",
+   "website": "https://www.nj.no/",
+   "domain": "nj.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Fagforening for journalister; tilbyr medlemmer blant annet kurs, konferanser, stipender og juridisk hjelp. Kontor i Brugata 19, Oslo.",
+   "why": "Har brukt Litteraturhuset før (NJ Frilans årsmøte 2025), så kjent med huset. Har lokallag og frilansgruppe med egne årsmøter og seminarer i Oslo.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Aktivitetslisten på forsiden viser 6. okt. 2026 i Oslo 'Frilanser-kurs: Hvordan skrive søknader som virker' og 'Årsmøte for NJ Oslo' (oppføringene er ikke tydelig adskilt), samt arbeidsmiljøkurs 12.-15. okt (RS Noatun, Horten). Aktivitetssiden for NJ Frilans: årsmøte 17. okt 2025 på Litteraturhuset i Oslo, med lansering av Frilansundersøkelsen og seminardel fra kl. 10 til 15.",
+    "types": [
+     "årsmøte",
+     "seminar",
+     "kurs",
+     "lansering"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Litteraturhuset (NJ Frilans årsmøte 2025)"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-06",
+      "title": "Frilanser-kurs: Hvordan skrive søknader som virker / Årsmøte for NJ Oslo (som oppført i aktivitetslisten)",
+      "venue": "Oslo",
+      "url": "https://www.nj.no/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications",
+    "NJ Frilans"
+   ],
+   "sources": [
+    {
+     "url": "https://www.nj.no/",
+     "title": "Norsk Journalistlag, forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.nj.no/aktiviteter/arsmotet-i-nj-frilans/",
+     "title": "Årsmøtet i NJ Frilans - Norsk Journalistlag",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Norske arkitekters landsforbund (NAL)",
+   "website": "https://www.arkitektforbundet.no/",
+   "domain": "arkitektforbundet.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Fagideell medlemsorganisasjon for arkitekter i Norge som arbeider for god arkitektur og arkitekters felles interesser. nal.no videresender til arkitektforbundet.no.",
+   "why": "Tett kalender med fagdager, frokostmøter og medlemsarrangementer, også via lokale arkitektforeninger. Oslo arkitektforening bruker Arkitektenes hus, så dagsarrangementer med ekstern sal er mer aktuelt.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forsiden viser en kurskalender med bl.a. fagdag (Oslo arkitektforening, 7. okt, markert UTSATT), fredagsbar på Arkitektenes hus 9. okt, frokostmøte, befaring og NAL-kurs. Arrangør oppgis ofte som lokal arkitektforening (Oslo, Stavanger, Møre og Romsdal).",
+    "types": [
+     "fagdag",
+     "kurs",
+     "mingel",
+     "seminar"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Arkitektenes hus"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-09",
+      "title": "Fredagsbar på Arkitektenes hus (Oslo arkitektforening)",
+      "venue": "Arkitektenes hus, Oslo",
+      "url": "https://www.arkitektforbundet.no/Kurs/f13ed889-8e4a-497d-803d-d58126018a1f"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Kurs og arrangementer",
+    "Oslo arkitektforening"
+   ],
+   "sources": [
+    {
+     "url": "https://www.nal.no/",
+     "title": "Norske arkitekters landsforbund (arkitektforbundet.no), forside",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Tekna – Teknisk-naturvitenskapelig forening",
+   "website": "https://www.tekna.no/",
+   "domain": "tekna.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": "L",
+   "about": "Fagforening for over 120 000 naturvitere, teknologer og studenter. Besøksadresse Dronning Mauds gate 15, Oslo.",
+   "why": "Svært eventaktiv: kompetanseside oppgir over 100 til over 150 kurs og konferanser i året, og to konferanser står nå i Oslo på Radisson Blu Scandinavia. Mulig volumkunde for Oslo-sal.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Teknas kompetanseside oppgir 'over 150' (og praktisk-siden 'over 100') kurs og konferanser i året. Lederkonferansen 5. nov. 2026 på Radisson Blu Scandinavia Hotel, Oslo; CO2-konferansen 20.-21. jan (2026-program) samme hotell. Tekna tar imot utstillere. Åpent også for ikke-medlemmer.",
+    "types": [
+     "konferanse",
+     "kurs",
+     "fagdag"
+    ],
+    "frequency": "Over 100 kurs og konferanser i året (kilden oppgir både 100+ og 150+)",
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Radisson Blu Scandinavia Hotel, Oslo"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [
+     {
+      "date": "2026-11-05",
+      "title": "Teknas Lederkonferanse 2026",
+      "venue": "Radisson Blu Scandinavia Hotel, Oslo",
+      "url": "https://www.tekna.no/lederkonferansen/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Kurs og konferanser"
+   ],
+   "sources": [
+    {
+     "url": "https://www.tekna.no/",
+     "title": "Tekna, forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.tekna.no/kompetanse/",
+     "title": "Bygg kompetanse med kurs og konferanser i Tekna",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.tekna.no/lederkonferansen/",
+     "title": "Teknas Lederkonferanse 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.tekna.no/co2-konferansen/",
+     "title": "Teknas CO2 konferanse 2026",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "NITO – Norges Ingeniør- og teknologorganisasjon",
+   "website": "https://www.nito.no/",
+   "domain": "nito.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": "L",
+   "about": "Norges største organisasjon for ingeniører og teknologer; over 120 000 medlemmer og 1 900 arbeidssteder. Besøksadresse Støperigata 1, Oslo.",
+   "why": "Stor medlemsbase og lokalavdelinger som arrangerer kurs og seminarer. Aktivitetssiden jeg leste var en bufret versjon fra juni, så aktuelle datoer må sjekkes direkte.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Kurs og aktiviteter-siden sier NITO arrangerer kurs, seminarer og sosiale aktiviteter over hele landet og på nett; eksempler inkluderer Koordinatorskolen i Oslo sentrum (11.-13. aug) og kurs for tillitsvalgte. Siden var bufret (juni-data), derfor ingen kommende datoer oppgitt.",
+    "types": [
+     "kurs",
+     "seminar",
+     "mingel"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Kurs og aktiviteter"
+   ],
+   "sources": [
+    {
+     "url": "https://www.nito.no/",
+     "title": "NITO, forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.nito.no/kurs-og-aktiviteter/",
+     "title": "Kurs og aktiviteter, NITO",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Dataforeningen",
+   "website": "https://dataforeningen.no/",
+   "domain": "dataforeningen.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Fagforening for IT-fagfolk med regionale foreninger; adresse Grev Wedels plass 9, Oslo.",
+   "why": "Regionale foreninger holder egne årsmøter og konferanser. Hovedkonferansen Betalingsformidling holdes i Trondheim, men Sør-Øst-foreningen kan være aktuell for Oslo.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forside og arrangementsside lister kommende arrangementer, bl.a. årsmøter (Sør-Øst, Midt-Nord), Mastering the Requirement Process-kurs og lunsjwebinar (AI Sør Øst). Betalingsformidling 2026 var 10.-11. mars 2026 på Radisson Blu Royal Garden, Trondheim.",
+    "types": [
+     "konferanse",
+     "årsmøte",
+     "kurs"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Radisson Blu Royal Garden, Trondheim (Betalingsformidling 2026)"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Regional association Sør-Øst",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.dnd.no/",
+     "title": "Dataforeningen, forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.dnd.no/arrangementer",
+     "title": "Arrangementer, Dataforeningen",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://dataforeningen.no/arrangementer/trondheim/konferanse/betalingsformidling-2026",
+     "title": "Betalingsformidling 2026",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Norsk Redaktørforening",
+   "website": "https://www.nored.no/",
+   "domain": "nored.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": "S",
+   "about": "Faglig interesseorganisasjon med 820 medlemmer fra redaktørstyrte medier. Underavdelinger inkluderer Oslo Redaktørforening.",
+   "why": "Oslo Redaktørforening har årsmøte med prisutdeling hvert år i mars, tidligere på Byens Tak. Liten medlemsbase, men et fast, prestisjepreget arrangement i Oslo.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forsiden viser aktiviteter (Slik møter vi klager, digitalt; Medieleder 2026, Hotel Britannia, Trondheim). Nyhetssak på redaktor.no: Årets redaktører i Oslo og Akershus 2026 deles ut på Oslo Redaktørforenings årsmøte mandag 9. mars; 2024-utgaven ble holdt på Byens Tak.",
+    "types": [
+     "årsmøte",
+     "konferanse",
+     "seminar"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Byens Tak (2024)",
+     "Hotel Britannia, Trondheim (Medieleder 2026)"
+    ],
+    "months": [
+     "mars (Oslo Redaktørforenings årsmøte, 2024-2026)"
+    ],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.nored.no/",
+     "title": "Forside | Norsk Redaktørforening",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.redaktor.no/nyheter/arets-redaktorer-i-oslo-og-akershus-2026-her-er-de-nominerte",
+     "title": "Årets redaktører i Oslo og Akershus 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.redaktor.no/nyheter/her-er-aarets-redaktoerer-i-oslo-og-akerhus-2024",
+     "title": "Her er årets redaktører i Oslo og Akerhus 2024",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Den norske legeforening (Legeforeningen)",
+   "website": "https://www.legeforeningen.no/",
+   "domain": "legeforeningen.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Profesjons- og fagorganisasjon for leger med mange fagmedisinske foreninger og yngre legers forening. Arrangerer kurs og kongresser.",
+   "why": "Svært mange fagmedisinske foreninger med egne årsmøter og kongresser. Organisasjonen har Legenes Hus, men bruker også eksterne lokaler (Scandic). Reelt mange enkeltkjøpere.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Kurskatalogen og foreningsledd-sidene viser daterte arrangementer i Oslo: Oslokongressen 'Dermatologi i allmennpraksis' 1.-2. juni 2026 (Scandic Helsfyr), Nevrodagene 10.-12. mars 2026 (Legenes Hus), Ylfs vårkurs og årsmøte 21.-24. april 2026 (Scandic Holmenkollen Park), NFKNF vårmøte 5.-6. mars 2026 (Legenes Hus). Alle er avholdt; ingen kommende datoer bekreftet.",
+    "types": [
+     "kurs",
+     "årsmøte",
+     "fagdag",
+     "konferanse"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Legenes Hus",
+     "Scandic Helsfyr",
+     "Scandic Holmenkollen Park"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Kurs og kongresser"
+   ],
+   "sources": [
+    {
+     "url": "https://www.legeforeningen.no/",
+     "title": "Legeforeningen, forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.legeforeningen.no/kurs/2026/2/37431/",
+     "title": "Dermatologi i allmennpraksis. Oslokongressen 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.legeforeningen.no/foreningsledd/fagmed/norsk-nevrologisk-forening/arrangementer/nevrodagene/nevrodager-informasjon/",
+     "title": "Om nevrodagene",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.legeforeningen.no/foreningsledd/yf/yngre-legers-forening/nyheter/varkurs-for-ylfs-tillitsvalgte-og-ylfs-arsmote/",
+     "title": "Vårkurs for Ylfs tillitsvalgte og Ylfs årsmøte",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Juristforbundet",
+   "website": "https://www.juristforbundet.no/",
+   "domain": "juristforbundet.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Fagforening for jurister, med faggrupper som Arbeidslivsjuristene og studentaktiviteter.",
+   "why": "Landsmøtet og tariffkonferansen holdes på Oslo-hoteller. Faggrupper (Arbeidslivsjuristene, studenter) arrangerer egne møter og sosiale kvelder, noe som tyder på flere mindre arrangementer.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Landsmøte 2026 på Soria Moria Hotell, Oslo 13.-14. nov 2026. Tariffkonferansen 2026 12.-13. mars på Thon Hotel Bristol, Oslo. Forsiden nevner årsmøte i Arbeidslivsjuristene og studentarrangementer (dato ikke lest).",
+    "types": [
+     "årsmøte",
+     "konferanse",
+     "kurs",
+     "mingel"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Soria Moria Hotell, Oslo",
+     "Thon Hotel Bristol, Oslo"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-11-13",
+      "title": "Juristforbundets landsmøte 2026 (13.-14. nov.)",
+      "venue": "Soria Moria Hotell, Oslo",
+      "url": "https://www.juristforbundet.no/om-oss/Landsmotet/landsmotet-2026/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Kurs og konferanser"
+   ],
+   "sources": [
+    {
+     "url": "https://www.juristforbundet.no/",
+     "title": "Forsiden | Juristforbundet",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.juristforbundet.no/om-oss/Landsmotet/landsmotet-2026/",
+     "title": "Landsmøte 2026 | Juristforbundet",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.juristforbundet.no/kurs/tillitsvalgtskurs/2026/d89c60b7-65b6-478c-a6fa-a4e22b04ec57/",
+     "title": "Tariffkonferansen 2026 | Juristforbundet",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Revisorforeningen (tidligere DnR)",
+   "website": "https://www.revisorforeningen.no/",
+   "domain": "revisorforeningen.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Bransje- og fagforening for revisorer, regnskapsførere og andre økonomer, med kurs og eKurs og styre med 12 medlemmer pluss leder.",
+   "why": "Faglig kurs- og konferansevirksomhet med betalende deltakere (revisorer, regnskapsførere). DnR-konferansen holdes på Gardermoen; Oslo-sentrum-sal kan være aktuelt for dagsseminarer.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Kurssiden: DnR-konferansen 2026 1.-2. sept på Clarion Hotel & Congress Oslo Airport, Gardermoen (åpen for medlemmer og andre, utstillere inviteres). IFRS-dagen 2026 14. sept er digital. Konferansen har pris for medlem og andre.",
+    "types": [
+     "konferanse",
+     "kurs"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Clarion Hotel & Congress Oslo Airport, Gardermoen"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Kurs"
+   ],
+   "sources": [
+    {
+     "url": "https://www.revisorforeningen.no/",
+     "title": "Revisorforeningen, forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.revisorforeningen.no/kurs/kursliste/dnr-konferansen-2026/",
+     "title": "DnR-konferansen 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.revisorforeningen.no/kurs/",
+     "title": "Kurs og eKurs, Revisorforeningen",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Den norske tannlegeforening (NTF)",
+   "website": "https://www.tannlegeforeningen.no/",
+   "domain": "tannlegeforeningen.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Profesjons- og fagforening for landets tannleger. Adresse Christiania Torv 5, Oslo.",
+   "why": "Årlig landsmøte og etterutdanning gir faste arrangementer, men 2026-landsmøtet er i Stavanger. Oslo-aktivitet bør verifiseres (kursoversikt, lokalforeninger).",
+   "event_signal": {
+    "documented": true,
+    "summary": "Kurssiden: NTFs landsmøte og Nordental 29.-31. okt 2026 på Forum Expo/Stavanger Forum; landsmøtet teller 15 timer i obligatorisk etterutdanning. Tannlegeforeningen har også en kursoversikt med påmelding.",
+    "types": [
+     "konferanse",
+     "kurs"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Stavanger Forum / Forum Expo"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-29",
+      "title": "NTFs landsmøte og Nordental 2026 (29.-31. okt.)",
+      "venue": "Forum Expo, Stavanger",
+      "url": "https://www.tannlegeforeningen.no/kurs-og-etterutdanning/ntfs-landsmote.html"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Kurs og etterutdanning"
+   ],
+   "sources": [
+    {
+     "url": "https://www.tannlegeforeningen.no/",
+     "title": "Tannlegeforeningen, forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.tannlegeforeningen.no/kurs-og-etterutdanning/ntfs-landsmote.html",
+     "title": "NTFs landsmøte",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Kommunikasjonsforeningen",
+   "website": "https://www.kommunikasjon.no/",
+   "domain": "kommunikasjon.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Landets eneste interesseorganisasjon for kommunikasjonsfolk; medlemskap koster 188 kr per måned og tilbyr kurs og arrangementer.",
+   "why": "Høstseminaret med heldagsprogram og åpen for ikke-medlemmer holdes i Drammen. Tydelig målgruppe i Oslo/Akershus (stillingsannonser fra Oslo), så Oslo-arrangement er plausibelt.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Kurs- og arrangementssiden: Høstseminaret 2026 onsdag 21. okt. kl. 09:30-17:00 på Quality River Station hotell, Drammen; 5 990 kr for medlem og 8 990 kr for ikke-medlem; 'åpent for alle'. Kun få ledige plasser.",
+    "types": [
+     "fagdag",
+     "seminar",
+     "kurs"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Quality River Station hotell, Drammen"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [
+     {
+      "date": "2026-10-21",
+      "title": "Høstseminaret 2026",
+      "venue": "Quality River Station hotell, Drammen",
+      "url": "https://www.kommunikasjon.no/kurs-og-arrangementer/hostseminaret"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Kurs og arrangementer"
+   ],
+   "sources": [
+    {
+     "url": "https://www.kommunikasjonsforeningen.no/",
+     "title": "Kommunikasjonsforeningen, forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.kommunikasjon.no/kurs-og-arrangementer/hostseminaret",
+     "title": "Høstseminaret 2026 - Kommunikasjonsforeningen",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Eiendom Norge",
+   "website": "https://www.eiendomnorge.no/",
+   "domain": "eiendomnorge.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Bransjeorganisasjon for eiendomsmeglingsbransjen; publiserer boligprisstatistikk og arrangerer konferanser og kurs. Adresse Grev Wedels plass 5, Oslo.",
+   "why": "Flaggskipkonferanse i Oslo med politikere og toppfolk fra finans, holdt på museum. Konkret for en Oslo-sal, men kilden bekrefter ikke at den gjentas årlig.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Nyhetssak 10.04.2026 og NTB-presseinvitasjon: Eiendom Norge konferansen 2026 tirsdag 21. april kl. 0830-1500 på Munchmuseet i Oslo ('Norges største boligkonferanse'), med program fra Norges Bank, Prognosesenteret, Nordea m.fl. Regjeringen.no bekrefter at en statsråd deltar. Gjentakelse ikke bekreftet av kilden.",
+    "types": [
+     "konferanse"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Munchmuseet, Oslo"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.eiendomnorge.no/",
+     "title": "Eiendom Norge, forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://eiendomnorge.no/nyheter/eiendom-norge-konferansen-2026-article3040-919.html",
+     "title": "Eiendom Norge konferansen 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://kommunikasjon.ntb.no/pressemelding/18865319/presseinvitasjon-eiendom-norge-konferansen-2026?lang=no&publisherId=17847466",
+     "title": "Presseinvitasjon: Eiendom Norge konferansen 2026",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Econa",
+   "website": "https://www.econa.no/",
+   "domain": "econa.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": "L",
+   "about": "Fagforening og faglig forening for over 34 000 studenter og arbeidstakere med mastergrad i økonomisk-administrative fag. Kontor i Kongens gate 6, Oslo.",
+   "why": "Mange arrangementer i Oslo-området; lokalavdeling Oslo/Akershus med 11 fagnettverk som holder medlemsmøter. Bruker i dag hoteller og Kløfta; fagnettverk kan gi hyppige mindre bookinger.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Kurs og arrangementer 2026: Tillitsvalgtkonferansen 2.-3. nov på Lily Country Club, Kløfta; Studentkonferansen 19.-20. sept på Quality Hotel Hasle Linie, Oslo; Grunnkurs for nye tillitsvalgte 12.-13. feb på Hotel Bristol, Oslo. Lokalavdeling Oslo og Akershus oppgir 11 fagnettverk som holder medlemsmøter.",
+    "types": [
+     "konferanse",
+     "kurs",
+     "fagdag",
+     "mingel"
+    ],
+    "frequency": "Tillitsvalgtkonferansen omtales som årlig",
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Lily Country Club, Kløfta",
+     "Quality Hotel Hasle Linie, Oslo",
+     "Hotel Bristol, Oslo"
+    ],
+    "months": [],
+    "open_closed": "lukket",
+    "next_dates": [
+     {
+      "date": "2026-11-02",
+      "title": "Tillitsvalgtkonferansen 2026",
+      "venue": "Lily Country Club, Kløfta",
+      "url": "https://www.econa.no/faglig-oppdatering/kurs-og-arrangementer/2026/tillitsvalgtkonferansen-2026/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Kurs og arrangementer",
+    "Econa Oslo og Akershus"
+   ],
+   "sources": [
+    {
+     "url": "https://www.sivilokonom.no/",
+     "title": "Econa, forside (sivilokonom.no)",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.econa.no/faglig-oppdatering/kurs-og-arrangementer/2026/tillitsvalgtkonferansen-2026/",
+     "title": "Tillitsvalgtkonferansen 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.econa.no/faglig-oppdatering/kurs-og-arrangementer/2026/studentkonferansen-2026/",
+     "title": "Studentkonferansen 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.econa.no/om-econa/lokalavdelinger/oslo-og-akershus/",
+     "title": "Econa Oslo og Akershus",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Politiets Fellesforbund",
+   "website": "https://www.pf.no/",
+   "domain": "pf.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": "L",
+   "about": "Største fagforening i politiet med 17 000 medlemmer. Kontor i Gjerdrums vei 4, Oslo.",
+   "why": "Fagdager og samlinger gjennom året, og landsmøte/kongress annethvert år. Fagdagen i oktober er foreløpig uten venue; i fjor holdt på hotell ved Gardermoen.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Kalender og kursoversikt: 'Gjennom året arrangerer vi ulike fagdager'. Fagdag om psykisk helse 10. okt 2025 kl. 10-15 på Radisson RED Oslo Airport, Gardermoen; ny fagdag 9. okt 2026 (verdensdagen for psykisk helse), mer informasjon kommer. Landsmøte annethvert år, kongress det andre året.",
+    "types": [
+     "fagdag",
+     "kurs",
+     "konferanse"
+    ],
+    "frequency": "Fagdager 'gjennom året'; landsmøte annethvert år, kongress det andre året",
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Radisson RED Oslo Airport, Gardermoen (2025)",
+     "Gjerdrums vei 4, Oslo"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-09",
+      "title": "Fagdag: Verdensdagen for psykisk helse",
+      "venue": null,
+      "url": "https://pf.no/temaomrader/fagdag-psykisk-helse"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Kurs og konferanse"
+   ],
+   "sources": [
+    {
+     "url": "https://www.pf.no/",
+     "title": "Politiets Fellesforbund, forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://pf.no/temaomrader/fagdag-psykisk-helse",
+     "title": "Fagdag: psykisk helse | Politiets Fellesforbund",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://pf.no/temaomrader/kalender",
+     "title": "Kurs- og møtekalender | Politiets Fellesforbund",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://pf.no/kurs-og-konferanse",
+     "title": "Kurs og konferanse | Politiets Fellesforbund",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Fornybar Norge (tidligere Energi Norge)",
+   "website": "https://www.fornybarnorge.no/",
+   "domain": "fornybarnorge.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Bransjeorganisasjon for fornybarnæringen og kraftsektoren, med kalender over kurs, webinarer og konferanser. energinorge.no viser Fornybar Norge.",
+   "why": "Årskonferansen går utenfor Oslo, men organisasjonen holder jevnlig Oslo-arrangementer (bl.a. Næringslivets Hus). Politisk interessant tema, med mange aktører i salen.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Årskonferansen 2026 16.-17. april på Radisson Blu Caledonien Hotel, Kristiansand (pris 7 500 eks mva for medlem, 9 500 for ikke-medlem; utstillere). Kalender på forsiden: 'Kjernekraft: Hva mener energiselskapene?' 7. april på Næringslivets Hus, Oslo, og webinar 9. april. Siden var en bufret versjon fra våren 2026.",
+    "types": [
+     "konferanse",
+     "seminar",
+     "kurs"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Radisson Blu Caledonien Hotel, Kristiansand",
+     "Næringslivets Hus, Middelthuns gate 27, Oslo"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.energinorge.no/",
+     "title": "Fornybar Norge (energinorge.no), forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.fornybarnorge.no/arrangement/2026/konferanser-2026/fornybar-norges-arskonferanse-2026/",
+     "title": "Årskonferansen 2026 - Fornybar Norge",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.fornybarnorge.no/arrangement/2026/konferanser-2026/fornybar-norges-arskonferanse-2026/praktiskeopplysninger/",
+     "title": "Praktiske opplysninger, Årskonferansen 2026",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Virke",
+   "website": "https://www.virke.no/",
+   "domain": "virke.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Hovedorganisasjon for handels- og tjenestenæringen. Adresse Henrik Ibsens gate 90, Oslo.",
+   "why": "Stor arrangør med flere formater (konferanser, kurs, Oslo-presentasjoner av handelsrapport). Virke Arena 2027 holdes på NOVA Spektrum; mindre Oslo-møter kan flyttes til eksterne saler.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Kurs, event og webinarer: Handelskonferansen 2026 24. sept 08:00-16:00 i Lillestrøm (Messeveien 8). Siden for Virke Arena sier Virke Arena 2027 holdes på NOVA Spektrum 30. september, med early bird til 5. okt. Kurs holdes jevnlig på Virkes kontor i Henrik Ibsens gate 90, Oslo. 'Handelsrapport 2026' fremlagt i samarbeid med Oslo Handelsstands Forening.",
+    "types": [
+     "konferanse",
+     "kurs",
+     "seminar",
+     "fagdag"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Messeveien 8, Lillestrøm",
+     "NOVA Spektrum",
+     "Virke, Henrik Ibsens gate 90, Oslo"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2027-09-30",
+      "title": "Virke Arena 2027 (Handelskonferansen, Ledersporet, Treningskonferansen)",
+      "venue": "NOVA Spektrum",
+      "url": "https://www.virke.no/konferanser/handelskonferansen/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Konferanser"
+   ],
+   "sources": [
+    {
+     "url": "https://www.virke.no/",
+     "title": "Virke, forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.virke.no/kurs-konferanser/",
+     "title": "Kurs, event og webinarer - Virke",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.virke.no/konferanser/handelskonferansen/",
+     "title": "Virke Arena: Handelskonferansen 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.virke.no/konferanser/virkes-handelsrapport-2026-hva-betyr-utviklingen-for-oslohandelen/",
+     "title": "Virkes Handelsrapport 2026",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "NHO Byggenæringen",
+   "website": "https://www.nhobyggenaringen.no/",
+   "domain": "nhobyggenaringen.no",
+   "segment": "fag",
+   "place": "Oslo",
+   "geo": "norge",
+   "size": null,
+   "about": "Arbeidsgiver- og næringsorganisasjon for bygge- og anleggsnæringen. Adresse Middelthuns gate 27, Oslo (Næringslivets Hus).",
+   "why": "Har flere Oslo-konferanser i året (klima, årskonferanse), men bruker Rådhuset og Næringslivets Hus. Kan være relevant for politisk rettede arrangementer og debatter.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Årskonferanse 4. juni 2026 kl. 10-14 på Næringslivets Hus, Majorstuen (generalforsamling fra 14:30). Byggenæringens klimakonferanse 5. feb 2026 kl. 09-15 på Oslo Rådhus. Arrangerer debatter og mingel på Arendalsuka 2026.",
+    "types": [
+     "konferanse",
+     "debatt",
+     "mingel",
+     "årsmøte"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Næringslivets Hus, Majorstuen",
+     "Oslo Rådhus"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.bnl.no/",
+     "title": "NHO Byggenæringen, forside",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.nhobyggenaringen.no/arrangementer/arskonferanse-nho-byggenaringen-2026/",
+     "title": "Årskonferanse NHO Byggenæringen 2026",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.nhobyggenaringen.no/arrangementssider/byggenaringens-klimakonferanse2026/program/",
+     "title": "Program, Byggenæringens klimakonferanse 2026",
+     "checked": "2026-10-06"
+    }
+   ]
+  }
+ ],
+ "rejected": [
+  {
+   "name": "Norsk Presseforbund",
+   "reason": "Dokumentert eventaktivitet (Åpenhetsseminaret, PFU-møter), men holder til i og arrangerer fra eget arrangementslokale Pressens Hus (Skippergata 24); ikke tatt med som konkurrerende venue. Åpenhetsseminaret 2026-siden kunne ikke åpnes (unknown error)."
+  },
+  {
+   "name": "Polyteknisk Forening",
+   "reason": "Medlemsforening som driver eget arrangementshus (Rosenkrantz' gate 7); regnes som konkurrerende venue."
+  },
+  {
+   "name": "Unio",
+   "reason": "Forsiden åpnet, men ingen arrangementer funnet i kildene; ikke dokumentert."
+  },
+  {
+   "name": "Spekter",
+   "reason": "Forsiden åpnet (nyheter om tariff), men ingen arrangementer funnet; ikke dokumentert."
+  },
+  {
+   "name": "FO (Fellesorganisasjonen)",
+   "reason": "Forsiden åpnet, ingen arrangementer funnet i kilden; ikke dokumentert."
+  },
+  {
+   "name": "Norsk Fysioterapeutforbund (Fysioterapeutene)",
+   "reason": "Forsiden åpnet, ingen arrangementer funnet i kilden; ikke dokumentert."
+  },
+  {
+   "name": "DOGA, Design og arkitektur Norge",
+   "reason": "Statlig kompetansemiljø (hører til offentlig sektor, ikke fag-segmentet); dessuten uklart om det utleies."
+  },
+  {
+   "name": "Creo (creo.no)",
+   "reason": "Nettsiden kunne ikke åpnes (CRAWL_TIMEOUT); ikke verifisert."
+  },
+  {
+   "name": "mbl.no",
+   "reason": "Domenet tilhører MBL Design AS (musikkprodukter), ikke Mediebedriftenes Landsforening; ikke brukt."
+  },
+  {
+   "name": "Fellesforbundet, Fagforbundet, LO, YS, Norsk Ergoterapeutforbund, Norsk Lektorlag, Den norske Dommerforening, Norske Billedkunstnere",
+   "reason": "Ikke undersøkt innen verktøybudsjettet; ikke verifisert."
+  },
+  {
+   "name": "WebFetch-verktøyet",
+   "reason": "Alle WebFetch-kall ble avbrutt (tillatelse ikke besvart); sider ble i stedet hentet via Firecrawl og Exa."
+  }
+ ]
+}

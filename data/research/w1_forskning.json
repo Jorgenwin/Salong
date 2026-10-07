@@ -1,0 +1,1001 @@
+{
+ "agent": "w1_forskning",
+ "segments": [
+  "forskning"
+ ],
+ "accounts": [
+  {
+   "name": "SINTEF",
+   "website": "https://www.sintef.no/",
+   "domain": "sintef.no",
+   "segment": "forskning",
+   "place": "Trondheim / Oslo",
+   "geo": "norge",
+   "size": "L",
+   "about": "SINTEF beskriver seg selv som et av Europas største uavhengige forskningsinstitutter og utfører flere tusen oppdrag hvert år. Forsiden viser stillinger med arbeidssted Oslo.",
+   "why": "Svært aktiv arrangør av fagdager og kurs, noen i Oslo. Mange arrangementer ligger på hoteller og andre venues; åpne Oslo-arrangementer kan være relevante for et større rom.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Egen oversikt over arrangementer, kurs, konferanser, seminar og webinar. Oslo-relaterte: Innregulering Grunnkurs (Oslo, 27.-28. okt 2026) og Norsk bygningsfysikkdag (Meet Ullevaal og digitalt, 24. nov 2026). Mange andre arrangementer er utenfor Oslo eller digitale.",
+    "types": [
+     "fagdag",
+     "konferanse",
+     "seminar",
+     "kurs"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Meet Ullevaal",
+     "Haraldrud energigjenvinningsanlegg",
+     "Radisson Blu Plaza Hotel",
+     "Britannia hotel"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-27",
+      "title": "Innregulering Grunnkurs (27.-28. okt)",
+      "venue": "Oslo",
+      "url": "https://www.sintef.no/arrangementer-og-kurs/"
+     },
+     {
+      "date": "2026-11-24",
+      "title": "Norsk bygningsfysikkdag: Slik bygger vi fuktsikkert",
+      "venue": "Meet Ullevaal og digitalt",
+      "url": "https://www.sintef.no/arrangementer-og-kurs/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.sintef.no/",
+     "title": "SINTEF - Anvendt forskning, teknologi og innovasjon",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.sintef.no/arrangementer-og-kurs/",
+     "title": "Arrangementer og kurs i SINTEF",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "CICERO Center for International Climate Research",
+   "website": "https://cicero.oslo.no/en",
+   "domain": "cicero.oslo.no",
+   "segment": "forskning",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Uavhengig klimaforskningssenter; nettstedet bruker navnet CICERO Center for International Climate Research. Adresse er ikke lest på sidene jeg åpnet (domenet er oslo.no).",
+   "why": "Klimaforskere med jevnlig formidling; en kandidat for åpne seminarer og lanseringer. Eneste lest arrangement er i Brussel, så Oslo-aktiviteten er ikke bekreftet av denne siden.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Eventsiden viser et fysisk arrangement: «Electricity markets for competitive and affordable energy in Europe», 2. november kl. 13-17 på Norway House i Brussel (år ikke oppgitt). Et søketreff nevner også «CICEROday 2024» (kun tittel lest).",
+    "types": [
+     "seminar",
+     "konferanse"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Norway House, Brussel"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Communications",
+    "Events"
+   ],
+   "sources": [
+    {
+     "url": "https://cicero.oslo.no/en/events",
+     "title": "CICERO Events",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://CICERO.oslo.no/en/cicero-presenterer-2024-ENG",
+     "title": "The CICEROday 2024 (kun søketreff-tittel)",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Stiftelsen Fritt Ord",
+   "website": "https://frittord.no/",
+   "domain": "frittord.no",
+   "segment": "forskning",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Allmennyttig privat stiftelse som arbeider for å fremme ytringsfrihet, offentlig debatt, kunst og kultur. Adresse: Uranienborgveien 2, Oslo.",
+   "why": "Hyppig debatt- og lanseringsarrangør, ofte i samarbeid med andre. Egne prosjekter omfatter «Bibliotek, leksikon og litteraturhus»: avklar eventuell tilknytning til Litteraturhuset før kontakt.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forsiden viser debatt om Iran 6. okt 2026 (med Oslo Dokumentarkino, Vega Scene), lansering av antologi om KI og mediene 8. okt 2026 kl. 13.30-16.00, og prisutdeling av Free Media Awards 29. sep 2026 i Toppsalen, Munchmuseet.",
+    "types": [
+     "debatt",
+     "lansering"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Vega Scene, Salongen",
+     "Munchmuseet, Toppsalen"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-08",
+      "title": "Lansering: KI og veien videre for mediene",
+      "venue": "ikke oppgitt på forsiden",
+      "url": "https://frittord.no/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://frittord.no/",
+     "title": "Hjem - Fritt Ord",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Transportøkonomisk institutt (TØI)",
+   "website": "https://www.toi.no/",
+   "domain": "toi.no",
+   "segment": "forskning",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Forskningsinstitutt med adresse Gaustadalleen 21, Oslo. Forsiden omtaler forskningsområder og nye studier.",
+   "why": "Inviterer til seminarer og workshops for kollektiv-, vei- og planmiljøer. Dokumentasjonen er tynn og delvis digital, men målgruppen er fagmiljøer som kan trenge møterom.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forsiden omtaler Kollektivforums arbeidsseminar (digitalt, 8. oktober) og en TØI-workshop onsdag 2. september (år og om den var fysisk er ikke oppgitt). Arrangementssiden lister bare eksterne arrangementer der TØI deltar.",
+    "types": [
+     "seminar"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Communications",
+    "Events"
+   ],
+   "sources": [
+    {
+     "url": "https://www.toi.no/",
+     "title": "Transportøkonomisk institutt - Forsiden",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.toi.no/arrangementer/",
+     "title": "Arrangementer - Transportøkonomisk institutt",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Det Norske Videnskaps-Akademi",
+   "website": "https://www.dnva.no/",
+   "domain": "dnva.no",
+   "segment": "forskning",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Frittstående, landsomfattende medlemsforening for alle vitenskapelige disipliner, stiftet 1857. Drives fra Drammensveien 78, Oslo. Står bak Abelprisen og Kavliprisen (omtalt på siden).",
+   "why": "Arrangerer foredrag, akademimøter og store prisarrangementer i Oslo, men har egne lokaler og leier ut til store hus (Oslo Konserthus). Mulig for større åpne foredrag og tverrfaglige debatter.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Arrangementsarkivet viser blant annet Kavliprisutdeling i Oslo Konserthus 1. sep 2026, Kavliprisforelesninger 31. aug, foredrag «Hvordan endrer KI oss?» 21. sep kl. 18 og Akademimøte 10. sep. Et åpent møte i klima/energi-utvalget er også omtalt.",
+    "types": [
+     "foredrag",
+     "konferanse",
+     "seminar"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Oslo Konserthus"
+    ],
+    "months": [
+     "august",
+     "september"
+    ],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.dnva.no/",
+     "title": "Det Norske Videnskaps-Akademi",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.dnva.no/arrangementer",
+     "title": "Events archive | DNVA",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "HL-senteret (Senter for studier av Holocaust og livssynsminoriteter)",
+   "website": "https://www.hlsenteret.no/",
+   "domain": "hlsenteret.no",
+   "segment": "forskning",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Forsknings-, formidlings- og dokumentasjonssenter som jobber med Holocaust og andre folkemord, antisemittisme, rasisme, ekstremisme og minoriteters vilkår. Ligger i Villa Grande, Huk aveny 56, Oslo.",
+   "why": "Dokumentert bruk av Litteraturhuset (15. okt 2026) og 25-årsjubileum i november: sterkt signal. Dette kan være en eksisterende leietaker/partner; avklar status før utadrettet salg.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Tilbyr foredrag, boksamtaler, forelesningsserier, kurs og konferanser; de fleste strømmes. Kommende: 11. okt 2026 (HL-senteret), 15. okt 2026 kl. 18.00-19.45 i Litteraturhuset i Oslo, og jubileumskonferanse 12.-13. nov 2026 (HL-senteret).",
+    "types": [
+     "foredrag",
+     "debatt",
+     "konferanse",
+     "kurs",
+     "lansering"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "HL-senteret (Villa Grande)",
+     "Litteraturhuset i Oslo"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-10-11",
+      "title": "Holocaust fortalt av ofrene",
+      "venue": "HL-senteret",
+      "url": "https://www.hlsenteret.no/arrangementer/"
+     },
+     {
+      "date": "2026-10-15",
+      "title": "Recognizing and denying the trauma of the others (25-årsjubileum)",
+      "venue": "Litteraturhuset i Oslo",
+      "url": "https://www.hlsenteret.no/"
+     },
+     {
+      "date": "2026-11-12",
+      "title": "Holocaust i Norge: Kunnskap, minne og forebygging (12.-13. nov)",
+      "venue": "HL-senteret",
+      "url": "https://www.hlsenteret.no/arrangementer/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.hlsenteret.no/",
+     "title": "Forside - HL-senteret",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.hlsenteret.no/arrangementer/",
+     "title": "Arrangementer - HL-senteret",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Langsikt",
+   "website": "https://langsikt.no/",
+   "domain": "langsikt.no",
+   "segment": "forskning",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Uavhengig, ideell tankesmie for mer langsiktig politikk, med fokus på kunstig intelligens, pandemier og ekstrem fattigdom.",
+   "why": "Har arrangert seminarer på Litteraturhuset og andre Oslo-venues; en naturlig kandidat for gjentakende seminarserie. Dato og år for Litteraturhus-seminaret er ikke bekreftet på siden.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Arrangementssiden lister «Langsikt-seminar med Anders Barstad» på Litteraturhuset (Wergelandsveien 29), en lansering av «De ti KI-bud» (Kulturhuset, Youngs gate 6) og et seminar på Brød og Sirkus. Seminarformat: innleder 20-30 min, resten diskusjon. Sommerfest 9. juni (Folk i Storgata). Datoer/år er ikke entydige i det jeg har lest.",
+    "types": [
+     "seminar",
+     "lansering",
+     "debatt",
+     "mingle"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Litteraturhuset",
+     "Kulturhuset, Youngs gate 6",
+     "Brød og Sirkus",
+     "Folk i Storgata"
+    ],
+    "months": [],
+    "open_closed": "åpent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://langsikt.no/",
+     "title": "Langsikt",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://langsikt.no/arrangementer",
+     "title": "Langsikt - Arrangementer",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.langsikt.no/event/langsikt-seminar-med-andreas-barstad-velferd-eller-bnp",
+     "title": "Langsikt-seminar med Anders Barstad: Velferd, eller BNP?",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Fridtjof Nansens Institutt (FNI)",
+   "website": "https://www.fni.no/",
+   "domain": "fni.no",
+   "segment": "forskning",
+   "place": "Lysaker (Bærum)",
+   "geo": "oslo",
+   "size": null,
+   "about": "Uavhengig forskningsinstitutt for internasjonal miljø-, klima- og energipolitikk, biologisk mangfold, havrett og Arktis. Adresse: Fridtjof Nansens vei 17, Lysaker.",
+   "why": "Regelmessig seminar- og konferansearrangør i Oslo-området (HUB i Oslo, egen Polhøgda). Fagseminarene er kandidater for et mellomstort rom; større konferanser bruker eksterne venues.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Arrangementssiden viser Arctic Security Conference 16. sep 2026 på the HUB i Oslo, klima- og energiseminar 24. sep 2026 og nordområdeseminar 3. des 2026 på Polhøgda, Lysaker, samt åpent hus 5. sep.",
+    "types": [
+     "konferanse",
+     "seminar"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Polhøgda, Lysaker",
+     "the HUB, Biskop Gunnerus' gate 3, Oslo"
+    ],
+    "months": [
+     "september",
+     "desember"
+    ],
+    "open_closed": "åpent",
+    "next_dates": [
+     {
+      "date": "2026-12-03",
+      "title": "Nansens nordområdeseminar 2026: Russland som nabo",
+      "venue": "Polhøgda, Lysaker",
+      "url": "https://www.fni.no/events"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.fni.no/",
+     "title": "Fridtjof Nansens Institutt - Home",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.fni.no/events",
+     "title": "Upcoming events - Fridtjof Nansens Institutt",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "NIKU, Norsk institutt for kulturminneforskning",
+   "website": "https://www.niku.no/",
+   "domain": "niku.no",
+   "segment": "forskning",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Forskningsinstitutt med spisskompetanse på kulturminner som utfører oppdrag for private og offentlige aktører. Nettstedet omtaler prosjekter i Oslo og Bergen.",
+   "why": "Bred kontaktflate mot kulturarvsektoren; kan være vert for lanseringer og fagdager. Dokumentasjonen gjelder et stort fagkongress-arrangement, ikke jevnlig eget program.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Nyhetssak: NIKU er en av vertene for ICOM-CC sin 21. triennalkonferanse i Oslo i september 2026, med nesten tusen deltakere (fra nettstedet). En annen sak omtaler lansering av boken «Arkeologisk geofysikk i Norge».",
+    "types": [
+     "konferanse",
+     "lansering"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [
+     "september"
+    ],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.niku.no/",
+     "title": "NIKU Forside",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Senter for global bærekraft (Bærekraftsenteret), UiO",
+   "website": "https://www.sum.uio.no/",
+   "domain": "sum.uio.no",
+   "segment": "forskning",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Tverrfaglig senter ved Universitetet i Oslo som arbeider med energi, mat og ressurser, helse, klima og miljø, demokrati og kunnskap/teknologi for en bærekraftig fremtid.",
+   "why": "Åpne lunsj- og kveldsarrangementer på UiO-scener; trolig bundet til UiOs egne rom, men kan være aktuelt for kveldsdebatter og lanseringer utenfor campus.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forsiden lister arrangementer våren 2026: «Etikk versus profitt for Oljefondet» 8. apr (Scene HumSam), «Kjernekraft i Norge» 16. apr (Scene Domus Bibliotheca) og «How do we limit consumption?» 22. apr (Professorboligen).",
+    "types": [
+     "seminar",
+     "debatt"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Scene HumSam",
+     "Scene Domus Bibliotheca",
+     "Professorboligen"
+    ],
+    "months": [
+     "april"
+    ],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.sum.uio.no/",
+     "title": "Forside - Senter for global bærekraft",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "ARENA Centre for European Studies (UiO)",
+   "website": "https://www.sv.uio.no/arena/english/",
+   "domain": "sv.uio.no",
+   "segment": "forskning",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Tverrfaglig forskningssenter ved Universitetet i Oslo som studerer europeisk politisk orden og integrasjon, aktivt siden 1994.",
+   "why": "Årlig ARENA Lecture med internasjonal gjest; kan bli et stort åpent arrangement. Bruker UiOs egne scener nå, så mulig kandidat først hvis deltakerinteressen sprenger rommet.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forsiden annonserer The ARENA Lecture 2026 med Enrico Letta om det indre marked i en geopolitisk tid, 19. oktober kl. 17.00 i Scene Domus Bibliotheca, med påmelding.",
+    "types": [
+     "foredrag"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Scene Domus Bibliotheca"
+    ],
+    "months": [
+     "oktober"
+    ],
+    "open_closed": "åpent",
+    "next_dates": [
+     {
+      "date": "2026-10-19",
+      "title": "The ARENA Lecture 2026: Enrico Letta on the single market in a geopolitical age",
+      "venue": "Scene Domus Bibliotheca",
+      "url": "https://www.sv.uio.no/arena/english/"
+     }
+    ],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.sv.uio.no/arena/english/",
+     "title": "Home - ARENA Centre for European Studies",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Norsk senter for menneskerettigheter, UiO",
+   "website": "https://www.jus.uio.no/smr/",
+   "domain": "jus.uio.no",
+   "segment": "forskning",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Senter ved Det juridiske fakultet, UiO, med forskning, masterprogram, tidsskrift (Nordic Journal of Human Rights) og forelesningsserien «Current issues in human rights research».",
+   "why": "Forelesningsserier og seminarer med internasjonale gjester; mulig for større åpne temakvelder. Kan være bundet til UiO-scener.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Arrangementssiden viser «Can human rights survive the new geopolitics?» 31. aug 2026 kl. 14.00-15.30 på Scene Domus Bibliotheca. Forsiden omtaler en forelesningsserie.",
+    "types": [
+     "foredrag",
+     "seminar"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Scene Domus Bibliotheca"
+    ],
+    "months": [
+     "august"
+    ],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "high"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events"
+   ],
+   "sources": [
+    {
+     "url": "https://www.jus.uio.no/smr/",
+     "title": "Forside - Norsk senter for menneskerettigheter",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.jus.uio.no/smr/om/aktuelt/arrangementer/",
+     "title": "Arrangementer - Norsk senter for menneskerettigheter",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "The Oslo Center",
+   "website": "https://www.oslocenter.no/",
+   "domain": "oslocenter.no",
+   "segment": "forskning",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Stiftelse som fremmer demokratisk praksis ved å styrke styresett, politiske og offentlige institusjoner og sivilsamfunn. Nettstedet presenterer ny CEO John Inge Løvdal.",
+   "why": "Arrangerer «Words Matter!», omtalt som Europas ledende samling for demokratiske verdier og ytringsfrihet; nytt arrangement i 2027 kan trenge stort rom. Sjekk arrangør og venue direkte.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forsiden: påmelding åpen til «Words Matter! 2026» i Oslo 28. april 2026 (gratis). Beskrives som «Europe's leading gathering» for demokratiske verdier og ytringsfrihet. Venue og deltakertall er ikke oppgitt.",
+    "types": [
+     "konferanse"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [
+     "april"
+    ],
+    "open_closed": "åpent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.oslocenter.no/",
+     "title": "Home - The Oslo Center",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Forsvarets forskningsinstitutt (FFI)",
+   "website": "https://www.ffi.no/",
+   "domain": "ffi.no",
+   "segment": "forskning",
+   "place": "Kjeller (Lillestrøm)",
+   "geo": "oslo",
+   "size": null,
+   "about": "Forsvarssektorens egen forskningsinstitusjon med anvendt forskning og utvikling. Besøksadresser: Instituttveien 20, Kjeller, og Karljohansvern, Horten.",
+   "why": "Arrangerer konferanser og frokostmøter om sikkerhetspolitikk og totalforsvar, ofte strømmet. Sikkerhetskrav kan begrense valg av venue; sjekk om arrangementene holdes i Oslo.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Arrangementssiden: «inviterer flere ganger i året til ulike seminarer, forum og frokostmøter». Kommende: Påvirkningskonferansen 2026, Russlandskonferansen 2026, «Totalforsvar rundt bordet» 27. oktober, Forsvarsforskningsdagen 2026, klima- og sikkerhetskonferanse 2026. Venue ikke lest.",
+    "types": [
+     "konferanse",
+     "seminar"
+    ],
+    "frequency": "flere ganger i året",
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.ffi.no/",
+     "title": "Forsvarets forskningsinstitutt (FFI)",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.ffi.no/aktuelt/arrangementer/",
+     "title": "Arrangementer fra FFI",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Institutt for energiteknikk (IFE)",
+   "website": "https://www.ife.no/",
+   "domain": "ife.no",
+   "segment": "forskning",
+   "place": "Kjeller (Lillestrøm)",
+   "geo": "oslo",
+   "size": null,
+   "about": "Forskningsinstitutt innen energi og nukleær teknologi som vil skape en forskningspark og innovasjonsdistrikt på Kjeller.",
+   "why": "Internasjonale konferanser lagt til Norge (digital suverenitet, KI). Internasjonale deltakere gir mulig behov for stort rom i Oslo, men venue er ikke oppgitt.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Forsiden lister arrangementer: 3rd International Conference on Digital Sovereignty (ICDS) 25. nov 2026, Enlarged Halden Programme Review Group meeting 11. okt 2026 og 1st International Conference on Human Centric AI 27. mai 2026. Venue og åpenhet ikke oppgitt.",
+    "types": [
+     "konferanse"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [
+     "oktober",
+     "november",
+     "mai"
+    ],
+    "open_closed": "ukjent",
+    "next_dates": [
+     {
+      "date": "2026-11-25",
+      "title": "3rd International Conference on Digital Sovereignty (ICDS) 2026",
+      "venue": "ikke oppgitt",
+      "url": "https://www.ife.no/"
+     }
+    ],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.ife.no/",
+     "title": "Front page - IFE",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "NIBR, By- og regionforskningsinstituttet (OsloMet)",
+   "website": "https://www.nibr.no/",
+   "domain": "nibr.no",
+   "segment": "forskning",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Samfunnsvitenskapelig oppdragsforskningsinstitutt ved OsloMet med avdelinger for bolig/regional utvikling, internasjonale studier og migrasjon, og velferd/demokrati/forvaltning.",
+   "why": "Konferanser og åpne seminarserier (UngKrim) kan trenge romtilbud utenfor campus. Del av OsloMet, som allerede ligger i listen: avstem for å unngå dobbeltarbeid.",
+   "event_signal": {
+    "documented": true,
+    "summary": "«Hva skjer?» viser UKRAINETT+ konferansen «State and Society Under Pressure» 11. november (år ikke oppgitt), Pilestredet, Oslo. Nettverket UngKrim skal formidle gjennom «en serie med åpne seminar».",
+    "types": [
+     "konferanse",
+     "seminar"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Pilestredet, Oslo"
+    ],
+    "months": [
+     "november"
+    ],
+    "open_closed": "åpent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.nibr.no/",
+     "title": "By- og regionforskningsinstituttet NIBR - OsloMet",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "KIFO, Institutt for kirke-, religions- og livssynsforskning",
+   "website": "https://www.kifo.no/",
+   "domain": "kifo.no",
+   "segment": "forskning",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Driver forskning og utredning om kirke, religion og livssyn i samfunnet, med hovedvekt på empirisk forskning. Adresse: Øvre Slottsgate 2 B, Oslo.",
+   "why": "Liten forskningsstiftelse med workshops og konferanser; trolig små til mellomstore arrangementer. Relevant for litteratur-/religionsnære temakvelder og lanseringer.",
+   "event_signal": {
+    "documented": true,
+    "summary": "Nyhetssaker: invitasjon til KIFO-workshop om minnepolitikk og Nasjonaljubileet 17.-18. juni 2026, omtale av en internasjonal forskerkonferanse om antifascisme (sak 21. sep 2026) og «KIFO på Arendalsuka». Venue ikke lest.",
+    "types": [
+     "seminar",
+     "konferanse"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [
+     "juni"
+    ],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.kifo.no/",
+     "title": "Hjem - Kifo",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.kifo.no/kifo-inviterer-til-workshop-om-minnepolitikk-og-nasjonaljubileet/",
+     "title": "KIFO inviterer til workshop om minnepolitikk og Nasjonaljubileet",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "CAS, Senter for grunnforskning (Centre for Advanced Study)",
+   "website": "https://www.cas.oslo.no/",
+   "domain": "cas.oslo.no",
+   "segment": "forskning",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": null,
+   "about": "Senter for grunnforskning ved Det Norske Videnskaps-Akademi, Drammensveien 78, Oslo; gir forskergrupper opphold og midler til tverrfaglig, nysgjerrighetsdrevet forskning.",
+   "why": "Jevnlig seminar- og workshopprogram, men mest små, lukkede forskergrupper i eget «Turret Room». Mulig kun for enkeltarrangementer som overstiger eget lokale (konferanser, seremonier).",
+   "event_signal": {
+    "documented": true,
+    "summary": "Events-siden lister seminarer (Turret Room at CAS og Zoom), workshops, en konferanse «Multilingualism in Medieval Norway» (2 dager) og en «Young CAS Ceremony» (kl. 16-21). Månedsangivelser er ufullstendige, år ikke oppgitt.",
+    "types": [
+     "seminar",
+     "konferanse",
+     "fagdag"
+    ],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [
+     "Turret Room at CAS"
+    ],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "medium"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Events",
+    "Administration"
+   ],
+   "sources": [
+    {
+     "url": "https://www.cas.oslo.no/",
+     "title": "CAS - Senter for grunnforskning",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.cas.oslo.no/events/",
+     "title": "Events | CAS",
+     "checked": "2026-10-06"
+    }
+   ]
+  },
+  {
+   "name": "Norsk institutt for vannforskning (NIVA)",
+   "website": "https://www.niva.no/",
+   "domain": "niva.no",
+   "segment": "forskning",
+   "place": "Oslo",
+   "geo": "oslo",
+   "size": "L",
+   "about": "Forskningsinstitutt for akvatiske økosystemer og miljø, etablert 1958, med 285+ ansatte og 700+ prosjekter årlig (oppgitt på forsiden). Hovedkontor flytter til Sognsveien 72, Oslo (Campus Ullevål) fra 1. juni 2026.",
+   "why": "Stort miljøfaglig institutt med nytt Oslo-kontor, men ingen eventaktivitet dokumentert på sidene jeg leste; arrangementssiden viste kun kontaktinformasjon.",
+   "event_signal": {
+    "documented": false,
+    "summary": "Arrangementssiden (niva.no/arrangementer) viste ingen arrangementer i teksten som ble lest.",
+    "types": [],
+    "frequency": null,
+    "typical_attendance": null,
+    "attendance_source": null,
+    "venues": [],
+    "months": [],
+    "open_closed": "ukjent",
+    "next_dates": [],
+    "confidence": "low"
+   },
+   "room_hint": null,
+   "contact_roles": [
+    "Communications"
+   ],
+   "sources": [
+    {
+     "url": "https://www.niva.no/",
+     "title": "Norsk institutt for vannforskning | NIVA",
+     "checked": "2026-10-06"
+    },
+    {
+     "url": "https://www.niva.no/arrangementer",
+     "title": "Arrangementer | NIVA",
+     "checked": "2026-10-06"
+    }
+   ]
+  }
+ ],
+ "rejected": [
+  {
+   "name": "Chr. Michelsen Institute (CMI)",
+   "reason": "Bergen-basert; events-siden (cmi.no/events) viser åpne seminarer, men uten Oslo-venue eller adresse i det som ble lest. Ikke tatt med pga. geo-prioritet og uklart venue."
+  },
+  {
+   "name": "Frischsenteret (UiO)",
+   "reason": "Nettstedet åpnet, men ingen arrangementer eller adresse lest; ikke nok grunnlag til å inkludere."
+  },
+  {
+   "name": "Simula Research Laboratory",
+   "reason": "Forsiden åpnet, men ingen eventinfo eller adresse lest; events-sider ga 404."
+  },
+  {
+   "name": "NILU",
+   "reason": "Forsiden åpnet; ingen arrangement eller Oslo-adresse lest."
+  },
+  {
+   "name": "Norsk Regnesentral",
+   "reason": "Forsiden åpnet; ingen arrangement eller adresse lest."
+  },
+  {
+   "name": "Teknologirådet",
+   "reason": "Statlig/offentlig organ (Kongens gate 14, Oslo) og ingen arrangementer lest; hører hjemme i segment offentlig. Arrangementsside ga 404."
+  },
+  {
+   "name": "Norges forskningsråd",
+   "reason": "Offentlig finansieringsorgan (segment offentlig), ikke forskningsmiljø; arrangementssider ikke lest."
+  },
+  {
+   "name": "C-REX, Senter for ekstremismeforskning (UiO)",
+   "reason": "Nettstedet viser «Ingen kommende arrangementer»."
+  },
+  {
+   "name": "ESOP (UiO)",
+   "reason": "Senteret er avviklet (2024) ifølge egen side."
+  },
+  {
+   "name": "Minotenk",
+   "reason": "Tankesmie; hjemmesiden omtaler seminarer, men arrangementssiden som kunne leses viser bare 2019-arrangementer, og Oslo-adresse er ikke bekreftet. Utelatt."
+  },
+  {
+   "name": "Skaperkraft",
+   "reason": "Tankesmie; nettstedet viste kun artikler/kommentarer, ingen arrangementer."
+  },
+  {
+   "name": "Norges Vel",
+   "reason": "Åpnet; stiftelse for matsikkerhet, ikke forskning, og ingen dokumenterte arrangementer eller adresse."
+  },
+  {
+   "name": "Norwegian Nobel Institute / Nobel Peace Prize",
+   "reason": "Nettstedet åpnet, men arrangementene (Nobel Peace Prize Forum) er undatert og knyttet til Nobel Peace Center; utelatt."
+  },
+  {
+   "name": "Det Norske Akademi for Språk og Litteratur (dnasl.no)",
+   "reason": "Kunne ikke åpne nettstedet (CRAWL_UNKNOWN_ERROR)."
+  },
+  {
+   "name": "Senter for tverrfaglig kjønnsforskning (UiO)",
+   "reason": "Kunne ikke åpne testet URL (uio.no/tik gir 404); ikke verifisert."
+  },
+  {
+   "name": "Civita, Tankesmien Agenda, Manifest, Res Publica, NUPI, PRIO, Fafo, NIFU, Institutt for samfunnsforskning, SIFO, FHI, OsloMet",
+   "reason": "finnes allerede i existing.json"
+  },
+  {
+   "name": "Metode-forbehold",
+   "reason": "WebFetch var ikke tilgjengelig (tillatelse ikke besvart); alle sider ble lest via Exa/Firecrawl, noen gjengitt som sammendrag. Flere sider har cachede/utdaterte datoer, og år er ikke alltid oppgitt; next_dates er derfor kun fylt ut der året fremgår."
+  }
+ ]
+}

@@ -1,0 +1,31 @@
+/* ---------- Kunnskapslag ---------- */
+.dl-orig.t-kunnskap{display:none}
+.kb{display:grid; gap:12px; padding-top:12px}
+.kb-modes{justify-self:start}
+.kb-ask{display:flex; gap:8px}
+.kb-ask .in{flex:1}
+.kb h4{font-family:var(--sans); font-size:11px; letter-spacing:.07em; text-transform:uppercase; font-weight:600; color:var(--muted); margin:0 0 6px; display:flex; gap:8px; align-items:center}
+.kb-sec{border-top:1px solid var(--rule); padding-top:12px}
+.kb-ai{border:1px dashed color-mix(in srgb,var(--accent) 45%,transparent); border-radius:var(--r); background:color-mix(in srgb,var(--accent-soft) 45%,var(--surface)); padding:10px 12px; display:grid; gap:8px}
+.kb-ai h4{margin-top:4px}
+.kb-claims,.kb-facts,.kb-gaps,.kb-hits{margin:0; padding:0; list-style:none; display:grid; gap:8px}
+.kb-claims li,.kb-facts li,.kb-gaps li{font-size:13.5px; line-height:1.5}
+.kb-claims q{display:block; quotes:none; font-size:12.5px; color:var(--muted); border-left:2px solid var(--rule-2); padding-left:8px; margin-top:3px}
+.kb-claims.sug li::before{content:"Forslag: "; font-weight:600}
+.kref{all:unset; cursor:pointer; font-size:11px; font-weight:700; padding:0 6px; border-radius:var(--r-sm); border:1px solid var(--rule-2); background:var(--surface); color:var(--accent); line-height:18px; margin-left:2px; font-variant-numeric:tabular-nums}
+.kref:hover{background:var(--sel)} .kref:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.kb-hits li{border-top:1px dashed var(--rule); padding-top:8px}
+.kb-hits li:first-child{border-top:0; padding-top:0}
+.kb-hits li[data-port]{cursor:pointer}
+.kb-hd{display:flex; gap:8px; align-items:baseline; flex-wrap:wrap; font-size:13px}
+.kb-hits p{font-size:13.5px; line-height:1.5; margin-top:2px}
+.kbcalc td:first-child{width:150px; color:var(--muted); vertical-align:top}
+.kbrows{margin-top:8px} .kbrows summary{cursor:pointer; font-size:13px; color:var(--accent)}
+.kbview{display:grid; gap:12px; padding-top:12px}
+.kbview h3{font-family:var(--serif); font-size:18px}
+.kbtext{margin:0; padding:10px 12px; background:var(--surface-2); border-radius:var(--r); white-space:pre-wrap; font-size:13.5px; line-height:1.55}
+.bkmeta{margin:10px 0}
+.case .csrc{border-top:1px solid var(--rule); padding:10px 0}
+.case .csrc h3{font-family:var(--serif); font-size:17px; margin-bottom:6px}
+.csrc-r{display:flex; gap:8px; align-items:baseline; font-size:13px; padding:4px 0 4px 20px; flex-wrap:wrap}
+@media (max-width:700px){ .kb-ask{flex-direction:column} }

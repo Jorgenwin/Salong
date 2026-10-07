@@ -1,0 +1,481 @@
+{
+  "agent": "w1_tech",
+  "segments": ["tech", "saas"],
+  "accounts": [
+    {
+      "name": "Atea AS",
+      "website": "https://www.atea.no",
+      "domain": "atea.no",
+      "segment": "tech",
+      "place": "Oslo",
+      "geo": "norge",
+      "size": null,
+      "about": "Atea beskriver seg som et IT-selskap med 23 kontorer fra Hammerfest til Kristiansand, og som Norges ledende IT-selskap. Hovedkontor oppgitt med adresse Karvesvingen 5, 0579 Oslo.",
+      "why": "Flere egne kundearrangementer i Oslo-området gjennom året, også i egne lokaler og på leide venues. Mulig kandidat for tema-/fagdager som ikke trenger messehall.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Atea.no lister egne arrangementer 2026: Klientdag på hovedkontoret i Oslo (12. mars), Sustainability Forum på Ambassaden i Oslo (18. mars, gratis), Sikkerhetsdagen Oslo på Oslo Event Hub (14. april, omtalt som 12. året på rad), og Atea Community Oslo på NOVA Spektrum, Lillestrøm (14. oktober, 1800 kr eks. mva, omtalt som over 20 år).",
+        "types": ["konferanse", "fagdag", "seminar"],
+        "frequency": "Sikkerhetsdagen: 12. året på rad (kilden); Community: over 20 år (kilden)",
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Atea hovedkontor, Karvesvingen 5, Oslo", "Ambassaden, Henrik Ibsens gate 48, Oslo", "Oslo Event Hub", "NOVA Spektrum, Lillestrøm"],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {"date": "2026-10-14", "title": "Atea Community Oslo 2026", "venue": "NOVA Spektrum, Lillestrøm", "url": "https://www.atea.no/arrangementer/2026/community-oslo/"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Marketing", "Sustainability"],
+      "sources": [
+        {"url": "https://www.atea.no/arrangementer/2026/community-oslo/", "title": "Atea Community Oslo 2026 | Atea", "checked": "2026-10-06"},
+        {"url": "https://www.atea.no/arrangementer/2026/atea-sustainability-forum/", "title": "Atea Sustainability Forum | Atea", "checked": "2026-10-06"},
+        {"url": "https://www.atea.no/arrangementer/2026/sikkerhetsdagen-oslo/", "title": "Atea Sikkerhetsdagen Oslo 2026 | Atea", "checked": "2026-10-06"},
+        {"url": "https://www.atea.no/arrangementer/2026/klientdag-oslo/", "title": "Hvilket klientutstyr bør du investere i nå? | Atea", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Dell Technologies Norge",
+      "website": "https://www.dell.com/no-no",
+      "domain": "dell.com",
+      "segment": "tech",
+      "place": "Oslo",
+      "geo": "intl",
+      "size": null,
+      "about": "Norgesorganisasjon i Dell Technologies, ledet av managing director Geir Rostadmo-Strømme ifølge Dells norske blogg.",
+      "why": "Årlig storkonferanse i Oslo for kunder og partnere; antakelig for stor for Solstad, men Dell og partnere kan ha mindre seminarer og workshops.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Dells norske blogg (2. juli 2026) kunngjør Dell Technologies Forum tirsdag 20. oktober 2026 i nye Oslo Spektrum for kunder, partnere, teknologiledere og IT-spesialister, med keynotes, paneler, breakout-sesjoner, workshops og Expo. En blogg fra 2024 omtaler forumet 31. oktober 2024 i Oslo Spektrum og sier 'Hver høst avholder vi en av Norges største IT-konferanser'.",
+        "types": ["konferanse"],
+        "frequency": "hver høst (kilden, 2024-blogg)",
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Oslo Spektrum"],
+        "months": ["oktober"],
+        "open_closed": "ukjent",
+        "next_dates": [
+          {"date": "2026-10-20", "title": "Dell Technologies Forum 2026", "venue": "Oslo Spektrum", "url": "https://www.dell.com/no-no/blog/derfor-boer-du-delta-paa-dell-technologies-forum-2026/"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Marketing", "Events", "Partner Manager"],
+      "sources": [
+        {"url": "https://www.dell.com/no-no/blog/derfor-boer-du-delta-paa-dell-technologies-forum-2026/", "title": "Derfor bør du delta på Dell Technologies Forum 2026", "checked": "2026-10-06"},
+        {"url": "https://www.dell.com/no-no/blog/rets-store-it-konferanse-naermer-seg/", "title": "Årets store IT-konferanse nærmer seg | Dell Technologies", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Infinigate Norge (Infinigate AS)",
+      "website": "https://www.infinigate.com/no/",
+      "domain": "infinigate.com",
+      "segment": "tech",
+      "place": "Lysaker (Bærum)",
+      "geo": "norge",
+      "size": null,
+      "about": "IT-sikkerhetsdistributør med norsk side som tilbyr opplæring, sertifiseringskurs, webinarer og arrangementer for partnere. Adresse oppgitt: Lysaker Torg 45, 1366 Lysaker.",
+      "why": "Distributør med eget partnerarrangement (Cyber Day) og jevnlige kurs. Venue ikke oppgitt på eventsiden, så leie i Oslo-området er et åpent spørsmål.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Eventsiden lister Infinigate Cyber Day 2026 3. desember 2026 kl. 12:00-23:00 ('Vi tror på kraften av samarbeid og kunnskapsdeling'), samt Fortinet-kurs, Fortinet Fast Track-sesjoner og webinarer høsten 2026. Siden sier Infinigate er autorisert opplæringssenter for en rekke leverandører.",
+        "types": ["kurs", "partnerarrangement"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [
+          {"date": "2026-12-03", "title": "Infinigate Cyber Day 2026", "venue": null, "url": "https://www.infinigate.com/no/events/"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Marketing", "Partner Manager"],
+      "sources": [
+        {"url": "https://www.infinigate.com/no/events/", "title": "Events - Infinigate | Norway", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Exertis Norge / Captech",
+      "website": "https://www.exertis.no",
+      "domain": "exertis.no",
+      "segment": "tech",
+      "place": "Oslo",
+      "geo": "norge",
+      "size": null,
+      "about": "Beskrives på arrangementssiden som en av Nordens ledende PC-byggere og IT-distributører, med Pro AV, Pro Audio og Security. Arrangementssiden er merket Captech EXPO Norge.",
+      "why": "Distributør med årlig forhandlermesse i Oslo og eget seminarprogram. Antakelig mer messeformat enn salsformat, men seminardelen kan være relevant.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Captech EXPO Norge 2026 ble holdt 16. april 2026 hos SKUR13, Filipstadveien 3, Oslo, med seminar kl. 15:00 og rundt 30 utstillere annonsert. Siden takker for 2026-utgaven og viser bilder fra Captech EXPO 2025 i Oslo. Neste omtalte arrangement er i Göteborg 15. oktober.",
+        "types": ["messe", "seminar"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["SKUR13, Filipstadveien 3, Oslo"],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Marketing", "Managing Director"],
+      "sources": [
+        {"url": "https://www.exertis.no/expo/no/", "title": "Captech EXPO Norge 2026", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Tietoevry (Public 360° / Plan & Build 360°)",
+      "website": "https://www.tietoevry.com/no/",
+      "domain": "tietoevry.com",
+      "segment": "tech",
+      "place": "Oslo-området",
+      "geo": "norge",
+      "size": null,
+      "about": "Arrangør av Public 360° Brukerforum, møteplass for brukere av Public 360° og Plan & Build 360°. Nettsiden tietoevry.com/no/ har norsk arrangementsoversikt.",
+      "why": "Årets brukerforum er lagt til Kløfta, så ikke direkte aktuelt i år. Programmet viser sesjoner, workshops og årsmøte i brukerforeningen, et format som kan flyttes til sentrale Oslo-lokaler.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Arrangementssiden viser Public 360° Brukerforum 25.-27. november 2026 på Lily Country Club, Kløfta, med workshops 25. november, plenum 26.-27. november, kundepaneler og årsmøte med styret i Brukerforeningen.",
+        "types": ["konferanse", "kurs", "årsmøte"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Lily Country Club, Kløfta"],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [
+          {"date": "2026-11-25", "title": "Public 360° Brukerforum 2026 (25.-27. nov.)", "venue": "Lily Country Club, Kløfta", "url": "https://www.tietoevry.com/no/arrangementer/2026/public-360-brukerforum-2026/"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Customer Success", "Marketing"],
+      "sources": [
+        {"url": "https://www.tietoevry.com/no/arrangementer/2026/public-360-brukerforum-2026/", "title": "Public 360° Brukerforum 2026", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "SaaS Security AS",
+      "website": "https://www.saassecurity.no",
+      "domain": "saassecurity.no",
+      "segment": "tech",
+      "place": "Norge",
+      "geo": "norge",
+      "size": "S",
+      "about": "Norsk distributør av sikkerhetstjenester fra nettskyen som selger gjennom et nordisk forhandlernettverk (mer enn 150 forhandlere/MSP ifølge egen side). Selskapets adresse er ikke bekreftet på sidene som ble lest.",
+      "why": "Liten distributør med årlig sikkerhetsdag i Oslo, men siden som ble lest er udatert og viser lite volum. Lav prioritet, kan sjekkes for forhandlerarrangementer.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Om-siden sier 'vi arrangerer årlig Cloud Security Day i Oslo, Stavanger og Bergen'. Egen referatside sier mer enn 120 deltakere totalt i de tre byene, uten årstall. Ingen kommende datoer funnet.",
+        "types": ["fagdag", "seminar"],
+        "frequency": "årlig (kilden)",
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [],
+        "confidence": "medium"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Partner Manager"],
+      "sources": [
+        {"url": "https://www.saassecurity.no/Selskap/Om-SaaS-Security-as", "title": "Om SaaS Security as", "checked": "2026-10-06"},
+        {"url": "https://www.saassecurity.no/Selskap/Cloud-Security-Day-Norge", "title": "Cloud Security Day Norge", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Fortinet (Norge)",
+      "website": "https://events.fortinet.com/securityday2026_norge",
+      "domain": "fortinet.com",
+      "segment": "tech",
+      "place": "Oslo",
+      "geo": "intl",
+      "size": null,
+      "about": "Internasjonal leverandør av cybersikkerhet. Norgesarrangementet signeres 'Fortinets team i Norge'. Kun arrangementssiden ble lest, ikke selskapets hovedsider.",
+      "why": "Dagsarrangement med middag i Oslo i november, gratis for alle virksomheter. Kommende dato er allerede på et hotell, så mest relevant som relasjon for fremtidige utgaver.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Fortinet Security Day 2026 i Norge: 12. november 2026, program kl. 9:30-17:00 og middag kl. 17:00-20:00 på Clarion Hotel The Hub i Oslo. Gratis for alle virksomheter, rettet mot beslutningstakere og IT-sikkerhetsprofesjonelle.",
+        "types": ["konferanse", "seminar"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Clarion Hotel The Hub, Oslo"],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {"date": "2026-11-12", "title": "Fortinet Security Day 2026", "venue": "Clarion Hotel The Hub, Oslo", "url": "https://events.fortinet.com/securityday2026_norge"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Marketing"],
+      "sources": [
+        {"url": "https://events.fortinet.com/securityday2026_norge", "title": "NORWAY - Fortinet Security Day 2026", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Kommando",
+      "website": "https://kommando.com",
+      "domain": "kommando.com",
+      "segment": "tech",
+      "place": "Oslo (arrangement)",
+      "geo": "norge",
+      "size": "S",
+      "about": "Identity security-selskap som beskriver seg som 'Nordic Experts in IGA & PAM' og samarbeider med CyberArk, SailPoint og Silverfort. Hovedkontor er ikke bekreftet på sidene som ble lest.",
+      "why": "Holder seminarer for C-nivå i Oslo sammen med leverandørpartnere, men i små møtesentre. Mer aktuelt for Wergeland-/Skram-størrelse rom enn Solstad.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Forsiden har seksjonen 'Upcoming events'. Eventsiden viser frokostseminar sammen med SailPoint 23. september 2026 kl. 08:00-12:00 på Sjølyst Møtesenter, Oslo, for C-nivå og senior beslutningstakere, med begrenset antall plasser.",
+        "types": ["seminar"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Sjølyst Møtesenter, Oslo"],
+        "months": [],
+        "open_closed": "lukket",
+        "next_dates": [],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Marketing", "Partner Manager"],
+      "sources": [
+        {"url": "https://kommando.com/events/securing-the-agentic-enterprise-in-the-age-of-ai/", "title": "Securing the Agentic Enterprise in the Age of AI - Kommando", "checked": "2026-10-06"},
+        {"url": "https://kommando.com", "title": "Identity Security Services | Kommando", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Finago",
+      "website": "https://finago.no",
+      "domain": "finago.no",
+      "segment": "saas",
+      "place": "Oslo",
+      "geo": "norge",
+      "size": "L",
+      "about": "Programvareleverandør for regnskapsbransjen og økonomifunksjoner (produkter nevnt på eventsiden: Finago Office, Payday, Control, Busy). Eventsiden oppgir Eirik Aalvik Stranden som Managing Director Scandinavia.",
+      "why": "Årlig kundekonferanse på rundt 800 i Oslo, altså større enn Solstad. Interessant for mindre fagspor, partnerarrangementer eller en splittet utgave.",
+      "event_signal": {
+        "documented": true,
+        "summary": "CloudCamp 2026: 15. oktober 2026, kl. 09:00-16:00, Clarion Hotel The Hub i Oslo, med AfterCloud på Norda. Siden kaller den 'vår årlige konferanse for regnskapsbyråer, partnere og bransjeaktører', sier den er åpen også for ikke-kunder, og at CloudCamp i fjor samlet rundt 800 deltakere.",
+        "types": ["konferanse"],
+        "frequency": "årlig (kilden)",
+        "typical_attendance": 800,
+        "attendance_source": "https://finago.no/cloudcamp",
+        "venues": ["Clarion Hotel The Hub, Oslo", "Norda (toppetasjen, Clarion Hotel The Hub)"],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {"date": "2026-10-15", "title": "CloudCamp 2026", "venue": "Clarion Hotel The Hub, Oslo", "url": "https://finago.no/cloudcamp"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": "Rundt 800 i fjor (kilden) er over Solstads 320 i stolrader; delt konsept eller partnerdag kan passe.",
+      "contact_roles": ["Events", "Marketing", "Partner Success"],
+      "sources": [
+        {"url": "https://finago.no/cloudcamp", "title": "Meld deg på årets CloudCamp-konferanse 2026 | Finago", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Visma Software Nordic",
+      "website": "https://www.vismasoftware.no",
+      "domain": "vismasoftware.no",
+      "segment": "saas",
+      "place": "Oslo",
+      "geo": "norge",
+      "size": null,
+      "about": "Programvareleverandør med hovedkontor oppgitt som Karenslyst allé 56, 0277 Oslo. Nettstedet har seksjon for kurs og konferanser.",
+      "why": "Holder fagkonferanser i egne lokaler på Skøyen, så leiebehovet er trolig lavt. Kan likevel ha større kundearrangementer. Må avklares om andre Visma-enheter arrangerer selv.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Siden om 'Høstens fagkonferanse 2026' beskriver en todagers fagkonferanse for lønn og personal på Visma sine lokaler på Skøyen i Oslo, oppgitt 'Oktober til Desember', 5790 kr, lunsj og bevertning inkludert, fysisk eller digitalt. Ingen enkeltdatoer lest.",
+        "types": ["fagdag", "kurs"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Visma, Karenslyst allé 56, Skøyen, Oslo"],
+        "months": ["oktober til desember (kilden)"],
+        "open_closed": "ukjent",
+        "next_dates": [],
+        "confidence": "medium"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Marketing", "Customer Success"],
+      "sources": [
+        {"url": "https://www.vismasoftware.no/kurs-og-konferanser/hostens-fysiske-fagkonferanse-2026-pa-skoyen", "title": "Høstens fagkonferanse 2026 | Visma Software Nordic", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Volue",
+      "website": "https://www.volue.com",
+      "domain": "volue.com",
+      "segment": "saas",
+      "place": "Oslo (arrangement)",
+      "geo": "norge",
+      "size": null,
+      "about": "Programvareleverandør for energimarkeder og kraftnett (Power Solutions Suite, tilbudt som enterprise-programvare eller tjeneste). Hovedkontor er ikke bekreftet på sidene som ble lest.",
+      "why": "Årlig to-dagers brukerforum i Oslo i et historisk konsertlokale, så de bruker allerede sentrale Oslo-venues. Neste utgave er trolig høsten 2027.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Volue User Forum+ 2026 er omtalt som 'Volues årlige møteplass' for brukere av NETBAS, ADMS, Elsmart og Grid Planner: to dager 1.-2. september 2026 i Gamle Logen, Oslo, med plenum, parallelle spor, workshops, partnerstands og middag. Billett 4 500 kr ordinært.",
+        "types": ["konferanse", "kurs"],
+        "frequency": "årlig (kilden)",
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Gamle Logen, Grev Wedels plass 2, Oslo"],
+        "months": ["september (2026-utgaven)"],
+        "open_closed": "ukjent",
+        "next_dates": [],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Marketing", "Product Manager"],
+      "sources": [
+        {"url": "https://www.volue.com/events/volue-userforum-plus-distribution-2026-no", "title": "Volue User Forum+ 2026", "checked": "2026-10-06"},
+        {"url": "https://www.volue.com", "title": "Powering those who power the world – Volue", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Xledger Norge",
+      "website": "https://xledger.com/no",
+      "domain": "xledger.com",
+      "segment": "saas",
+      "place": "Oslo",
+      "geo": "norge",
+      "size": null,
+      "about": "Leverandør av skybasert ERP-system. Norgeskontor med adresse Østensjøveien 32, 0667 Oslo.",
+      "why": "Har årlig partnerdag, men siste dokumenterte utgave er fra 2024 og venue er ikke oppgitt. Verdt en henvendelse om partnerdag 2026 og eventuelle kundearrangementer.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Nyhetssak 19. november 2024: Xledger samlet partnere til Partnerdag torsdag 14. november 2024 med utdeling av partnerpriser (BDO, Norian, Azets, Admento m.fl. nevnt). Sted og deltakertall er ikke oppgitt. Ingen nyere arrangement funnet.",
+        "types": ["partnerdag"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [],
+        "confidence": "medium"
+      },
+      "room_hint": null,
+      "contact_roles": ["Partner Sales", "Marketing", "Events"],
+      "sources": [
+        {"url": "https://xledger.com/no/blog/partnerdagen-2024/", "title": "Sterk utvikling for Xledgers partnere i 2024 - Xledger", "checked": "2026-10-06"},
+        {"url": "https://xledger.com/no", "title": "Xledger ERP - Komplett og automatisert", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Eye-share (Brukerforum)",
+      "website": "https://eye-share.no",
+      "domain": "eye-share.no",
+      "segment": "saas",
+      "place": "Fornebu (Bærum)",
+      "geo": "norge",
+      "size": null,
+      "about": "Leverandør av eye-share-løsningen for arbeidsflyt og automatisering i økonomi. Avdeling Oslo er oppgitt med adresse Snarøyveien 20, Fornebu.",
+      "why": "Todagers brukerforum med utstillertorg og parallelle spor, men lagt til hotell ved Gardermoen. Mulig mindre Oslo-arrangement ved siden av, men det er ikke dokumentert.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Eye-share Brukerforum 2026: 19.-20. november 2026 på Quality Airport Hotel Gardermoen, med parallelle fagspor, utstillertorg med partnere, sertifiseringstester, festmiddag og partner Tieto. Dagpakke fra 5 800 kr. Samme side omtaler det som 'årets viktigste møteplass' for brukere.",
+        "types": ["konferanse", "kurs"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Quality Airport Hotel Gardermoen"],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [
+          {"date": "2026-11-19", "title": "Eye-share Brukerforum 2026", "venue": "Quality Airport Hotel Gardermoen", "url": "https://eye-share.no/eye-share-brukerforum-2026"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Customer Success", "Marketing"],
+      "sources": [
+        {"url": "https://eye-share.no/eye-share-brukerforum-2026", "title": "Eye-share Brukerforum 2026", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Duett",
+      "website": "https://duett.no",
+      "domain": "duett.no",
+      "segment": "saas",
+      "place": "Norge",
+      "geo": "norge",
+      "size": null,
+      "about": "Leverandør av skybasert programvare for regnskapskontorer (Duett Økonomi og Taskline). Hovedkontor er ikke bekreftet på sidene som ble lest.",
+      "why": "Egen todagers fagkonferanse for regnskapsførere, lagt til Gardermoen. Målgruppen er stor og samlet, men dagens venue ligger utenfor Oslo sentrum.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Duett Fagseminar 2026 for regnskapsførere: 20.-21. oktober 2026 på Gardermoen, med hotellrater på Thon Hotel Oslo Airport, lunsj begge dager og middag med underholdning første kveld. Siden refererer til en stemningsfilm fra 2025.",
+        "types": ["fagdag", "seminar"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Gardermoen (Thon Hotel Oslo Airport nevnt for overnatting)"],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [
+          {"date": "2026-10-20", "title": "Duett Fagseminar 2026 (20.-21. okt.)", "venue": "Gardermoen", "url": "https://duett.no/fagseminar-2026"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Marketing", "Customer Success"],
+      "sources": [
+        {"url": "https://duett.no/fagseminar-2026", "title": "Duett | Fagseminar for regnskapsførere 2026", "checked": "2026-10-06"},
+        {"url": "https://duett.no", "title": "Innovative løsninger som gir SMB-er mer overskudd | Duett", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Ginntech (Edutorium)",
+      "website": "https://ginntech.com/nb",
+      "domain": "ginntech.com",
+      "segment": "saas",
+      "place": "Trondheim (hovedkontor), Oslo (kontor)",
+      "geo": "norge",
+      "size": "S",
+      "about": "Tech-firma som utvikler løsninger for samhandling og prosessflyt, med hovedvekt på utdanningsinstitusjoner (Edutorium, Mimir). Kontorer i Trondheim (hovedkontor) og Oslo.",
+      "why": "Årlig brukerkonferanse delt i fagskoledag og UH-dag, men holdt ved Gardermoen. Liten kundegruppe i utdanningssektoren, trolig lavere prioritet.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Brukerkonferansen 2026 (Edutorium) på Radisson Hotel & Conference Centre Oslo Airport: fagskoledag onsdag 15. april og UH-dag torsdag 16. april, kl. 09:30-15:00. Siden sier 'som vanlig deler vi den i to'.",
+        "types": ["konferanse"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Radisson Hotel & Conference Centre Oslo Airport"],
+        "months": ["april (2026-utgaven)"],
+        "open_closed": "ukjent",
+        "next_dates": [],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Customer Success", "Events"],
+      "sources": [
+        {"url": "https://ginntech.com/nb/brukerkonferansen-2026", "title": "Brukerkonferansen 2026 | Ginntech", "checked": "2026-10-06"},
+        {"url": "https://ginntech.com/nb", "title": "forside | Ginntech", "checked": "2026-10-06"}
+      ]
+    }
+  ],
+  "rejected": [
+    {"name": "Verktøyforbehold (WebFetch)", "reason": "WebFetch ga PROVENANCE_REQUIRED (tillatelse ikke besvart) på 5 forsøk. All verifisering er gjort med Exa web_fetch/web_search i stedet. Ochno (ochno.com/events) ble dermed bare sett i søketreff, ikke åpnet, og er ikke tatt med."},
+    {"name": "Sopra Steria", "reason": "Konsulenthus, hører hjemme i segment konsulent. Eget Oslo-arrangement 15. oktober 2026 (Momentum Arena) funnet i søk, ikke åpnet i denne økten."},
+    {"name": "Devoteam (Forretningssystemer 2026)", "reason": "IT-konsulent, segment konsulent. Kun søketreff om konferanse 19. mars 2026 på Clarion Hotel Oslo; ikke åpnet."},
+    {"name": "SBN (SAP-brukergruppe)", "reason": "Brukerforening, passer segment nettverk/fag. SBN-konferansen 20.-21. oktober 2026 i sentrale Oslo (Klingenberg Kino og Nationaltheatret konferansesenter) kun sett i søketreff, ikke åpnet."},
+    {"name": "PowerOffice (PowerForum)", "reason": "Dokumentert event ligger på Quality Hotel Ramsalt/Scandic Havet, ikke i Oslo-området. Øvrige arrangementer ikke funnet."},
+    {"name": "Tripletex", "reason": "Kun webinarer og et fysisk kurs hos dem på Skøyen funnet, ingen kundekonferanse dokumentert."},
+    {"name": "Proplan Utvikling AS (Brukerkonferansen Proplan Tiltak)", "reason": "Kun søketreff om konferanse 2025 ved Gardermoen, selskapets hovedside ikke åpnet. Ikke tatt med."},
+    {"name": "Brainworker AS (HCL-brukerkonferanse)", "reason": "Kun 2024-blogginnlegg i søketreff, liten aktør, ikke åpnet."},
+    {"name": "Palo Alto Networks (Partner Xchange)", "reason": "Kun LinkedIn-treff, forbeholdt distributør- og partnernettverk, egen nettside ikke åpnet."},
+    {"name": "Unit4, SAP Norge, Microsoft Norge, Cisco Norge", "reason": "Dukket opp kun som partnere/foredragsholdere på andres arrangementer. Ingen egen arrangementsside åpnet."},
+    {"name": "MVP-Dagen, ERP-konferansen (Dataforeningen), Oslo Tech Show, Geonorge/Kartverket, EFO", "reason": "Arrangør er community, forening, messe eller offentlig organ, ikke tech-/SaaS-leverandør."},
+    {"name": "Visma Enterprise Plus fylkessamling", "reason": "Samling 23.-24. september 2026 på Clarion Hotel Oslo Airport funnet i søketreff (visma.qondor.com), ikke åpnet. Visma Software Nordic er tatt med på grunnlag av annen åpnet side."}
+  ]
+}

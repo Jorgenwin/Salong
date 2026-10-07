@@ -1,0 +1,17 @@
+# bygg og avhengigheter
+dist/
+node_modules/
+# hemmeligheter: aldri i repoet
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+credentials*.json
+# lokale filer
+.DS_Store
+*.log
+test-results/
+playwright-report/
+tests/e2e/*.png

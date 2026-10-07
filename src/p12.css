@@ -1,0 +1,59 @@
+/* ---------- Trinn 2: Kunnskap, fire svarblokker ---------- */
+.kn-b{border-left:3px solid var(--rule-2); padding:2px 0 2px 12px; display:grid; gap:6px; min-width:0}
+.kn-b>h4{margin:0 !important}
+.kn-b-kort{border-left-color:var(--accent); background:color-mix(in srgb,var(--sel) 70%,transparent); padding:10px 12px; border-radius:0 var(--r) var(--r) 0}
+.kn-kort{font-family:var(--serif); font-size:17px; line-height:1.45; color:var(--ink)}
+.kn-b-funn{border-left-color:color-mix(in srgb,var(--accent) 55%,var(--rule-2))}
+.kn-b-tall{border-left-color:var(--info)}
+.kn-b-mangl{border-left-color:var(--warn)}
+.kn-b-neste{border-left-color:var(--ink)}
+.kn-weak{font-size:13.5px; color:var(--warn); font-weight:600}
+.kn-cov{all:unset; cursor:pointer; margin-left:auto; font-size:12px; font-weight:600; padding:1px 9px; border-radius:999px; border:1px solid var(--rule-2); color:var(--ink); background:var(--surface)}
+.kn-cov:hover{border-color:var(--accent)} .kn-cov:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.kn-cov.weak{border-color:color-mix(in srgb,var(--warn) 55%,transparent); color:var(--warn); background:var(--warn-soft)}
+.kn-v{font-style:normal; font-size:11px; font-weight:600; padding:0 6px; border-radius:var(--r-sm); line-height:18px; display:inline-block; white-space:nowrap}
+.kn-v.ok{background:var(--accent-soft); color:var(--accent)} .kn-v.no{background:var(--warn-soft); color:var(--warn)}
+.kn-sum{display:grid; gap:3px; padding:10px 12px; background:var(--surface-2); border-radius:var(--r-sm); font-size:13px}
+.kn-sum b{font-size:15px}
+.kn-foot{justify-content:flex-end; gap:8px; flex-wrap:wrap; align-items:center}
+.kn-tmp.saved{border-style:solid; border-color:color-mix(in srgb,var(--accent) 40%,transparent); background:var(--sel)}
+.kn-tmp .row{flex:0 0 auto; gap:6px}
+.kn-past li .row{gap:12px}
+.kb-pins{display:grid; gap:8px; border-top:1px solid var(--rule); padding-top:12px}
+.kb-pin{border:1px solid var(--rule); border-left:3px solid var(--accent); border-radius:var(--r-sm); padding:8px 12px; display:grid; gap:4px; justify-items:start; font-size:13.5px}
+.kb-pin ul{margin:4px 0; padding-left:18px; display:grid; gap:4px} .kb-pin q{quotes:none; color:var(--muted); font-size:12.5px}
+.kb-pin summary{cursor:pointer; color:var(--accent); font-size:13px}
+/* ---------- Trinn 3: Kalender ---------- */
+.cal2{display:grid; gap:14px; min-width:0}
+.cal2-g{display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:16px; align-items:start}
+.cal2-main{display:grid; gap:12px; min-width:0}
+.cal2-side{display:grid; gap:12px; min-width:0}
+.cal-p{padding:14px 16px !important; gap:10px !important}
+.cal-p>header h2{font-size:16px !important}
+.cal-p .li{padding:7px 0} .cal-p .li .t{font-size:13.5px; font-weight:600} .cal-p .li .s{font-size:12px}
+.cal-st{font-size:11.5px; font-weight:600; color:var(--muted); white-space:nowrap; font-variant-numeric:tabular-nums}
+.cal-ut{display:grid; gap:2px}
+.cal-u{all:unset; cursor:pointer; display:grid; grid-template-columns:104px minmax(0,1fr) 62px; gap:8px; align-items:center; padding:5px 6px; border-radius:var(--r-sm); font-size:12.5px}
+.cal-u:hover{background:var(--surface-2)} .cal-u.on{background:var(--sel)} .cal-u:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.cal-u.sol .cal-un{font-weight:700}
+.cal-un{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.cal-ub{display:flex; gap:2px; height:10px; background:var(--surface-2); border-radius:var(--r-sm); overflow:hidden}
+.cal-ub i{display:block; height:100%; min-width:3px}
+.cal-ub i.bekreftet{background:var(--accent)} .cal-ub i.holdt{background:var(--amber)} .cal-ub i.dialog{background:var(--blue)}
+.cal-uv{text-align:right; color:var(--muted); font-variant-numeric:tabular-nums}
+.cal-w{list-style:none; margin:0; padding:0; display:grid; gap:0}
+.cal-w li{display:grid; grid-template-columns:104px minmax(0,1fr) auto; gap:8px; align-items:baseline; font-size:13px; padding:5px 0; border-top:1px dashed var(--rule)}
+.cal-w li:first-child{border-top:0}
+.cal-h3{font-family:var(--sans); font-size:11px; letter-spacing:.07em; text-transform:uppercase; font-weight:600; color:var(--muted); margin-top:4px}
+.cal tbody tr.focus th.room{background:var(--sel); box-shadow:inset 3px 0 0 var(--accent)}
+.cal2-main.one .cal tbody tr:not(.focus):not(.sep) td .bk{opacity:.45}
+.bk.imp{border:1px dashed currentColor}
+.cal2-main .filters select.in.fsel{width:auto; margin-left:auto}
+@media (max-width:1250px){ .cal2-g{grid-template-columns:1fr} .cal2-side{grid-template-columns:repeat(2,minmax(0,1fr))} .cal2-side .caldet{grid-column:1/-1} }
+@media (max-width:760px){ .cal2-side{grid-template-columns:1fr} }
+.lg.imp{background:transparent; border:1px dashed var(--muted)}
+
+.cal2-under{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; align-items:start}
+.cal2-side{position:sticky; top:88px}
+@media (max-width:1250px){ .cal2-side{position:static} }
+@media (max-width:900px){ .cal2-under{grid-template-columns:1fr} }

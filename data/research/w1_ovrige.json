@@ -1,0 +1,1296 @@
+{
+  "agent": "w1_ovrige",
+  "segments": [
+    "offentlig",
+    "utdanning",
+    "byra",
+    "nettverk"
+  ],
+  "accounts": [
+    {
+      "name": "Direktoratet for forvaltning og økonomistyring (DFØ)",
+      "website": "https://www.dfo.no/",
+      "domain": "dfo.no",
+      "segment": "offentlig",
+      "place": "Oslo",
+      "geo": "norge",
+      "size": null,
+      "about": "Statens fagorgan for økonomistyring, utredning av statlige tiltak, organisering og ledelse i staten og offentlige anskaffelser; leverer også lønns- og regnskapstjenester.",
+      "why": "Årlig anskaffelseskonferanse i Oslo og løpende kurs/seminarer; store flersalsarrangementer i hotell. Mulig kandidat for fagdager i Solstad og parallellrom.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Anskaffelseskonferansen 2026 arrangeres 3. november på Radisson Blu Plaza Hotel i Oslo, fysisk eller digitalt, med hovedsesjoner, tre parallellsaler (Sal A–C) og tjenestetorg med 26–30 utstillerplasser. DFØ har egen side for kurs og seminarer.",
+        "types": [
+          "konferanse",
+          "seminar",
+          "kurs"
+        ],
+        "frequency": "Anskaffelseskonferansen beskrives som et årlig arrangement",
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Radisson Blu Plaza Hotel, Oslo"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {
+            "date": "2026-11-03",
+            "title": "Anskaffelseskonferansen 2026",
+            "venue": "Radisson Blu Plaza Hotel, Oslo",
+            "url": "https://www.dfo.no/kurs-og-seminarer/konferanser-i-dfo/anskaffelseskonferansen-2026"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": "Kilden beskriver plenum, tre parallellsaler og tjenestetorg for 26–30 utstillere; deltakertall oppgis ikke.",
+      "contact_roles": [
+        "Kurs og konferanser",
+        "Events"
+      ],
+      "sources": [
+        {
+          "url": "https://www.dfo.no/",
+          "title": "DFØ forside",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://www.dfo.no/kurs-og-seminarer/konferanser-i-dfo/anskaffelseskonferansen-2026",
+          "title": "Anskaffelseskonferansen 2026 | DFØ",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Digitaliseringsdirektoratet (Digdir)",
+      "website": "https://www.digdir.no/",
+      "domain": "digdir.no",
+      "segment": "offentlig",
+      "place": "Oslo (arrangement)",
+      "geo": "norge",
+      "size": null,
+      "about": "Direktorat som skal bidra til en mer effektiv, brukerorientert og samordnet offentlig sektor gjennom digitalisering. Har egen arrangementsoversikt på nettsiden.",
+      "why": "Mange møter og samlinger, også fysiske i Oslo og en egen Digitaliseringskonferanse. Størrelse og leiebehov varierer, trolig mest relevant for mindre rom.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Forsiden lister kommende arrangement, blant annet KI Norge veiledningsmøte 7. oktober 2026 på Økern Portal i Oslo. Digdir omtaler også Digitaliseringskonferansen (åpningstale omtalt 16. juni 2026) og medarrangerer NOKIOS i Trondheim 20.–22. oktober.",
+        "types": [
+          "konferanse",
+          "seminar"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Økern Portal, Oslo"
+        ],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [
+          {
+            "date": "2026-10-07",
+            "title": "KI Norge veiledningsmøte",
+            "venue": "Økern Portal, Oslo",
+            "url": "https://www.digdir.no/kunstig-intelligens/ki-norge-veiledningsmote/8382"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://www.digdir.no/",
+          "title": "Digitaliseringsdirektoratet forside (arrangement, nyheter)",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Helsedirektoratet",
+      "website": "https://www.helsedirektoratet.no/",
+      "domain": "helsedirektoratet.no",
+      "segment": "offentlig",
+      "place": "Oslo",
+      "geo": "norge",
+      "size": null,
+      "about": "Direktorat som gir råd og veiledning til helse- og omsorgstjenestene i Norge. Har egen oversikt over konferanser og webinarer.",
+      "why": "Jevn strøm av konferanser og samlinger, men holder dem i egne lokaler i Vitaminveien; leiebehov kanskje størst for arrangementer som vokser ut av egne rom.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Forsiden viser 13 kommende arrangementer, blant annet Leverandørsamling om digitalisering (8. oktober) og Symposium Normen 20 år (13. oktober), begge i Helsedirektoratet, Vitaminveien 4 i Oslo, og digitalt.",
+        "types": [
+          "konferanse",
+          "seminar"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Helsedirektoratet, Vitaminveien 4, Oslo"
+        ],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [
+          {
+            "date": "2026-10-08",
+            "title": "Leverandørsamling om digitalisering i helse- og omsorgssektoren",
+            "venue": "Helsedirektoratet, Vitaminveien 4, Oslo og digitalt",
+            "url": "https://www.helsedirektoratet.no/konferanser/leverandorsamling"
+          },
+          {
+            "date": "2026-10-13",
+            "title": "Symposium Normen 20 år",
+            "venue": "Helsedirektoratet, Vitaminveien 4, 0483 Oslo og digitalt",
+            "url": "https://www.helsedirektoratet.no/konferanser/symposium-normen-20-ar"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://www.helsedirektoratet.no/",
+          "title": "Helsedirektoratet forside (arrangementer)",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Utdanningsdirektoratet (Udir)",
+      "website": "https://www.udir.no/",
+      "domain": "udir.no",
+      "segment": "offentlig",
+      "place": "Oslo (arrangement)",
+      "geo": "norge",
+      "size": null,
+      "about": "Direktorat med ansvar for barnehager, grunnskoler og videregående opplæring. Har offentlig kalender som viser konferanser og samlinger.",
+      "why": "Nasjonale konferanser og dialogsamlinger i Oslo-hoteller, men flere er målrettet fylker/sektor og kan være lukket eller fulltegnet. Mulig kandidat for fagdager.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Kalenderen viser Den nasjonale yrkesfagkonferansen 12.–13. oktober 2026 (markert fulltegnet, kan følges digitalt) og Dialogsamling om fullføringsretten 22.–23. oktober 2026 på Thon Hotel Opera, Oslo, med inntil seks representanter per fylkeskommune.",
+        "types": [
+          "konferanse",
+          "seminar"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Thon Hotel Opera, Dronning Eufemias gate 4, Oslo"
+        ],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [
+          {
+            "date": "2026-10-12",
+            "title": "Den nasjonale yrkesfagkonferansen",
+            "venue": "",
+            "url": "https://www.udir.no/kalender/"
+          },
+          {
+            "date": "2026-10-22",
+            "title": "Dialogsamling om fullføringsretten og mer opplæring",
+            "venue": "Thon Hotel Opera, Dronning Eufemias gate 4, Oslo",
+            "url": "https://www.udir.no/kalender/"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://www.udir.no/",
+          "title": "Forside | udir.no",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://www.udir.no/kalender/",
+          "title": "Kalender | udir.no",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Integrerings- og mangfoldsdirektoratet (IMDi)",
+      "website": "https://www.imdi.no/",
+      "domain": "imdi.no",
+      "segment": "offentlig",
+      "place": "Oslo",
+      "geo": "norge",
+      "size": null,
+      "about": "Direktorat som skal gjennomføre regjeringens integreringspolitikk og styrke kommuner og sektormyndigheters kompetanse på integrering og mangfold. Adresse Tollbugata 20, Oslo.",
+      "why": "Årskonferanse uten deltakeravgift med begrenset antall plasser i hotell, pluss regionale konferanser og fagverksteder. Kan passe som alternativ til hotell for ledersamling.",
+      "event_signal": {
+        "documented": true,
+        "summary": "IMDIs årskonferanse 2026 holdes 29. oktober kl. 09–16 på Radisson Blu Plaza Hotel i Oslo; ingen konferanseavgift og begrenset antall plasser, målgruppe ledere og beslutningstakere i stat, kommune, fylke, næringsliv og frivillighet. Forsiden lister også regionale konferanser og webinarer.",
+        "types": [
+          "konferanse",
+          "kurs"
+        ],
+        "frequency": "Årskonferanse omtales som en fast konferanse (fjorårets konferanse nevnt)",
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Radisson Blu Plaza Hotel, Oslo"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {
+            "date": "2026-10-29",
+            "title": "IMDIs årskonferanse 2026",
+            "venue": "Radisson Blu Plaza Hotel, Oslo",
+            "url": "https://www.imdi.no/kurs-og-arrangementer/arrangementer/imdis-arskonferanse-2026/"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://www.imdi.no/",
+          "title": "Forside | IMDi",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://www.imdi.no/kurs-og-arrangementer/arrangementer/imdis-arskonferanse-2026/",
+          "title": "IMDIs årskonferanse 2026 | IMDi",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Medietilsynet",
+      "website": "https://www.medietilsynet.no/",
+      "domain": "medietilsynet.no",
+      "segment": "offentlig",
+      "place": "Oslo (arrangement)",
+      "geo": "norge",
+      "size": null,
+      "about": "Statlig tilsyn på medieområdet som også arrangerer faglige konferanser; har egen arrangementsside.",
+      "why": "Arrangerer åpne, gratis fagkonferanser i Oslo og hadde Dataspillkonferansen i kinosal; en kandidat for et dagsarrangement med scene og mingling.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Dataspillkonferansen 2026 holdes 22. oktober kl. 10.00–14.30 på Vika kino eller digitalt, gratis, med lunsj, prisdryss og innlegg fra blant andre kultur- og likestillingsministeren. Medietilsynet har egen arrangementsside.",
+        "types": [
+          "konferanse"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Vika kino, Oslo"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {
+            "date": "2026-10-22",
+            "title": "Dataspillkonferansen 2026: Hva bør voksne vite om barn og gaming?",
+            "venue": "Vika kino eller digitalt",
+            "url": "https://www.medietilsynet.no/nyheter/arrangement/dataspillkonferansen-2026/"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://www.medietilsynet.no/",
+          "title": "Medietilsynet forside",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://www.medietilsynet.no/nyheter/arrangement/dataspillkonferansen-2026/",
+          "title": "Dataspillkonferansen 2026 | Medietilsynet",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Direktoratet for høyere utdanning og kompetanse (HK-dir)",
+      "website": "https://hkdir.no/",
+      "domain": "hkdir.no",
+      "segment": "utdanning",
+      "place": "Oslo",
+      "geo": "norge",
+      "size": null,
+      "about": "Direktorat for høyere utdanning og kompetanse. Arrangerer sammen med NOKUT Konferanse for høyere utdanning, og har egen arrangementsside.",
+      "why": "Sektorkonferanse for UH-ledere med fysisk og digital deltakelse i Oslo, avholdt for andre gang; mulig tilbakevendende leietaker ved bytte av arena.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Konferanse for høyere utdanning 2026 arrangeres 13. oktober på Radisson Blu Plaza Hotel i Oslo (fysisk og digitalt) av NOKUT og HK-dir i fellesskap, for andre gang, med sosial samling kvelden før; målgruppe ledere og administrativt ansatte i UH-sektoren.",
+        "types": [
+          "konferanse"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Radisson Blu Plaza Hotel, Oslo"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {
+            "date": "2026-10-13",
+            "title": "Konferanse for høyere utdanning 2026",
+            "venue": "Radisson Blu Plaza Hotel, Oslo",
+            "url": "https://hkdir.no/arrangementer/konferanse-for-hoyere-utdanning-2026"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Programme Manager"
+      ],
+      "sources": [
+        {
+          "url": "https://hkdir.no/arrangementer/konferanse-for-hoyere-utdanning-2026",
+          "title": "Konferanse for høyere utdanning 2026 | HK-dir",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Voksenopplæringsforbundet (Vofo)",
+      "website": "https://www.vofo.no/",
+      "domain": "vofo.no",
+      "segment": "utdanning",
+      "place": "Oslo",
+      "geo": "norge",
+      "size": null,
+      "about": "Paraplyorganisasjon for studieforbund og frivillig voksenopplæring, med adresse Christian Krohgs gate 10, Oslo.",
+      "why": "Årlig årskonferanse i Oslo mot studieforbund og frivillige organisasjoner, åpen for interesserte. Brukte Frivillighetens Hus i 2026; mulig alternativ for neste års konferanse.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Årskonferanse 2026 ble holdt 27. mai på Frivillighetens Hus i Oslo, rettet mot studieforbund og medlemsorganisasjoner og åpen for alle interesserte; konferansen markerte 50 år med voksenopplæringsloven. Samskapingskonferanse i Telemark er utsatt.",
+        "types": [
+          "konferanse",
+          "årsmøte"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Frivillighetens Hus, Oslo"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://www.vofo.no/aktuelt/arskonferanse-2026",
+          "title": "Årskonferanse 2026 | Voksenopplæringsforbundet",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://www.vofo.no/aktuelt/voksenopplaering-demokrati-og-samfunnsrolle",
+          "title": "Voksenopplæring, demokrati og samfunnsrolle | Vofo",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Kunsthøgskolen i Oslo (KHiO)",
+      "website": "https://khio.no/",
+      "domain": "khio.no",
+      "segment": "utdanning",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Kunsthøgskole i Oslo med egen arrangementskalender som viser seminarer, konferanser, seminarserier og åpen dag.",
+      "why": "Mange fagseminarer og konferanser per år; har brukt eksterne arenaer (Sentralen til Dansekonferansen). Størst potensial for tematiske seminarer og kunstfaglige konferanser.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Arrangementslisten for 2026 viser flere seminarer/konferanser, blant annet Artistic Research Week (19.–23. januar, gratis) og Dansekonferansen 21.–22. januar på Sentralen, Marmorsalen, gratis med påmelding. Åpen dag holdes torsdag 12. november. Seminarserier som Agenda holdes oftest på Kunstnernes Hus.",
+        "types": [
+          "konferanse",
+          "seminar"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Sentralen, Marmorsalen, Oslo",
+          "Kunstnernes Hus"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {
+            "date": "2026-11-12",
+            "title": "Åpen dag 2026",
+            "venue": "Kunsthøgskolen i Oslo",
+            "url": "https://khio.no/events/2445"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://khio.no/events/2445",
+          "title": "Åpen dag 2026 - Kunsthøgskolen i Oslo",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://khio.no/events/report/2026",
+          "title": "Arrangementer 2026 - Kunsthøgskolen i Oslo",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://khio.no/events/2300",
+          "title": "Dansekonferansen 2026 - Kunsthøgskolen i Oslo",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://khio.no/arrangementer/seminarserier",
+          "title": "Seminarserier - Kunsthøgskolen i Oslo",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Handelshøyskolen BI",
+      "website": "https://www.bi.no/",
+      "domain": "bi.no",
+      "segment": "utdanning",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Handelshøyskole med campus Oslo og eget arrangementskalender; arrangerer frokostseminarer, nettverksmøter og nasjonale konferanser.",
+      "why": "Mye arrangementsvolum på egen campus, så leiebehov er trolig begrenset til større konferanser eller eksterne sammenhenger. Kan være partner for felles arrangement.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Kalenderen viser Lederens verktøykasse, beskrevet som BIs månedlige frokostseminar og nettverksmøteplass (gratis), neste 30. oktober 2026 på BI campus Oslo, og Forskerutdanningskonferansen 22.–23. oktober 2026 på BI campus Oslo.",
+        "types": [
+          "seminar",
+          "konferanse"
+        ],
+        "frequency": "månedlig (Lederens verktøykasse)",
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "BI campus Oslo"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {
+            "date": "2026-10-22",
+            "title": "Forskerutdanningskonferansen 2026",
+            "venue": "BI campus Oslo",
+            "url": "https://www.bi.no/om-bi/kalender/2026/oktober/forskerutdanningskonferansen-2026/"
+          },
+          {
+            "date": "2026-10-30",
+            "title": "Lederens verktøykasse: Slik setter du kunden i sentrum - på ordentlig",
+            "venue": "BI campus Oslo, A1-040 (Finn Øien)",
+            "url": "https://www.bi.no/om-bi/kalender/2026/oktober/lederens-verktoykasse-slik-setter-du-kunden-i-sentrum---pa-ordentlig/"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://www.bi.no/om-bi/kalender/2026/oktober/lederens-verktoykasse-slik-setter-du-kunden-i-sentrum---pa-ordentlig/",
+          "title": "Lederens verktøykasse | BI",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://www.bi.no/om-bi/kalender/2026/oktober/forskerutdanningskonferansen-2026/",
+          "title": "Forskerutdanningskonferansen 2026 | BI",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "VID vitenskapelige høgskole (VID Oslo)",
+      "website": "https://www.vid.no/",
+      "domain": "vid.no",
+      "segment": "utdanning",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Høgskole med Oslo-campus som arrangerer konferanser og åpne forelesninger, blant annet doktorgradskonferanse arrangert av Senter for diakoni og profesjonspraksis.",
+      "why": "Åpne forelesninger og fagkonferanser på egen campus; leiebehov uklart, men miljøet har fagnettverk som kan trekke publikum til byen.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Åpen forelesning om KI i forskning og kritisk tenkning 26. oktober 2026 kl. 13.15–14.30 på VID Oslo, som del av en doktorgradskonferanse arrangert av Senter for diakoni og profesjonspraksis (SDP).",
+        "types": [
+          "konferanse",
+          "seminar"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "VID Oslo"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {
+            "date": "2026-10-26",
+            "title": "Open lecture on AI in research and critical thinking",
+            "venue": "VID Oslo",
+            "url": "https://www.vid.no/en/events/open-lecture-on-ai-in-research-and-critical-thinking"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://www.vid.no/en/events/open-lecture-on-ai-in-research-and-critical-thinking",
+          "title": "Open lecture on AI in research and critical thinking - vid.no",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Studieforbundet kultur og tradisjon",
+      "website": "https://www.kulturogtradisjon.no/",
+      "domain": "kulturogtradisjon.no",
+      "segment": "utdanning",
+      "place": "Oslo",
+      "geo": "norge",
+      "size": null,
+      "about": "Studieforbund for kultur- og tradisjonsorganisasjoner med medlemsorganisasjoner over hele landet; arrangerer årsmøte med faglige innlegg.",
+      "why": "Årsmøte med medlemsorganisasjoner i Oslo, flyttbar hvert år; mulig leietaker for årsmøte og medlemskonferanse.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Studieforbundet samlet medlemsorganisasjonene til årsmøte på Håndverkeren i Oslo i mai 2026 (oppført 20.05.26), med faglige innlegg, gruppearbeid og filmpremiere. Omtalt i innlegg publisert 25. mai.",
+        "types": [
+          "årsmøte",
+          "seminar"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Håndverkeren, Oslo"
+        ],
+        "months": [],
+        "open_closed": "lukket",
+        "next_dates": [],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://www.kulturogtradisjon.no/post/%C3%A5rsm%C3%B8te-i-studieforbundet-fellesskap-fag-og-viktige-samtalar",
+          "title": "Årsmøte i Studieforbundet: fellesskap, fag og viktige samtalar",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://www.kulturogtradisjon.no/%C3%A5rsm%C3%B8te",
+          "title": "Årsmøte | Studieforbundet kultur og tradisjon",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Geelmuyden Kiese",
+      "website": "https://gknordic.com/",
+      "domain": "gknordic.com",
+      "segment": "byra",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Nordisk kommunikasjonsbyrå med kontor i Oslo (St. Olavs plass 5). Arrangerer frokostseminarer i egne lokaler.",
+      "why": "Byrået inviterer til bransjeseminarer med paneler; vokser et arrangement ut av kontoret er Litteraturhuset et naturlig alternativ. Også mulig kanal til byråets kunder.",
+      "event_signal": {
+        "documented": true,
+        "summary": "GK FOOD frokostseminar 20. oktober 2026 kl. 08.00–10.00 i byråets lokaler (St. Olavs plass 5, 9. etasje) med paneldebatt og mingling.",
+        "types": [
+          "seminar",
+          "debatt",
+          "mingle"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Geelmuyden Kiese / Paritee, St. Olavs plass 5, 9. etasje, Oslo"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {
+            "date": "2026-10-20",
+            "title": "Når mat blir et spørsmål om tillit (GK FOOD frokostseminar)",
+            "venue": "St. Olavs plass 5, 9. etasje, Oslo",
+            "url": "https://gknordic.com/no/event/nar-mat-blir-et-sporsmal-om-tillit/"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://gknordic.com/no/event/nar-mat-blir-et-sporsmal-om-tillit/",
+          "title": "Når mat blir et spørsmål om tillit - Geelmuyden Kiese",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Bas Kommunikasjon",
+      "website": "https://www.bas.no/",
+      "domain": "bas.no",
+      "segment": "byra",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Oslo-basert aktør innen kundekommunikasjon og lojalitet (Youngstorget 3) som arrangerer kurs, frokostseminarer og Dialogkonferansen.",
+      "why": "Egen konferanse som kaller seg Nordens største innen feltet, pluss gjentatte frokostseminarer (flere markert fulle). Kan trenge en scene med plass til flere.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Dialogkonferansen holdes 22. september 2026 på Cosmopolite Scene og Nieu i Oslo, omtalt som Nordens største konferanse innen kundekommunikasjon og lojalitet. Siden viser også tidligere frokostseminarer, flere markert Fullt.",
+        "types": [
+          "konferanse",
+          "seminar"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Cosmopolite Scene, Oslo",
+          "Nieu, Oslo"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://www.bas.no/kurs-og-konferanser",
+          "title": "Kurs og konferanser - Bas Kommunikasjon",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Involve! Advertising",
+      "website": "https://involve.no/",
+      "domain": "involve.no",
+      "segment": "byra",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Byrå med kontor på Bestumstubben 11 i Oslo som holder frokostseminarer om medie- og kommunikasjonsfag.",
+      "why": "Frokostseminarer med flere innledere viser vilje til å invitere kunder og bransje. Det er uklart om de holdes eksternt.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Frokostseminar «Slik blir du eksperten mediene ringer!» med mingling og flere innlegg fra byråets rådgivere; siden er publisert i mai 2026, dato og sted fremgår ikke av lesbart innhold.",
+        "types": [
+          "seminar",
+          "mingle"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [],
+        "confidence": "medium"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://involve.no/aktuelt/frokostseminar-slik-blir-du-eksperten-mediene-ringer/",
+          "title": "Frokostseminar: Slik blir du eksperten mediene ringer! - Involve",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Macsimum",
+      "website": "https://macsimum.no/",
+      "domain": "macsimum.no",
+      "segment": "byra",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Konferanseprodusent og eventbyrå med Oslo-adresse (Universitetsgata 2) som utvikler faglige møteplasser for fagmiljøer, blant annet JavaZone, NIC og Sikkerhetsfestivalen.",
+      "why": "Produserer og utvikler flere faglige konferanser selv og kan velge arena for kunders arrangementer; en mulig vei inn til flere konferanser om gangen.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Nettsiden oppgir at Macsimum utvikler faglige møteplasser, nevner JavaZone, NIC (sky, sikkerhet, IT-infrastruktur) og Sikkerhetsfestivalen, og tilbyr konferanser og faglige møteplasser fra idé til gjennomføring. Datoer og steder oppgis ikke på sidene jeg leste.",
+        "types": [
+          "konferanse"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [],
+        "confidence": "medium"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Programme Manager"
+      ],
+      "sources": [
+        {
+          "url": "https://macsimum.no/",
+          "title": "Macsimum – konferanseproduksjon og tech-eventer i Norge",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://macsimum.no/om-oss",
+          "title": "Om oss – Macsimum",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Z Event (avdeling Oslo)",
+      "website": "https://zevent.no/",
+      "domain": "zevent.no",
+      "segment": "byra",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": "M",
+      "about": "Eventbyrå med Oslo-avdeling i Pilestredet 27 (ca. 50 ansatte i Oslo) som planlegger og gjennomfører konferanser, seminarer, lanseringer og awards for kunder.",
+      "why": "Eventbyrå som bestiller lokaler for kunder (over 300 eventer per år, ifølge egen side); et byrå som anbefaler venue kan bli en viktig videreformidler.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Nettsiden sier byrået produserer over 300 eventer i året for kunder over hele Norge, blant annet konferanser, ledersamlinger, seminarer, lanseringsevent og awards. Konkrete datoer eller steder oppgis ikke.",
+        "types": [
+          "konferanse",
+          "seminar",
+          "lansering"
+        ],
+        "frequency": "over 300 eventer i året (selvoppgitt, hele Norge)",
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [],
+        "months": [],
+        "open_closed": "lukket",
+        "next_dates": [],
+        "confidence": "medium"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Account Manager"
+      ],
+      "sources": [
+        {
+          "url": "https://zevent.no/z-event-oslo",
+          "title": "Z Event avdeling Oslo",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "M51 Marketing",
+      "website": "https://m51.no/",
+      "domain": "m51.no",
+      "segment": "byra",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Markedsføringsaktør i Oscars gate 32 i Oslo som publiserer innsikt og inviterer til frokostseminarer.",
+      "why": "Byrået arrangerer seminarer for kunder og markedsførere i egne lokaler med begrenset antall plasser, et mulig behov når publikum vokser ut av kontoret.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Invitasjon til frokostseminar om AI-agenter i markedsføring torsdag 12. mars 2026 kl. 09.00–10.30 i Oscars gate 32 i Oslo, med begrenset antall plasser.",
+        "types": [
+          "seminar"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Oscars gate 32, Oslo"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://m51.no/innsikt/bli-med-pa-frokostseminar-hos-oss-12-mars/",
+          "title": "Bli med på frokostseminar hos oss 12. mars | M51",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Kommunikasjonsforeningen",
+      "website": "https://www.kommunikasjon.no/",
+      "domain": "kommunikasjon.no",
+      "segment": "nettverk",
+      "place": "Oslo",
+      "geo": "norge",
+      "size": "L",
+      "about": "Fagforening for kommunikasjonsfolk med kontor i Brugata 19, Oslo, som tilbyr kurs, seminarer, medlemsmøter og årlige konferanser.",
+      "why": "Største arrangement samler flere hundre i Oslo hver vår, og foreningen holder mange regionale møter. Solstad er relevant for Kommunikasjonsdagen, mindre rom for kurs og frokostmøter.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Høstseminaret 2026 holdes 21. oktober på Quality River Station hotell i Drammen (åpent for alle, pris oppgitt). Kommunikasjonsdagen 2027 holdes torsdag 22. april, og siden sier at flere hundre deltakere samles i Oslo hver vår. Foreningen har også kurs og medlemsarrangementer over hele landet.",
+        "types": [
+          "konferanse",
+          "seminar",
+          "kurs"
+        ],
+        "frequency": "Kommunikasjonsdagen årlig; Høstseminaret årlig siden 1967",
+        "typical_attendance": "flere hundre (Kommunikasjonsdagen)",
+        "attendance_source": "https://www.kommunikasjon.no/kurs-og-arrangementer",
+        "venues": [
+          "Quality River Station hotell, Drammen"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {
+            "date": "2026-10-21",
+            "title": "Høstseminaret 2026",
+            "venue": "Quality River Station hotell, Drammen",
+            "url": "https://www.kommunikasjon.no/kurs-og-arrangementer/hostseminaret"
+          },
+          {
+            "date": "2027-04-22",
+            "title": "Kommunikasjonsdagen 2027",
+            "venue": "Oslo",
+            "url": "https://www.kommunikasjon.no/kurs-og-arrangementer"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": "Kilden oppgir flere hundre deltakere på Kommunikasjonsdagen i Oslo; kan sammenlignes med Solstads kapasitet.",
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://www.kommunikasjon.no/kurs-og-arrangementer",
+          "title": "Kurs og arrangementer - Kommunikasjonsforeningen",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://www.kommunikasjon.no/kurs-og-arrangementer/hostseminaret",
+          "title": "Høstseminaret 2026 - Kommunikasjonsforeningen",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Markedsføringsforeningen i Oslo",
+      "website": "https://www.mfo.no/",
+      "domain": "mfo.no",
+      "segment": "nettverk",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Forening for markedsføringsfolk i Oslo (Tordenskiolds gate 2) som holder frokostmøter med faglig program og mingling.",
+      "why": "Gjentakende frokostmøter i Oslo-lokaler og kinosaler; nettverk med bransjesponsorer. Kan være et naturlig sted å ta seminarserier med kunstnerisk eller litterær vinkling.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Frokostmøte «Millionfesten utenfor banen» 24. september 2026 kl. 08.30–11.00 på Klingenberg kino; neste frokostmøte «Fra innsikt til resultater – slik vinner du B2B-kunden» 25. november kl. 09–11 på Vika kino. Arrangør oppgis som Markedsføringsforeningen i Oslo Drift AS.",
+        "types": [
+          "seminar",
+          "mingle"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Klingenberg kino, Oslo",
+          "Vika kino, Oslo"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {
+            "date": "2026-11-25",
+            "title": "Frokostmøte: Fra innsikt til resultater – slik vinner du B2B-kunden",
+            "venue": "Vika kino, Oslo",
+            "url": "https://event.checkin.no/231286/frokostmoete-fra-innsikt-til-innflytelse-slik-vinner-du-b2b-kunden"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://www.mfo.no/vm-frokost",
+          "title": "Frokostmøte: Millionfesten utenfor banen | Markedsføringsforeningen i Oslo",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://event.checkin.no/231286/frokostmoete-fra-innsikt-til-innflytelse-slik-vinner-du-b2b-kunden",
+          "title": "Frokostmøte 25. nov. 2026 – Markedsføringsforeningen i Oslo Drift AS",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Dataforeningen",
+      "website": "https://dataforeningen.no/",
+      "domain": "dataforeningen.no",
+      "segment": "nettverk",
+      "place": "Oslo",
+      "geo": "norge",
+      "size": null,
+      "about": "Nettverk for teknologi- og IT-profesjonelle med arrangementer i Oslo, spesialgrupper og partnere; arrangerer konferansen Make Data Smart.",
+      "why": "Konferanse med flere saler (plenum og fire parallellsaler) og partnere, avholdt på hotell; en kandidat for teknologinettverk med behov for scene og bredt program.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Make Data Smart Oslo 2026 holdes 2. november på Radisson Blu Scandinavia Hotel i Oslo, med keynotes, workshops, partnere og pitching-konkurranse; programmet viser plenum og fire parallellsaler. Arrangert av komité fra BI & Analytics Oslo.",
+        "types": [
+          "konferanse",
+          "kurs"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Radisson Blu Scandinavia Hotel, Oslo"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {
+            "date": "2026-11-02",
+            "title": "Make Data Smart Oslo 2026",
+            "venue": "Radisson Blu Scandinavia Hotel, Oslo",
+            "url": "https://dataforeningen.no/arrangementer/oslo/konferanse/make-data-smart-2026"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Programme Manager"
+      ],
+      "sources": [
+        {
+          "url": "https://dataforeningen.no/arrangementer/oslo/konferanse/make-data-smart-2026",
+          "title": "Make Data Smart 2026 | Dataforeningen",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Det Norske Videnskaps-Akademi (DNVA)",
+      "website": "https://www.dnva.no/",
+      "domain": "dnva.no",
+      "segment": "nettverk",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Vitenskapsakademi i Drammensveien 78, Oslo, med fast program av åpne møter, foredrag, komitémøter og konferanser.",
+      "why": "Tett program med åpne foredrag i egne lokaler (Kavlisalen); kan ha behov for større sal ved tema med bred interesse. Eget hus gir lavere leiebehov.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Arrangementslisten viser mange kommende møter i oktober–november 2026, blant annet åpent foredrag om masseutryddelser 22. oktober kl. 18 og møte om akademisk frihet 27. oktober kl. 17.30 (åpent, påmelding), begge i akademiets lokaler i Drammensveien 78.",
+        "types": [
+          "seminar",
+          "debatt",
+          "konferanse"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Det Norske Videnskaps-Akademi, Drammensveien 78, Oslo (Kavlisalen)"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {
+            "date": "2026-10-22",
+            "title": "Foredrag om: «Masseutryddelser og klimaendringer gjennom de siste 500 millioner år»",
+            "venue": "Det Norske Videnskaps-Akademi, Drammensveien 78",
+            "url": "https://www.dnva.no/detskjer/2026/05/foredrag-om-masseutryddelser-og-klimaendringer-gjennom-de-siste-500-millioner-ar"
+          },
+          {
+            "date": "2026-10-27",
+            "title": "Akademisk frihet under press – rettslige rammer og erfaringer fra Sverige",
+            "venue": "Kavlisalen, Det Norske Videnskaps-Akademi",
+            "url": "https://www.dnva.no/detskjer/2026/08/akademisk-frihet-under-press-rettslige-rammer-og-erfaringer-fra-sverige"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://www.dnva.no/arrangementer/kommende",
+          "title": "Events upcoming | Det Norske Videnskaps-Akademi",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://www.dnva.no/detskjer/2026/08/akademisk-frihet-under-press-rettslige-rammer-og-erfaringer-fra-sverige",
+          "title": "Akademisk frihet under press | DNVA",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://www.dnva.no/detskjer/2026/05/foredrag-om-masseutryddelser-og-klimaendringer-gjennom-de-siste-500-millioner-ar",
+          "title": "Foredrag om masseutryddelser | DNVA",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "HER Programmet (Hun Etablerer Ressursprogrammet)",
+      "website": "https://www.herprogrammet.no/",
+      "domain": "herprogrammet.no",
+      "segment": "nettverk",
+      "place": "Oslo",
+      "geo": "norge",
+      "size": null,
+      "about": "Nettverk og plattform for kvinnelige gründere og ledere med kontor på Bygdøy Allé 111 i Oslo; tilbyr medlemskap, workshops, kurs og nettverkstreff.",
+      "why": "Månedlige treff og workshops i Oslo, noen åpne for ikke-medlemmer. Treffene er små, men medlemsnettverket kan være interessant for større dagsarrangementer.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Forsiden lister kommende arrangementer, blant annet HER Meet & Connect – Oslo (17. september og 14. oktober, Asia, Aker Brygge) og digitale co-working-økter. Arrangementssiden beskriver Meet & Connect som et månedlig samlingspunkt, gratis for medlemmer og åpent for andre.",
+        "types": [
+          "mingle",
+          "kurs"
+        ],
+        "frequency": "månedlig (Meet & Connect)",
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Asia, Aker Brygge, Oslo"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {
+            "date": "2026-10-14",
+            "title": "HER Meet & Connect - Oslo",
+            "venue": "Asia, Aker Brygge, Oslo",
+            "url": "https://www.herprogrammet.no/"
+          }
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://www.herprogrammet.no/",
+          "title": "Hjem | HER Programmet",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://www.herprogrammet.no/event-details/her-meet-connect-oslo-11",
+          "title": "HER Meet & Connect - Oslo | HER Programmet",
+          "checked": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "name": "Human-Etisk Forbund",
+      "website": "https://www.human.no/",
+      "domain": "human.no",
+      "segment": "nettverk",
+      "place": "Oslo",
+      "geo": "norge",
+      "size": null,
+      "about": "Humanistisk livssynsorganisasjon med eget arrangementsprogram: seminarer, filosofipub, dialogkafeer, kurs og sosiale treff, lokalt og nasjonalt.",
+      "why": "Svært stort og vedvarende arrangementsprogram, mye lokalt. Landsdekkende seminarer og debatter kan flyttes til en sentral Oslo-scene; filosofi og debatt passer huset.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Arrangementssiden lister mange arrangementer fra slutten av september og utover, blant annet filosofipub, dialogkafé, ordduell og Etikkseminaret 2026 på Soria Moria Hotell i Oslo (dato fremstår som 11.10, men ukedagen på siden stemmer ikke). Humanistisk Kompass har helgesamlinger på hotell i Oslo 23.–25. oktober 2026.",
+        "types": [
+          "seminar",
+          "debatt",
+          "kurs",
+          "mingle"
+        ],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [
+          "Soria Moria Hotell, Oslo"
+        ],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [],
+        "confidence": "medium"
+      },
+      "room_hint": null,
+      "contact_roles": [
+        "Events",
+        "Communications"
+      ],
+      "sources": [
+        {
+          "url": "https://www.human.no/arrangementer",
+          "title": "Arrangementer | Human-Etisk Forbund",
+          "checked": "2026-10-06"
+        },
+        {
+          "url": "https://www.human.no/humanistisk-kompass",
+          "title": "Humanistisk Kompass - Human-Etisk Forbund",
+          "checked": "2026-10-06"
+        }
+      ]
+    }
+  ],
+  "rejected": [
+    {
+      "name": "Utdanningsforbundet",
+      "reason": "finnes allerede i existing.json"
+    },
+    {
+      "name": "Kulturdirektoratet / Kulturrådet",
+      "reason": "forsiden åpnet, men ingen arrangementer funnet; ikke tatt med"
+    },
+    {
+      "name": "Statistisk sentralbyrå (SSB)",
+      "reason": "forsiden åpnet, men ingen arrangementsinformasjon funnet"
+    },
+    {
+      "name": "Språkrådet",
+      "reason": "forsiden åpnet, men ingen arrangementer funnet"
+    },
+    {
+      "name": "Bufdir",
+      "reason": "forsiden åpnet, men ingen arrangementer funnet"
+    },
+    {
+      "name": "Riksantikvaren",
+      "reason": "forsiden åpnet og lenker til arrangementskalender, men kalenderen kunne ikke åpnes (fant ikke siden); ikke dokumentert"
+    },
+    {
+      "name": "Folkeuniversitetet",
+      "reason": "arrangementssiden viser språkkafé (Asker) og webinarer, men ingen daterte fysiske Oslo-arrangementer funnet; ikke tatt med"
+    },
+    {
+      "name": "Akademiet Videreutdanning (tidl. AOF Norge)",
+      "reason": "ingen fysiske arrangementer dokumentert (nettbasert studietilbud)"
+    },
+    {
+      "name": "Fagskolen Oslo",
+      "reason": "forsiden åpnet, men ingen arrangementsprogram funnet"
+    },
+    {
+      "name": "Event.no, CIC Event, Kjentfolk, Compass Event, Lead Event",
+      "reason": "eventbyråer verifisert via søk, men ikke prioritert (utenfor Oslo, ingen egne arrangementer dokumentert, eller samme mønster som Z Event)"
+    },
+    {
+      "name": "Metro Branding",
+      "reason": "verifisert seminar i Oslo (april 2026), men hovedkontor i Sandefjord; utelatt for balanse"
+    },
+    {
+      "name": "Oslogruppen (antroposofisk)",
+      "reason": "har høstprogram, men er en liten forening med eget bibliotek/lokale; lav sannsynlighet for leie"
+    },
+    {
+      "name": "NHO Geneo, Virke, Oslo Handelskammer-lignende organisasjoner, NITO",
+      "reason": "hører til segmentet fag/bransjeorganisasjoner (andre agenters oppdrag)"
+    },
+    {
+      "name": "Sentralen, Mesh, Vika kino, Klingenberg kino, Trekanten",
+      "reason": "konkurrerende venues; nevnt kun som arenaer i kildene"
+    },
+    {
+      "name": "Subjekt",
+      "reason": "arrangementet ligger på Litteraturhuset; ikke ekstern kunde"
+    },
+    {
+      "name": "WebFetch-verktøyet",
+      "reason": "teknisk forbehold: WebFetch ble avvist (URL ikke i provenance), så sider ble åpnet via Firecrawl og Exa; Firecrawl ble rate-begrenset"
+    },
+    {
+      "name": "Etikkseminaret-dato hos Human-Etisk Forbund",
+      "reason": "forbehold: siden viser 11.10 med ukedag lørdag, som ikke stemmer for 2026; dato derfor ikke oppgitt i next_dates"
+    },
+    {
+      "name": "Enkelte kilder lest via søkeutdrag",
+      "reason": "forbehold: HER Programmet (14. oktober), Markedsføringsforeningen 25. november, KHiO-lister og DNVA-detaljsider ble lest som utdrag fra søk, ikke alle som egne sideåpninger"
+    }
+  ]
+}

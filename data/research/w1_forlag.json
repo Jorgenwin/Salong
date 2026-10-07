@@ -1,0 +1,729 @@
+{
+  "agent": "w1_forlag",
+  "segments": ["forlag"],
+  "accounts": [
+    {
+      "name": "Kagge Forlag",
+      "website": "https://kagge.no",
+      "domain": "kagge.no",
+      "segment": "forlag",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Oslo-forlag (Akersgata 45) som utgir sakprosa og skjønnlitteratur og fyller 30 år i 2026.",
+      "why": "Lanserer jevnlig i Oslo, tidligere på Litteraturhuset og nå på Nasjonalbiblioteket; kan være aktuell for større lanseringer av sakprosa-toppitler.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Forlagets egen billettside viser lanseringer: Arne Johan Vetlesen 18.08.2026 i Skram, Litteraturhuset; Terje Tvedt «Norges historie» 20.10.2026 kl. 18.30 på Nasjonalbiblioteket (gratis husbillett, begrenset antall plasser i Målstova). Bok365 omtaler en høstfest i september for 30-årsjubileet.",
+        "types": ["lansering"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Litteraturhuset", "Nasjonalbiblioteket (Målstova)"],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {"date": "2026-10-20", "title": "Boklansering: Norges historie. Med verden som speil av Terje Tvedt", "venue": "Nasjonalbiblioteket, Oslo", "url": "https://kaggeforlag.ticketco.events/no/nb/e/boklansering_norges_historie_med_verden_som_speil_av_terje_tvedt"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Marketing", "Events"],
+      "sources": [
+        {"url": "https://kaggeforlag.ticketco.events/no/nb", "title": "TicketCo - Arrangementer Kagge Forlag", "checked": "2026-10-06"},
+        {"url": "https://kaggeforlag.ticketco.events/no/nb/e/boklansering_norges_historie_med_verden_som_speil_av_terje_tvedt", "title": "Boklansering Norges historie (Terje Tvedt)", "checked": "2026-10-06"},
+        {"url": "https://kagge.no/aktuelt/kagge-forlag-30-ar/", "title": "Kagge Forlag 30 år", "checked": "2026-10-06"},
+        {"url": "https://bok365.no/artikkel/kagge-forlag-blir-30-ar-og-lanserer-bokhandelpris/", "title": "Kagge Forlag fyller 30 år (BOK365)", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Bonnier Norsk Forlag",
+      "website": "https://www.bonniernorskforlag.no",
+      "domain": "bonniernorskforlag.no",
+      "segment": "forlag",
+      "place": "Norge",
+      "geo": "norge",
+      "size": null,
+      "about": "Norsk forlag med skjønnlitteratur, krim og sakprosa. Nettsiden viser en høstturné for forfatteren Vetle Lid Larssen (Dragsug-turneen).",
+      "why": "Forlaget legger forfatterbesøk til Litteraturhuset (mars 2026) og kjører forfatterturneer; kan trenge Oslo-sal for større lanseringer.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Forlagets pressemelding 27.2.2026 sier Thomas Korsgaard deltar på to arrangementer på Litteraturhuset i Oslo 5. og 6. mars 2026 (samtaler med Vigdis Hjorth og Janne Stigen Drangsholt). Forsiden omtaler «Dragsug-turneen» med oversikt over høstens turné; datoer er ikke lest.",
+        "types": ["lansering"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Litteraturhuset"],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [],
+        "confidence": "medium"
+      },
+      "room_hint": null,
+      "contact_roles": ["Communications", "Marketing"],
+      "sources": [
+        {"url": "https://www.bonniernorskforlag.no/", "title": "Bonnier Norsk Forlag (forside)", "checked": "2026-10-06"},
+        {"url": "https://kommunikasjon.ntb.no/pressemelding/18799200/thomas-korsgaard-lanserer-ny-bok-i-oslo?lang=no&publisherId=17848269", "title": "Thomas Korsgaard lanserer ny bok i Oslo (pressemelding)", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Vigmostad & Bjørke",
+      "website": "https://vigmostadbjorke.no",
+      "domain": "vigmostadbjorke.no",
+      "segment": "forlag",
+      "place": "Oslo / Bergen",
+      "geo": "norge",
+      "size": null,
+      "about": "Forlag med kontor i Oslo (St. Olavs gate 12) og Bergen, omtalt som Norges fjerde største forlagshus. Forlagshuset omfatter ifølge forlagets side blant annet Fagbokforlaget, Bladkompaniet, Eide, Norsk Musikkforlag og Akademika.",
+      "why": "Stort forlagshus med Oslo-kontor og egen høstlansering; konsernet dekker også fagbok og fagbokhandel, så flere mulige arrangementstyper.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Forleggerforeningens kalender lister «Høstlansering Vigmostad & Bjørke» 19. august kl. 15.00, Oslo (oppføringen er publisert 29.5.2026; årstall er utledet fra publiseringsdato). Dokumentasjonen er fra tredjepartskalender, ikke forlagets egen side.",
+        "types": ["lansering"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [],
+        "months": ["august"],
+        "open_closed": "ukjent",
+        "next_dates": [],
+        "confidence": "medium"
+      },
+      "room_hint": null,
+      "contact_roles": ["Marketing", "Events"],
+      "sources": [
+        {"url": "https://vigmostadbjorke.no/side/om-forlaget", "title": "Om forlaget | Vigmostad & Bjørke", "checked": "2026-10-06"},
+        {"url": "https://forleggerforeningen.no/kalenderhendelser/hostlansering-vigmostad-bjorke-2/", "title": "Høstlansering Vigmostad & Bjørke (Forleggerforeningen)", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Tiden Norsk Forlag",
+      "website": "https://tiden.no",
+      "domain": "tiden.no",
+      "segment": "forlag",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Oslo-forlag (Bernhard Getz gate 3) med romaner, krim og lyrikk.",
+      "why": "Holder årlig-aktig høstlansering i Oslo, hittil i Gyldendalhuset; mulig flyttekandidat for en større sal.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Arrangementsoppføring (AllEvents/HappeningNext) oppgir Tiden Norsk Forlag som arrangør av «Tidens høstlansering 2026», tirsdag 18.8.2026 kl. 10 i Gyldendalhuset, Hamsunsalen, med opplesninger og boksamtaler. Tiden.no viser ikke selv et arrangementsprogram.",
+        "types": ["lansering"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Gyldendalhuset (Hamsunsalen)"],
+        "months": ["august"],
+        "open_closed": "ukjent",
+        "next_dates": [],
+        "confidence": "medium"
+      },
+      "room_hint": null,
+      "contact_roles": ["Marketing", "Events"],
+      "sources": [
+        {"url": "https://tiden.no/", "title": "Tiden Norsk Forlag", "checked": "2026-10-06"},
+        {"url": "https://allevents.in/oslo/tidens-h%C3%B8stlansering-2026/200030545904706", "title": "Tidens høstlansering 2026 (AllEvents)", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Pax Forlag",
+      "website": "https://www.pax.no",
+      "domain": "pax.no",
+      "segment": "forlag",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Oslo-forlag (Bernhard Getz' gate 3) for fagbøker og oversatt skjønnlitteratur siden 1964, en del av Forente Forlag AS.",
+      "why": "Forlag med dokumenterte lanseringer og forfatterbesøk; små arrangementer, men kan trenge større sal for internasjonale navn.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Aktuelt-siden har datert nyhetsoverskrifter om arrangementer: «Velkommen til boklansering 4. november» (20.10.2025), «Tina Harnesk til Samisk hus 26. november» (14.11.2025), «Arundhati Roy til Litteraturhuset!» (16.9.2025). Kun overskriftene er lest. Ingen kommende arrangement funnet.",
+        "types": ["lansering"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Samisk hus", "Litteraturhuset"],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [],
+        "confidence": "medium"
+      },
+      "room_hint": null,
+      "contact_roles": ["Marketing", "Communications"],
+      "sources": [
+        {"url": "https://www.pax.no/aktuelt/", "title": "Aktuelt - Pax", "checked": "2026-10-06"},
+        {"url": "https://www.pax.no/", "title": "Pax | Fagbøker og oversatt skjønnlitteratur siden 1964", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Forlaget Oktober",
+      "website": "https://www.oktober.no",
+      "domain": "oktober.no",
+      "segment": "forlag",
+      "place": "Norge",
+      "geo": "norge",
+      "size": null,
+      "about": "Norsk litterært forlag; nettsiden viser nyheter om priser og debutanter.",
+      "why": "Har arrangert lanseringer i Oslo og står oppført på Litteraturhusets kalender; trolig kjent leietaker, så vurder som oppfølging heller enn nysalg.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Forlagets arrangementsside sier for tiden ingen planlagte arrangementer, men har arkivert lanseringsfest 22.9.2022 (Hagegata 20, Oslo). Litteraturhusets kalender lister «Laila Sognnæs Østhagen, Lydbroderiet, Forlaget Oktober» 4. nov. kl. 19.00 (tittel og rom er ikke tydelig i kalenderutdraget).",
+        "types": ["lansering"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Litteraturhuset"],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [
+          {"date": "2026-11-04", "title": "Laila Sognnæs Østhagen, Lydbroderiet, Forlaget Oktober (som oppført i kalenderen)", "venue": "Litteraturhuset", "url": "https://www.litteraturhuset.no/nb/kalender"}
+        ],
+        "confidence": "medium"
+      },
+      "room_hint": null,
+      "contact_roles": ["Marketing", "Events"],
+      "sources": [
+        {"url": "https://oktober.no/arrangementer-kalender/", "title": "Arrangementer - Forlaget Oktober", "checked": "2026-10-06"},
+        {"url": "https://oktober.no/arrangementer-kalender/lanseringsfest-v-r-stille-b-rd-torgersen-og-jeg-vil-ikke-reddes-vegard-s-teren/", "title": "Lanseringsfest (22.9.2022)", "checked": "2026-10-06"},
+        {"url": "https://www.litteraturhuset.no/nb/kalender", "title": "Kalender | Litteraturhuset", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Aschehoug",
+      "website": "https://aschehoug.no",
+      "domain": "aschehoug.no",
+      "segment": "forlag",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "H. Aschehoug & Co. (W. Nygaard) AS, grunnlagt 1872, beskriver seg som en ledende og uavhengig litteratur- og kunnskapsformidler; besøksadresse Sehesteds gate 3, Oslo.",
+      "why": "Stort forlag som tilbyr forfattermøter, men synlige arrangementer ligger på Facebook; usikkert hvor mye som er egne arrangementer med leiebehov.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Forsiden har seksjonen «Arrangementer – klikk her for å se hvor du kan møte forfatterne våre» (lenker til Facebook-events). Aschehoug Skole har arrangementsside uten kommende arrangementer, med tidligere (blant annet «Lansering av Modus»). Ingen konkrete datoer lest.",
+        "types": [],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": [],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [],
+        "confidence": "medium"
+      },
+      "room_hint": null,
+      "contact_roles": ["Marketing", "Events"],
+      "sources": [
+        {"url": "https://www.aschehoug.no/", "title": "Aschehoug (forside)", "checked": "2026-10-06"},
+        {"url": "https://skole.aschehoug.no/arrangementer", "title": "Arrangementer - Aschehoug Skole", "checked": "2026-10-06"},
+        {"url": "https://aschehoug.no/hostens-nye-boker-2026", "title": "Høstens nye bøker - Aschehoug", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Frisk forlag",
+      "website": "https://www.friskforlag.no",
+      "domain": "friskforlag.no",
+      "segment": "forlag",
+      "place": "Stavanger",
+      "geo": "norge",
+      "size": null,
+      "about": "Forlag i Stavanger (Østervågkaien 21) med helse-, livsstils- og kokebøker.",
+      "why": "Arrangerte utsolgt konferanse i Wergeland 1.9.2026, så sannsynlig kunde som kan vokse til større sal; allerede kjent leietaker.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Forlagets TicketCo-side: «Frisk-konferansen 2026», 1.9.2026 kl. 16.00 i Litteraturhuset i Oslo (Wergeland), med foredrag og bokbad. Billettsiden sier at det ikke er flere billetter tilgjengelig. Litteraturhusets romoversikt lister arrangementet som «Høstens Frisk-konferanse!».",
+        "types": ["konferanse"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Litteraturhuset (Wergeland)"],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [],
+        "confidence": "high"
+      },
+      "room_hint": "Utsolgt i Wergeland; kapasitet og antall oppgis ikke i kilden, men utsolgt kan tilsi behov for større sal.",
+      "contact_roles": ["Events", "Marketing"],
+      "sources": [
+        {"url": "https://friskforlag.ticketco.events/no/nb/e/frisk_konferansen", "title": "Frisk-konferansen 2026 (TicketCo)", "checked": "2026-10-06"},
+        {"url": "https://www.friskforlag.no/", "title": "Frisk forlag", "checked": "2026-10-06"},
+        {"url": "https://www.litteraturhuset.no/en/rom/wergeland-en", "title": "Lei rommet Wergeland på Litteraturhuset", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Forlagshuset Publica",
+      "website": "https://www.forlagshusetpublica.no",
+      "domain": "forlagshusetpublica.no",
+      "segment": "forlag",
+      "place": "Norge",
+      "geo": "norge",
+      "size": null,
+      "about": "Forlag som utgir bøker av debuterende og mindre kjente forfattere og tar imot manus; nettsiden har nyheter om utgivelser og forfattere.",
+      "why": "Står oppført med lansering på Litteraturhuset 1.12.2026; forfatterstyrt forlag med mange små titler kan gi gjentatte mindre bookinger.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Litteraturhusets kalender lister «Boklansering: Ord fra Quarius», 1. des. kl. 19.00, arrangør «Forlagshuset Publika». Forlagets egne nyheter omtaler lanseringsdato for ny bok (28.8.2026), men ikke et arrangementsprogram.",
+        "types": ["lansering"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Litteraturhuset"],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [
+          {"date": "2026-12-01", "title": "Boklansering: Ord fra Quarius", "venue": "Litteraturhuset", "url": "https://www.litteraturhuset.no/nb/kalender"}
+        ],
+        "confidence": "medium"
+      },
+      "room_hint": null,
+      "contact_roles": ["Marketing", "Events"],
+      "sources": [
+        {"url": "https://www.forlagshusetpublica.no/no/news", "title": "Nyheter - Forlagshuset Publica", "checked": "2026-10-06"},
+        {"url": "https://www.litteraturhuset.no/nb/kalender", "title": "Kalender | Litteraturhuset", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Tronsmo bøker & tegneserier",
+      "website": "https://www.tronsmo.no",
+      "domain": "tronsmo.no",
+      "segment": "forlag",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": "S",
+      "about": "Uavhengig bokhandel i Universitetsgata 12, Oslo, med egen arrangementsside.",
+      "why": "Hyppig lanseringsarena for småforlag; kan være formidler mot forlag og forfattere som vokser ut av butikklokalet.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Arrangementssiden «Kommende arrangement» lister lanseringer kl. 16.30: 1. okt (Beatles & 60-tallet i Norge), 8. okt (Paradigme), 15. okt (Tommy Olsson), 22. okt (Jorunn Folkvord: Pensjon er politisk). Siden oppgir ikke årstall; de står som kommende. En tidligere lansering (Forlaget Manifest, 26.8.2026) er ført opp med Tronsmo som vert.",
+        "types": ["lansering"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Tronsmo, Universitetsgata 12"],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {"date": "2026-10-08", "title": "Lansering: Paradigme (årstall utledet, siden oppgir ikke år)", "venue": "Tronsmo, Universitetsgata 12", "url": "https://www.tronsmo.no/arrangement/"},
+          {"date": "2026-10-15", "title": "Lansering: Tommy Olsson - November er en åpen dør (årstall utledet)", "venue": "Tronsmo, Universitetsgata 12", "url": "https://www.tronsmo.no/arrangement/"},
+          {"date": "2026-10-22", "title": "Lansering: Jorunn Folkvord - Pensjon er politisk (årstall utledet)", "venue": "Tronsmo, Universitetsgata 12", "url": "https://www.tronsmo.no/arrangement/"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events"],
+      "sources": [
+        {"url": "https://www.tronsmo.no/arrangement/", "title": "KOMMENDE ARRANGEMENT - TRONSMO", "checked": "2026-10-06"},
+        {"url": "https://stayhappening.com/e/boklansering-andquotom-arbeiderkampandquot-av-martin-tranm%C3%A6l-E2ISYTBVYGK", "title": "Boklansering: Om arbeiderkamp (Tronsmo, 26.8.2026)", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Biblioteksentralen (Bibliotekenes Hus)",
+      "website": "https://www.bibliotekenes.no",
+      "domain": "bibliotekenes.no",
+      "segment": "forlag",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Biblioteksentralen SA (org.nr. 910 568 183, Alnabru, Oslo) leverer til bibliotek og arrangerer Bokdager i Bibliotekenes Hus sammen med forlag.",
+      "why": "Bransjeaktør som samler forlag og bibliotekansatte i faste bokdager; vår og høst gir gjentakende fagdag-behov, men høstens er digital.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Barnebokdagen 25.3.2026 og Voksenbokdagen 26.3.2026 ble holdt fysisk i Bibliotekenes Hus (Alf Bjerckes vei 20, Oslo) og digitalt, gratis med påmelding, der forlag presenterer lister. Høstens bokdager (23.-24.9.2026) var digitale. Ingen kommende arrangement på siden.",
+        "types": ["fagdag"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Bibliotekenes Hus, Alf Bjerckes vei 20, Oslo"],
+        "months": ["mars", "september"],
+        "open_closed": "åpent",
+        "next_dates": [],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Marketing"],
+      "sources": [
+        {"url": "https://www.bibliotekenes.no/arrangementer", "title": "Arrangementer | Bibliotekenes", "checked": "2026-10-06"},
+        {"url": "https://www.bibliotekenes.no/arrangementer/barnebokdagen---bokdager-v%C3%A5ren-2026-", "title": "Barnebokdagen - Bokdager våren 2026", "checked": "2026-10-06"},
+        {"url": "https://bibliotekutvikling.no/kompetansebank/event/bokdager-barneboker/", "title": "Bokdager høsten 2026 - Barnebøker", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Minerva",
+      "website": "https://www.minerva.no",
+      "domain": "minerva.no",
+      "segment": "forlag",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Avis og tidsskrift med adresse Akersgaten 20, Oslo.",
+      "why": "Arrangerer «Minervakvelder» med debatt og nummerlansering, tidligere i samarbeid med Civita; åpne kveldsarrangementer passer mindre og mellomstore saler.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Minervakveld 9.6.2026 med lansering av tidsskriftnummer 2/2026 og panel, gratis og åpent, Eilefs Landhandleri, Oslo. Debattkveld om likestilling 14.10.2025 sammen med Civitas kvinnenettverk på samme sted.",
+        "types": ["debatt", "lansering"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Eilefs Landhandleri"],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Editorial"],
+      "sources": [
+        {"url": "https://stayhappening.com/e/andquota-republic-if-you-can-keep-itandquot-%E2%80%93-minervakveld-om-usa-demokratiet-og-vestens-fremtid-E2ISYK7QAJQ", "title": "Minervakveld om USA, demokratiet og Vestens fremtid (9.6.2026)", "checked": "2026-10-06"},
+        {"url": "https://www.minerva.no/feminisme-likestilling-likestillingspolitikk/har-likestillingspolitikken-gatt-for-langt/484599", "title": "Har likestillingspolitikken gått for langt? (Minerva)", "checked": "2026-10-06"},
+        {"url": "https://www.minerva.no/", "title": "Avisen Minerva", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Klassekampen",
+      "website": "https://klassekampen.no",
+      "domain": "klassekampen.no",
+      "segment": "forlag",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": "M",
+      "about": "Riksdekkende dagsavis med utgiversted Oslo (Grønland 4). Wikipedia oppgir 158 ansatte (2026).",
+      "why": "Egen arrangementsseksjon med debatter, konserter og bokarrangementer; internasjonale gjester som Naomi Klein tilsier behov for stor sal.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Klassekampens arrangementssider viser blant annet 8. mars 2026 med surrogatidebatt og konsert, Bokmagasinets jubileumsfest 23. sept (Brenneriveien 1) og Naomi Klein og Astra Taylor tirsdag 17. nov kl. 18.30 på Chateau Neuf (siden oppgir ikke årstall). Sommerbåt med debatter juni 2026.",
+        "types": ["debatt", "lansering"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Chateau Neuf", "Ingensteds (Brenneriveien 1)"],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {"date": "2026-11-17", "title": "Naomi Klein og Astra Taylor: End Times Fascism (årstall utledet av ukedag)", "venue": "Chateau Neuf, Oslo", "url": "https://klassekampen.no/arrangementer/naomi-klein-og-astra-taylor"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Communications"],
+      "sources": [
+        {"url": "https://klassekampen.no/arrangementer/naomi-klein-og-astra-taylor", "title": "Naomi Klein og Astra Taylor: End Times Fascism", "checked": "2026-10-06"},
+        {"url": "https://klassekampen.no/arrangementer/bokmagasinets-jubileumsfest", "title": "Bokmagasinets jubileumsfest", "checked": "2026-10-06"},
+        {"url": "https://klassekampen.no/arrangementer/kvinnedagen2026", "title": "8. mars med Klassekampen", "checked": "2026-10-06"},
+        {"url": "https://no.wikipedia.org/wiki/Klassekampen", "title": "Klassekampen (Wikipedia)", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Norsk Kritikerlag",
+      "website": "https://kritikerlaget.no",
+      "domain": "kritikerlaget.no",
+      "segment": "forlag",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": "S",
+      "about": "Organisasjon for kritikere med besøksadresse Kronprinsens gt. 17, Oslo; arrangerer kritikerseminarer og kurs.",
+      "why": "Gjentakende seminarer og kurs for kritikere og forfattere, ofte i samarbeid med andre organisasjoner; små-til-mellomstore saler.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Kritikerseminaret 4.-5.6.2026 (Lillehammer), kritikerseminar 5.2.2026 i Bergen, og Kurs i utstillingskritikk 22.-23.10 og 12.-13.11.2026 på Oslo Museum/Interkulturelt Museum sammen med Norsk tidsskriftforening og tidsskriftet Museum.",
+        "types": ["seminar", "kurs"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Kulturhuset Banken (Lillehammer)", "Litteraturhuset i Bergen", "Oslo Museum/Interkulturelt Museum"],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [
+          {"date": "2026-10-22", "title": "Kurs i utstillingskritikk (første samling, 22.-23. okt.)", "venue": "Oslo Museum/Interkulturelt Museum, Tøyenbekken 5", "url": "https://www.tidsskriftforeningen.no/2026-kurs-og-seminarer-skrivekurs/269467"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Administration"],
+      "sources": [
+        {"url": "https://kritikerlaget.no/", "title": "Forsiden - Norsk Kritikerlag", "checked": "2026-10-06"},
+        {"url": "https://kritikerlaget.no/saker/oppsummering-kritikerseminaret-2026", "title": "Oppsummering: Kritikerseminaret 2026", "checked": "2026-10-06"},
+        {"url": "https://kritikerlaget.no/saker/den-svikefulle-litteraturkritikken", "title": "Den svikefulle litteraturkritikken", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Norsk Tidsskriftforening",
+      "website": "https://www.tidsskriftforeningen.no",
+      "domain": "tidsskriftforeningen.no",
+      "segment": "forlag",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Forening for tidsskrifter som arrangerer seminarer og kurs for tidsskriftmiljøet.",
+      "why": "Bransjeforening for tidsskrifter med seminarer og kurs i Oslo; mulig kunde for fagdager, trolig små til mellomstore saler.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Forsiden viser vitenskapelig tidsskriftseminar 22. oktober kl. 12-16 i Legenes hus (sammen med Scandinavian University Press) og Kurs i utstillingskritikk 22.-23.10 og 12.-13.11.2026 på Oslo Museum/IKM, Tøyenbekken 5, pris kr 1000.",
+        "types": ["seminar", "kurs"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Legenes hus", "Oslo Museum/Interkulturelt Museum"],
+        "months": [],
+        "open_closed": "ukjent",
+        "next_dates": [
+          {"date": "2026-10-22", "title": "Vitenskapelig tidsskriftseminar: Når publiseringssystemet knaker", "venue": "Legenes hus, Oslo", "url": "https://www.tidsskriftforeningen.no/"},
+          {"date": "2026-10-22", "title": "Kurs i utstillingskritikk (første samling)", "venue": "Oslo Museum/Interkulturelt Museum", "url": "https://www.tidsskriftforeningen.no/2026-kurs-og-seminarer-skrivekurs/269467"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Administration"],
+      "sources": [
+        {"url": "https://www.tidsskriftforeningen.no/", "title": "Forsiden - Norsk Tidsskriftforening", "checked": "2026-10-06"},
+        {"url": "https://www.tidsskriftforeningen.no/2026-kurs-og-seminarer-skrivekurs/269467", "title": "Kurs i utstillingskritikk 22.-23. oktober og 12.-13. november 2026", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Norsk Oversetterforening",
+      "website": "https://oversetterforeningen.no",
+      "domain": "oversetterforeningen.no",
+      "segment": "forlag",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": "M",
+      "about": "Forening for litterære oversettere i Norge. Årsmøte, høstseminar og fagdager beskrives på nettsiden.",
+      "why": "Årsmøte (100 deltakere i 2025 på Litteraturhuset) og høstseminar (ca. 85) er faste arrangementer; størrelsen passer mellomstore rom, ikke Solstad.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Årsmøte normalt en lørdag innen utgangen av mars (2025 på Litteraturhuset med 100 deltakere; 2026 21. mars i Møtekompaniet, Kronprinsens gate 17). Høstseminar ca. 85 deltakere (2025 Hurdalsjøen, 17.-19.10; neste oppgitt 16.-18.10.2026 samme sted). Fagseminar 24.9.2026 i NFFOs lokaler, Oslo, åpent også for ikke-medlemmer.",
+        "types": ["årsmøte", "seminar", "fagdag"],
+        "frequency": "årsmøte årlig (normalt innen utgangen av mars); høstseminar årlig",
+        "typical_attendance": "ca. 85 (høstseminar); 100 (årsmøte 2025)",
+        "attendance_source": "https://oversetterforeningen.no/for-medlemmer/moter-kurs-og-seminarer/ og årsmøtepapirer 2026 (PDF)",
+        "venues": ["Litteraturhuset", "Møtekompaniet, Kronprinsens gate 17", "Hurdalsjøen Hotell & Spa", "NFFOs lokaler, Uranienborgveien 2"],
+        "months": ["mars", "oktober"],
+        "open_closed": "ukjent",
+        "next_dates": [
+          {"date": "2026-10-16", "title": "Høstseminar (16.-18. okt., oppgitt i styrets oppdatering)", "venue": "Hurdalsjøen", "url": "https://oversetterforeningen.no/styrets-manedlige-oppdatering/"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": "Kilden oppgir 100 deltakere på årsmøtet og ca. 85 på høstseminar; passer rom i størrelse med Wergeland/Skram fremfor Solstad.",
+      "contact_roles": ["Administration", "Events"],
+      "sources": [
+        {"url": "https://oversetterforeningen.no/for-medlemmer/moter-kurs-og-seminarer/", "title": "Møter, kurs og seminarer - Oversetterforeningen", "checked": "2026-10-06"},
+        {"url": "https://oversetterforeningen.no/wp-content/uploads/2026/03/Arsmotepapirer-for-Norsk-Oversetterforening-for-perioden-2025-2026-4.pdf", "title": "Årsmøtepapirer 2026", "checked": "2026-10-06"},
+        {"url": "https://oversetterforeningen.no/styrets-manedlige-oppdatering/", "title": "Styrets månedlige oppdatering", "checked": "2026-10-06"},
+        {"url": "https://oversetterforeningen.no/fagseminar-for-oversettere-24-september/", "title": "Fagseminar for oversettere 24. september", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Forfatterforbundet",
+      "website": "https://forfatterforbundet.no",
+      "domain": "forfatterforbundet.no",
+      "segment": "forlag",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Forfatterorganisasjon med kontor i Henrik Ibsens gate 28, Oslo; arrangerer fagdager og litterære arrangementer. Egen organisasjon, ikke Den norske Forfatterforening.",
+      "why": "Dokumentert serie med fagdager og stor fantasyhelg på Nasjonalbiblioteket; kan trenge større sal enn Målstova og er ikke i existing.json.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Fantasyhelg 23.-25.10.2026 på Nasjonalbiblioteket (lansering av Siri Pettersen fredag, fagdag lørdag, fest og fandag). Fagdag om barne- og ungdomslitteratur mandag 9. nov. samme sted. Pris for fantasy-fagdag kr 250 for medlemmer, kr 450 for ikke-medlemmer.",
+        "types": ["fagdag", "lansering", "seminar"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Nasjonalbiblioteket (Målstova)"],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {"date": "2026-10-23", "title": "Siri Pettersen lanserer Askehjerter (starten på Fantasyhelgen)", "venue": "Nasjonalbiblioteket, Målstova", "url": "https://forfatterforbundet.no/2026/09/11/tidenes-fantasyfest/"},
+          {"date": "2026-10-24", "title": "Fantasyfagdag", "venue": "Nasjonalbiblioteket, Målstova", "url": "https://forfatterforbundet.no/2026/09/11/tidenes-fantasyfest/"},
+          {"date": "2026-10-25", "title": "Fantasy fandag", "venue": "Nasjonalbiblioteket, Målstova", "url": "https://forfatterforbundet.no/2026/09/11/tidenes-fantasyfest/"},
+          {"date": "2026-11-09", "title": "Fagdag: Skriv så barn får lyst til å lese!", "venue": "Nasjonalbiblioteket, Oslo", "url": "https://forfatterforbundet.no/"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Communications"],
+      "sources": [
+        {"url": "https://forfatterforbundet.no/", "title": "Forfatterforbundet (forside)", "checked": "2026-10-06"},
+        {"url": "https://forfatterforbundet.no/2026/09/11/tidenes-fantasyfest/", "title": "Fantasydager på Nasjonalbiblioteket", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Norsk Forfattersentrum",
+      "website": "https://www.forfattersentrum.no",
+      "domain": "forfattersentrum.no",
+      "segment": "forlag",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": null,
+      "about": "Forfatterorganisasjon med besøksadresse Fridtjof Nansens plass 3, Oslo; nettsiden har program for arrangementer og skrivekurs fordelt på regioner.",
+      "why": "Stor arrangementsvirksomhet, men synlige datoer er i Kristiansand og på Vestlandet; Oslo/Austlandet-programmet må avklares før de kan regnes som leietaker.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Arrangementssiden lister mange datert arrangementer og skrivekurs oktober-november 2026, blant annet Bjørneboefestivalen i Kristiansand 16.10.2026 og skrivekurs. De leste oppføringene ligger utenfor Oslo; Oslo-arrangementer er ikke bekreftet.",
+        "types": ["kurs", "debatt"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Intimscenen, Teateret, Kongens gate 2, Kristiansand"],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {"date": "2026-10-16", "title": "Bjørneboefestivalen: Hvem tar opp arven etter Bjørneboe?", "venue": "Intimscenen, Teateret, Kristiansand", "url": "https://www.forfattersentrum.no/arrangement/bjorneboefestivalen-hvem-tar-opp-arven-etter-bjorneboe"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Programme Manager"],
+      "sources": [
+        {"url": "https://www.forfattersentrum.no/arrangement", "title": "Arrangementer - Norsk Forfattersentrum", "checked": "2026-10-06"},
+        {"url": "https://www.forfattersentrum.no/arrangement/bjorneboefestivalen-hvem-tar-opp-arven-etter-bjorneboe", "title": "Bjørneboefestivalen: Hvem tar opp arven etter Bjørneboe?", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Norsk barnebokinstitutt",
+      "website": "https://barnebokinstituttet.no",
+      "domain": "barnebokinstituttet.no",
+      "segment": "forlag",
+      "place": "Oslo",
+      "geo": "oslo",
+      "size": "S",
+      "about": "Stiftelse og nasjonalt utdannings- og kunnskapssenter for barne- og ungdomslitteratur, stiftet 1979, i Observatoriegata 1B, Oslo.",
+      "why": "Arrangerer seminarer og samarbeider om kritikerseminar; fagmiljø for barnelitteratur, trolig mindre arrangementer som kan vokse ved samarbeid med forlag.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Barnebokkritikk.no oppgir årlig kritikerseminar i samarbeid med Norsk barnebokinstitutt og Periskop, fredag 23.10.2026 kl. 9.30-16.00 på Nasjonalbiblioteket, Målstova (inngang kr 300, lunsj kr 300). Instituttets forside har «Hva skjer?» med skrivekvelder og omtale av Nordisk barnebokkonferanse 2027 på Lillestrøm.",
+        "types": ["seminar"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Nasjonalbiblioteket (Målstova)"],
+        "months": [],
+        "open_closed": "åpent",
+        "next_dates": [
+          {"date": "2026-10-23", "title": "Kritikerseminar: Språk for kvalitet? (Barnebokkritikk, Periskop og NBI)", "venue": "Nasjonalbiblioteket, Målstova", "url": "https://www.barnebokkritikk.no/sprak-for-kvalitet/"}
+        ],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Events", "Communications"],
+      "sources": [
+        {"url": "https://barnebokinstituttet.no/om-nbi/kontakt-oss/", "title": "Kontakt oss - Norsk barnebokinstitutt", "checked": "2026-10-06"},
+        {"url": "https://www.barnebokinstituttet.no/", "title": "Forside - Norsk barnebokinstitutt", "checked": "2026-10-06"},
+        {"url": "https://www.barnebokkritikk.no/sprak-for-kvalitet/", "title": "Språk for kvalitet? (Barnebokkritikk.no)", "checked": "2026-10-06"},
+        {"url": "https://no.wikipedia.org/wiki/Norsk_barnebokinstitutt", "title": "Norsk barnebokinstitutt (Wikipedia)", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Norsk Litteraturfestival",
+      "website": "https://litteraturfestival.no",
+      "domain": "litteraturfestival.no",
+      "segment": "forlag",
+      "place": "Lillehammer",
+      "geo": "norge",
+      "size": "L",
+      "about": "Litteraturfestival i Lillehammer (Storgata 47). Festivalprogrammet 2026 gikk 1.-7. juni med forfattere fra 25 europeiske land.",
+      "why": "Stor nasjonal festival, men Lillehammer-basert; leie i Oslo er lite sannsynlig, mer aktuell som partner for Oslo-arrangementer med festivalprofil.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Festivalnyhet 24.3.2026: Norsk Litteraturfestival 1.-7. juni 2026 på Lillehammer, tema Europa. Barne- og ungdomsprogrammet Pegasus har 11 500 påmeldte plasser i skole- og barnehageprogrammet.",
+        "types": ["debatt", "lansering"],
+        "frequency": null,
+        "typical_attendance": "11 500 påmeldte barn og unge i Pegasus-programmet (2026)",
+        "attendance_source": "https://litteraturfestival.no/2026/03/programmet-for-norsk-litteraturfestival-2026-er-klart/",
+        "venues": ["Lillehammer", "Kulturhuset Banken"],
+        "months": ["juni"],
+        "open_closed": "åpent",
+        "next_dates": [],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Programme Manager", "Communications"],
+      "sources": [
+        {"url": "https://litteraturfestival.no/2026/03/programmet-for-norsk-litteraturfestival-2026-er-klart/", "title": "Programmet for Norsk Litteraturfestival 2026 er klart!", "checked": "2026-10-06"},
+        {"url": "https://litteraturfestival.no/", "title": "Norsk Litteraturfestival", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Kapittel, Stavanger internasjonale festival for litteratur og ytringsfrihet (Sølvberget)",
+      "website": "https://www.solvberget.no/kapittel",
+      "domain": "solvberget.no",
+      "segment": "forlag",
+      "place": "Stavanger",
+      "geo": "norge",
+      "size": null,
+      "about": "Kapittel arrangeres årlig av Sølvberget bibliotek og kulturhus, etablert 1995, og beskrives som blant Norges største litteraturfestivaler.",
+      "why": "Stor litteraturfestival, men Stavanger-basert; liten sjanse for leie i Oslo, relevant som referanse og mulig partner.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Kapittel ble arrangert 16.-20. september 2026 med samtaler, foredrag, filmvisninger, lesesirkler og debatter; tema sex. Sølvberget oppgir at festivalen arrangeres årlig.",
+        "types": ["debatt", "seminar"],
+        "frequency": "årlig",
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Sølvberget", "Stavanger domkirke", "Litteraturhuset i Stavanger"],
+        "months": ["september"],
+        "open_closed": "åpent",
+        "next_dates": [],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Programme Manager", "Communications"],
+      "sources": [
+        {"url": "https://www.solvberget.no/artikler/dette-er-kapittel", "title": "Dette er Kapittel", "checked": "2026-10-06"},
+        {"url": "https://www.solvberget.no/artikler/programmet-for-kapittel-2026-er-klart", "title": "Kapittelprogrammet er klart!", "checked": "2026-10-06"},
+        {"url": "https://www.solvberget.no/kapittel", "title": "Kapittel", "checked": "2026-10-06"}
+      ]
+    },
+    {
+      "name": "Bergen internasjonale litteraturfestival (LitFestBergen)",
+      "website": "https://www.litfestbergen.no",
+      "domain": "litfestbergen.no",
+      "segment": "forlag",
+      "place": "Bergen",
+      "geo": "norge",
+      "size": null,
+      "about": "Internasjonal litteraturfestival for sakprosa og skjønnlitteratur, første gang i 2019; 2026-utgaven var 4.-8. februar på Litteraturhuset i Bergen.",
+      "why": "Bergen-basert; lav sannsynlighet for Oslo-leie, men samarbeider med Norsk Kritikerlag og Oversetterforening og kan være partner.",
+      "event_signal": {
+        "documented": true,
+        "summary": "Festivalen ble arrangert 4.-8.2.2026 på Litteraturhuset i Bergen (åttende utgave, tema svik) med program og bydelsarrangementer (LitFestBydel). Åpningen var utsolgt.",
+        "types": ["debatt", "lansering"],
+        "frequency": null,
+        "typical_attendance": null,
+        "attendance_source": null,
+        "venues": ["Litteraturhuset i Bergen"],
+        "months": ["februar"],
+        "open_closed": "åpent",
+        "next_dates": [],
+        "confidence": "high"
+      },
+      "room_hint": null,
+      "contact_roles": ["Programme Manager", "Communications"],
+      "sources": [
+        {"url": "https://www.litfestbergen.no/festivalen/om-festivalen/", "title": "Om festivalen - LitFestBergen", "checked": "2026-10-06"},
+        {"url": "https://www.litfestbergen.no/program/2026/", "title": "Program LitFestBergen 4.-8. februar 2026", "checked": "2026-10-06"},
+        {"url": "https://www.litfestbergen.no/litfestbergen-2026/nyheiter/festivalprogrammet-2026-er-klart/", "title": "Festivalprogrammet 2026 er klart!", "checked": "2026-10-06"}
+      ]
+    }
+  ],
+  "rejected": [
+    {"name": "Nasjonalbiblioteket", "reason": "offentlig institusjon og samtidig konkurrerende lokale (Målstova, Folkestova); brukes kun som venue i andre kontoer"},
+    {"name": "Deichman (Bjørvika, Grünerløkka)", "reason": "offentlig bibliotek og konkurrerende venue"},
+    {"name": "Nordic Black Theatre, Oslo Konserthus, Chateau Neuf, Eilefs Landhandleri, Angst Bar", "reason": "venues/konkurrerende utleielokaler"},
+    {"name": "Norsk faglitterær forfatter- og oversetterforening (NFFO) / Norsk sakprosafestival", "reason": "finnes allerede i existing.json"},
+    {"name": "Den norske Forleggerforening, Gyldendal, Cappelen Damm, Samlaget, Res Publica, Universitetsforlaget, Kolofon, Heartland, Heldor, Norsk PEN, NORLA, Norsk bibliotekforening", "reason": "finnes allerede i existing.json"},
+    {"name": "Den norske Forfatterforening", "reason": "finnes allerede i existing.json (Forfatterforbundet er en annen organisasjon og er tatt med)"},
+    {"name": "Forlaget Manifest", "reason": "trolig knyttet til Manifest Analyse som står i existing.json; egen nettside ikke åpnet"},
+    {"name": "Fagbokforlaget og Akademika", "reason": "ikke egen aktivitet verifisert; omtales kun under Vigmostad & Bjørke (fagbokforlaget.no åpnet, uten arrangementer)"},
+    {"name": "Outland forlag", "reason": "arrangement (13.6.2026) er dokumentert på outland.no for butikken Outland Grensen; ikke bekreftet som samme enhet som outlandforlag.no"},
+    {"name": "Morgenbladet", "reason": "forsiden åpnet (morgenbladet.no), ingen arrangementer funnet"},
+    {"name": "Magasinet Mannfolk / Mannfolk.org", "reason": "frivillig non-profit utenfor forlagssegmentet, ingen verifisert arrangementsserie utover omtale på Litteraturhusets kalender"},
+    {"name": "Norli, Ark, Tanum, Haugen Bok, Akademika (bokhandelkjeder)", "reason": "kunne ikke bekrefte egne arrangementsprogrammer (norli.no ikke tilgjengelig); Norli er partner i Saklig søndag på Litteraturhuset, dvs. etablert samarbeid"},
+    {"name": "Egmont People Forlag", "reason": "kun sett omtalt som medarrangør av boklansering på Oslo Konserthus; egen nettside ikke åpnet"},
+    {"name": "Anarres bokkafé / Anarres bokmesse", "reason": "mikroaktør; eget nettsted ikke åpnet"},
+    {"name": "Subjekt, Dagsavisen, Vårt Land, Dag og Tid", "reason": "ingen egne arrangementer verifisert (Subjekt og Dagsavisen kun som kalender/strømmer)"},
+    {"name": "Norsk måldyrkingslag, Vennetreff for NS-barn, Juridika, Martinus Senter, Jødisk Museum", "reason": "leietakere på Litteraturhuset, men hører til andre segmenter (Martinus og Jødisk Museum finnes i existing.json)"},
+    {"name": "Teknisk forbehold", "reason": "WebFetch var blokkert og Firecrawl rate-begrenset; alle sider er lest via Exa-søk/-fetch. oversetterforening.no (feil domene) og biblioteksentralen.no ga feil, riktig domene er oversetterforeningen.no og bibliotekenes.no. Flere lesinger er søkeutdrag, ikke hele sider. Årstall er utledet for Tronsmo, Klassekampen og Vigmostad & Bjørke der siden ikke oppgir år."}
+  ]
+}
