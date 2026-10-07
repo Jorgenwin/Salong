@@ -43,6 +43,8 @@ const {navTo,setup,testSeed,ROOT} = require('./h.js'); const fs=require('fs'), p
     const bad=files.filter(f=>/(api[_-]?key|secret|token|passw(or)?d)["']?\s*[:=]\s*["'][A-Za-z0-9_\-]{16,}["']|sk-[A-Za-z0-9]{20,}|Bearer\s+[A-Za-z0-9._-]{20,}/i.test(fs.readFileSync(f,'utf8')));
     check('S12 ingen hemmeligheter eller nøkler i kildekoden',bad,[]);
     const ui=fs.readFileSync(path.join(ROOT,'src/berik.js'),'utf8');
+    const demo=(()=>{ const s=fs.readFileSync(path.join(ROOT,'src/app_base.js'),'utf8'), i=s.indexOf('const DEMO=')+11; let d=0,j=i; for(;j<s.length;j++){ if(s[j]==='{') d++; else if(s[j]==='}'){ d--; if(!d) break; } } return JSON.parse(s.slice(i,j+1)); })();
+    check('S14 DEMO i app_base.js er lik data/example/seed.json',JSON.stringify(demo)===JSON.stringify(JSON.parse(fs.readFileSync(path.join(ROOT,'data/example/seed.json'),'utf8'))),true);
     check('S13 Berik-knappene bruker SalongServices.enrichment',/SalongServices\.enrichment/.test(ui),true);
     check('X1 ingen sidefeil',A.errs.length,0);
   }catch(e){ await A.done(e); return; }
