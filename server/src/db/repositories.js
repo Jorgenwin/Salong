@@ -307,6 +307,29 @@ function createRepositories(input) {
   const db=requireDb(input);
 
   return {
+    members:{
+      async getByAuthSubject(authSubject){
+        const subject=String(authSubject||'').trim();
+        if(!subject) return null;
+        const result=await db.query(`
+          SELECT id, auth_subject, name, email, role, active
+          FROM members
+          WHERE auth_subject=$1
+          LIMIT 1
+        `,[subject]);
+        const row=result.rows[0];
+        if(!row) return null;
+        return {
+          id:row.id,
+          authSubject:row.auth_subject,
+          name:row.name,
+          email:row.email||null,
+          role:row.role,
+          active:row.active!==false
+        };
+      }
+    },
+
     accounts:{
       async get(id) {
         const result=await db.query(
