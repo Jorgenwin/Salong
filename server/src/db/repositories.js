@@ -76,6 +76,105 @@ function mapOpportunity(row) {
   };
 }
 
+const STAGE_STATUS={
+  ny:'Ny forespørsel',
+  dialog:'Dialog',
+  visning:'Omvisning',
+  tilbud:'Tilbud sendt',
+  holdt:'Holdt av',
+  bekreftet:'Bekreftet',
+  tapt:'Tapt'
+};
+
+function calendarKindForStage(stage){
+  if(stage==='bekreftet') return 'event';
+  if(stage==='holdt') return 'hold';
+  if(stage==='tilbud') return 'offer';
+  return 'enq';
+}
+
+const CALENDAR_TIME_ZONE='Europe/Oslo';
+const CALENDAR_FORMATTER=new Intl.DateTimeFormat('en-GB',{
+  timeZone:CALENDAR_TIME_ZONE,
+  year:'numeric',
+  month:'2-digit',
+  day:'2-digit',
+  hour:'2-digit',
+  minute:'2-digit',
+  hourCycle:'h23'
+});
+
+function calendarParts(value){
+  if(!value) return {date:null,time:''};
+  const instant=value instanceof Date?value:new Date(value);
+  if(Number.isNaN(instant.getTime())) return {date:null,time:''};
+  const parts=Object.fromEntries(
+    CALENDAR_FORMATTER.formatToParts(instant)
+      .filter(part=>part.type!=='literal')
+      .map(part=>[part.type,part.value])
+  );
+  return {
+    date:parts.year+'-'+parts.month+'-'+parts.day,
+    time:parts.hour+':'+parts.minute
+  };
+}
+
+function timeOnly(value){
+  return calendarParts(value).time;
+}
+
+function mapOpportunityCalendar(row){
+  return {
+    date:asDateOnly(row.event_date),
+    time:'',
+    kind:calendarKindForStage(row.stage),
+    title:row.title||'',
+    org:row.organization_name||'',
+    room:row.room||'',
+    owner:row.owner_id||null,
+    status:STAGE_STATUS[row.stage]||row.stage||'',
+    open:'deal:'+row.id
+  };
+}
+
+function mapBookingCalendar(row){
+  const when=calendarParts(row.starts_at);
+  return {
+    date:when.date,
+    time:when.time,
+    kind:row.status==='holdt'?'hold':'event',
+    title:row.title||'',
+    org:row.organization_name||'',
+    room:row.room||'',
+    owner:null,
+    status:row.status||'Booking',
+    open:row.organization_id?'org:'+row.organization_id:''
+  };
+}
+
+function mapActivityCalendar(row){
+  const source=row.due_at||row.happened_at;
+  const when=calendarParts(source);
+  const kind=row.type==='visning'?'visit':row.type==='meeting'?'meet':'due';
+  return {
+    date:when.date,
+    time:when.time,
+    kind,
+    title:row.text||'',
+    org:row.organization_name||'',
+    room:row.opportunity_room||'',
+    owner:row.owner_id||row.opportunity_owner_id||null,
+    status:kind==='due'?'Frist':'Planlagt',
+    open:row.opportunity_id?'deal:'+row.opportunity_id:row.organization_id?'org:'+row.organization_id:''
+  };
+}
+
+function compareCalendarItems(a,b){
+  return String(a.date||'').localeCompare(String(b.date||''))||
+    String(a.time||'99:99').localeCompare(String(b.time||'99:99'))||
+    String(a.org||'').localeCompare(String(b.org||''),'nb');
+}
+
 const ACCOUNT_SELECT=`
   SELECT
     o.id,
@@ -178,6 +277,63 @@ function createRepositories(input) {
         `,params);
         return result.rows.map(mapOpportunity);
       }
+    },
+
+    calendar:{
+      async list({from,to}) {
+        const range=[from,to];
+
+        const opportunities=await db.query(`
+          SELECT d.*, o.name AS organization_name
+          FROM opportunities d
+          LEFT JOIN organizations o ON o.id=d.organization_id
+          WHERE d.deleted_at IS NULL
+            AND d.stage <> 'tapt'
+            AND d.event_date BETWEEN $1::date AND $2::date
+          ORDER BY d.event_date, d.created_at
+        `,range);
+
+        const bookings=await db.query(`
+          SELECT b.*, o.name AS organization_name
+          FROM bookings b
+          LEFT JOIN organizations o ON o.id=b.organization_id
+          WHERE b.starts_at IS NOT NULL
+            AND (b.starts_at AT TIME ZONE 'Europe/Oslo')::date BETWEEN $1::date AND $2::date
+          ORDER BY b.starts_at, b.created_at
+        `,range);
+
+        const activities=await db.query(`
+          SELECT
+            a.*,
+            o.name AS organization_name,
+            d.room AS opportunity_room,
+            d.owner_id AS opportunity_owner_id
+          FROM activities a
+          LEFT JOIN organizations o ON o.id=a.organization_id
+          LEFT JOIN opportunities d ON d.id=a.opportunity_id
+          WHERE a.deleted_at IS NULL
+            AND a.done=false
+            AND (
+              (
+                a.type IN ('visning','meeting')
+                AND (COALESCE(a.due_at,a.happened_at) AT TIME ZONE 'Europe/Oslo')::date BETWEEN $1::date AND $2::date
+              )
+              OR
+              (
+                a.type='task'
+                AND a.opportunity_id IS NOT NULL
+                AND (a.due_at AT TIME ZONE 'Europe/Oslo')::date BETWEEN $1::date AND $2::date
+              )
+            )
+          ORDER BY COALESCE(a.due_at,a.happened_at), a.created_at
+        `,range);
+
+        return [
+          ...opportunities.rows.map(mapOpportunityCalendar),
+          ...bookings.rows.map(mapBookingCalendar),
+          ...activities.rows.map(mapActivityCalendar)
+        ].filter(item=>item.date).sort(compareCalendarItems);
+      }
     }
   };
 }
@@ -187,6 +343,11 @@ module.exports={
   mapAccount,
   mapContact,
   mapOpportunity,
+  mapOpportunityCalendar,
+  mapBookingCalendar,
+  mapActivityCalendar,
+  compareCalendarItems,
+  calendarParts,
   buildProspectWhere,
   asTimestamp,
   asDateOnly
