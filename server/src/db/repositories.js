@@ -176,6 +176,36 @@ function compareCalendarItems(a,b){
     String(a.org||'').localeCompare(String(b.org||''),'nb');
 }
 
+const ENRICHMENT_SOURCE_STATUSES=new Set(['ok','empty','blocked','plan_restricted','error','not_connected']);
+const ENRICHMENT_FINISH_STATUSES=new Set(['needs_review','completed','partial','failed']);
+
+function mapEnrichmentJob(row){
+  if(!row) return null;
+  return {
+    id:row.id,
+    accountId:row.account_id,
+    status:row.status,
+    requestedBy:row.requested_by||null,
+    sourceStatuses:row.source_statuses||{},
+    errorCode:row.error_code||null,
+    errorMessage:row.error_message||null,
+    attemptCount:Number(row.attempt_count)||0,
+    availableAt:asTimestamp(row.available_at),
+    lockedAt:asTimestamp(row.locked_at),
+    lockedBy:row.locked_by||null,
+    startedAt:asTimestamp(row.started_at),
+    completedAt:asTimestamp(row.completed_at),
+    createdAt:asTimestamp(row.created_at),
+    updatedAt:asTimestamp(row.updated_at)
+  };
+}
+
+function requireWorkerId(workerId){
+  const value=String(workerId||'').trim();
+  if(!value) throw new TypeError('workerId is required');
+  return value;
+}
+
 const ACCOUNT_SELECT=`
   SELECT
     o.id,
@@ -280,6 +310,147 @@ function createRepositories(input) {
       }
     },
 
+    enrichmentJobs:{
+      async create({id,accountId,requestedBy=null,availableAt=null}={}){
+        if(!id||!accountId) throw new TypeError('enrichmentJobs.create requires id and accountId');
+        const result=await db.query(`
+          INSERT INTO enrichment_jobs(
+            id, account_id, requested_by, available_at
+          )
+          VALUES ($1,$2,$3,COALESCE($4::timestamptz,now()))
+          RETURNING *
+        `,[id,accountId,requestedBy,availableAt]);
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async get(id){
+        const result=await db.query(
+          'SELECT * FROM enrichment_jobs WHERE id = $1 LIMIT 1',
+          [id]
+        );
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async latestForAccount(accountId){
+        const result=await db.query(`
+          SELECT *
+          FROM enrichment_jobs
+          WHERE account_id = $1
+          ORDER BY created_at DESC
+          LIMIT 1
+        `,[accountId]);
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async claimNext(workerId){
+        const worker=requireWorkerId(workerId);
+        const result=await db.query(`
+          WITH next_job AS (
+            SELECT id
+            FROM enrichment_jobs
+            WHERE status='queued'
+              AND available_at <= now()
+            ORDER BY available_at, created_at
+            FOR UPDATE SKIP LOCKED
+            LIMIT 1
+          )
+          UPDATE enrichment_jobs j
+          SET status='running',
+              locked_at=now(),
+              locked_by=$1,
+              started_at=COALESCE(j.started_at,now()),
+              attempt_count=j.attempt_count+1,
+              updated_at=now()
+          FROM next_job
+          WHERE j.id=next_job.id
+          RETURNING j.*
+        `,[worker]);
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async setSourceStatus(id,workerId,source,status){
+        const worker=requireWorkerId(workerId);
+        const sourceKey=String(source||'').trim();
+        if(!sourceKey) throw new TypeError('source is required');
+        if(!ENRICHMENT_SOURCE_STATUSES.has(status)){
+          throw new TypeError('invalid enrichment source status');
+        }
+        const result=await db.query(`
+          UPDATE enrichment_jobs
+          SET source_statuses=jsonb_set(
+                COALESCE(source_statuses,'{}'::jsonb),
+                ARRAY[$3]::text[],
+                to_jsonb($4::text),
+                true
+              ),
+              updated_at=now()
+          WHERE id=$1
+            AND status='running'
+            AND locked_by=$2
+          RETURNING *
+        `,[id,worker,sourceKey,status]);
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async finish(id,workerId,{status,errorCode=null,errorMessage=null}={}){
+        const worker=requireWorkerId(workerId);
+        if(!ENRICHMENT_FINISH_STATUSES.has(status)){
+          throw new TypeError('invalid enrichment finish status');
+        }
+        const result=await db.query(`
+          UPDATE enrichment_jobs
+          SET status=$3,
+              error_code=$4,
+              error_message=$5,
+              completed_at=now(),
+              locked_at=NULL,
+              locked_by=NULL,
+              updated_at=now()
+          WHERE id=$1
+            AND status='running'
+            AND locked_by=$2
+          RETURNING *
+        `,[id,worker,status,errorCode,errorMessage]);
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async reschedule(id,workerId,{delaySeconds=0,errorCode=null,errorMessage=null}={}){
+        const worker=requireWorkerId(workerId);
+        const delay=Number(delaySeconds);
+        if(!Number.isFinite(delay)||delay<0){
+          throw new TypeError('delaySeconds must be a non-negative number');
+        }
+        const result=await db.query(`
+          UPDATE enrichment_jobs
+          SET status='queued',
+              available_at=now()+($3::double precision * interval '1 second'),
+              error_code=$4,
+              error_message=$5,
+              locked_at=NULL,
+              locked_by=NULL,
+              updated_at=now()
+          WHERE id=$1
+            AND status='running'
+            AND locked_by=$2
+          RETURNING *
+        `,[id,worker,delay,errorCode,errorMessage]);
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async cancelQueued(id){
+        const result=await db.query(`
+          UPDATE enrichment_jobs
+          SET status='cancelled',
+              completed_at=now(),
+              updated_at=now()
+          WHERE id=$1
+            AND status='queued'
+          RETURNING *
+        `,[id]);
+        return mapEnrichmentJob(result.rows[0]);
+      }
+    },
+
     calendar:{
       async list({from,to}) {
         const range=[from,to];
@@ -350,6 +521,7 @@ module.exports={
   mapActivityCalendar,
   compareCalendarItems,
   calendarParts,
+  mapEnrichmentJob,
   buildProspectWhere,
   asTimestamp,
   asDateOnly
