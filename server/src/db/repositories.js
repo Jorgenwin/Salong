@@ -139,10 +139,11 @@ function mapOpportunityCalendar(row){
 
 function mapBookingCalendar(row){
   const when=calendarParts(row.starts_at);
+  const isHold=row.status==='holdt'||row.status==='forelopig';
   return {
     date:when.date,
     time:when.time,
-    kind:row.status==='holdt'?'hold':'event',
+    kind:isHold?'hold':'event',
     title:row.title||'',
     org:row.organization_name||'',
     room:row.room||'',
@@ -298,6 +299,7 @@ function createRepositories(input) {
           FROM bookings b
           LEFT JOIN organizations o ON o.id=b.organization_id
           WHERE b.starts_at IS NOT NULL
+            AND b.status IN ('bekreftet','forelopig','holdt')
             AND (b.starts_at AT TIME ZONE 'Europe/Oslo')::date BETWEEN $1::date AND $2::date
           ORDER BY b.starts_at, b.created_at
         `,range);
