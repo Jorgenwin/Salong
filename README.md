@@ -23,6 +23,12 @@ npm start          # bygger og kjører på http://localhost:8080
 
 Testene bruker Playwright med Chromium. I Claude Code-skyøkter er Chromium forhåndsinstallert: sett `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` og ikke kjør `playwright install`. Andre steder: `npx playwright install chromium`. Skjermbilder fra testene havner i en temp-mappe (`SALONG_SHOTS` overstyrer), ikke i repoet.
 
+## Utvikling og data
+
+- Arbeidsflyt for branches, tester, Claude/Codex og PR-er: [docs/development.md](docs/development.md)
+- Regler for hva som kan og ikke kan ligge i Git: [docs/data-policy.md](docs/data-policy.md)
+- Felles agentregler: [AGENTS.md](AGENTS.md) og [CLAUDE.md](CLAUDE.md)
+
 ## Hva du får utenfor Claude
 
 Appen starter i **demomodus**: eksempeldata (merket «Eksempel»), ingenting lagres, og research/Apollo/Spør Salong er «ikke tilkoblet», fordi de i dag går via Claude-artefaktens kapabiliteter (`db`, `mcp`, `sample`). Det er ikke en feil. Full funksjon krever artefakten eller en fremtidig backend.
