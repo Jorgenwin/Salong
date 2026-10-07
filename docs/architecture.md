@@ -49,7 +49,7 @@ Dette lar seg ikke gjøre riktig i en nettleser og må på en server før Salong
 
 ## D. Teknisk gjeld og prototypebegrensninger
 
-- **`rep()`-patcher i `src/build.py`** (ca. 100 stykker) endrer `app_base.js` ved bygging. Det er historikk fra iterasjoner i artefakten. De bør brettes inn i kildefilene én og én; build gir i dag byte-identisk utdata med den publiserte artefakten.
+- **`rep()`-patcher i `src/build.py`** er historikk fra iterasjoner i artefakten. Oppryddingen gjøres gradvis i små PR-er: de første lavrisiko-kjernepatchene er nå flyttet inn i `app_base.js`, mens resten fortsatt skal brettes inn i de faktiske kildefilene uten funksjonsendringer.
 - **Delt scope og modulrekkefølge.** Duplikater finnes (f.eks. `enrProbe` i både `enr.js` og `enrsvc.js`; den siste vinner). Ingen ES-moduler, ingen typer utover JSDoc i `services/types.js`.
 - **Én stor fil (1,4 MB)** og ingen kodesplitting.
 - **Testkrok i produksjonskode:** `window.__salong` eksponerer intern tilstand for testene (inneholder ingen hemmeligheter).

@@ -58,7 +58,7 @@ const UI={view:'idag',pr:null,q:'',mine:false,tier:'all',former:false,seg:'',sor
   inbox:{text:'',f:null,busy:false,err:''}, tpl:{k:'winback',dealId:'',text:'',busy:false}, imp:{type:'orgs',rows:null,head:null,name:''},
   sc:{use:50,rooms:6}, fn:{goal:100,per:2,c1:40,c2:60,c3:50}, confirm:null, report:{text:'',busy:false}};
 let db=null, user=null, me={id:null,name:'',avatarUrl:''}, sample=null, mcp=null, dl=null, live=false, readOnly=false;
-const people={};
+const people={}; let DV=0;
 
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -152,7 +152,7 @@ async function put(col,id,obj,opts={}){
   const prev=S[col][id], now=iso(new Date());
   const doc={...obj,rev:(prev?.rev||0)+1,updatedAt:now,updatedBy:me.id||null,updatedByName:me.name||''};
   if(!prev){ doc.createdAt=obj.createdAt||now; doc.createdBy=obj.createdBy||me.id||null; }
-  S[col][id]=doc;
+  S[col][id]=doc; DV++;
   const D=UI.drawer; if(D&&D.id===id&&((D.kind==='deal'&&col==='deals')||(D.kind==='org'&&col==='orgs'))){ D.baseRev=doc.rev; D.base=JSON.parse(JSON.stringify(doc)); }
   render();
   if(AUDITED.includes(col)&&!opts.noAudit) audit(col,id,prev,doc,opts.action);
@@ -163,7 +163,7 @@ async function del(col,id,batch){
   if(SOFT.includes(col)&&S[col][id]) return put(col,id,{...S[col][id],deletedAt:iso(new Date()),deletedBy:me.name||'',deleteBatch:batch||uid('del')},{action:'flyttet til papirkurven'});
   return hardDel(col,id);
 }
-async function hardDel(col,id){ if(readOnly) return false; delete S[col][id]; render(); return commit(col,id,null,'del'); }
+async function hardDel(col,id){ if(readOnly) return false; delete S[col][id]; DV++; render(); return commit(col,id,null,'del'); }
 async function restore(batch){ let n=0; for(const col of SOFT) for(const [id,x] of Object.entries(S[col])) if(x.deleteBatch===batch){ const {deletedAt,deletedBy,deleteBatch,...rest}=x; await put(col,id,rest,{action:'gjenopprettet'}); n++; } toast(n+' oppføringer er gjenopprettet'); }
 async function saveSettings(obj){
   S.settings={...S.settings,...obj}; render();
@@ -622,7 +622,7 @@ function orgStats(id){
 /* ---------- kunder og kundekort ---------- */
 const STATUS={fast:['Fast leietaker','a'],kunde:['Kunde','b'],prospekt:['Prospekt','violet']};
 const statusChip=s=>'<span class="chip '+STATUS[s][1]+'">'+STATUS[s][0]+'</span>';
-function orgStatus(id){ const o=S.orgs[id]||{}, p=PROFILES[id]; if(o.former) return 'fast'; if((p&&hasHistory(p))||deals().some(d=>d.orgId===id&&d.stage==='bekreftet')) return 'kunde'; return 'prospekt'; }
+function orgStatus(id){ const o=S.orgs[id]||{}, p=PROFILES[id]; if(o.former) return 'fast'; if((p&&hasHistory(p))||deals().some(d=>d.orgId===id&&d.stage==='bekreftet')||bookingsAll().some(b=>b.orgId===id&&b.status==='bekreftet')) return 'kunde'; return 'prospekt'; }
 function allOrgs(){ const out=orgs(); for(const p of Object.values(PROFILES)) if(!S.orgs[p.id]) out.push({id:p.id,name:p.name,segment:p.segment||'',tier:p.tier||'B',former:false,website:p.website||'',contacts:[],virtual:true}); return out; }
 async function openOrg(id,tab){ if(!S.orgs[id]&&PROFILES[id]) await ensureOrg(PROFILES[id]); openDrawer('org',id); if(tab&&UI.drawer){ UI.drawer.tab=tab; renderDrawer(true); } }
 function moneyMap(){ const {B,Y,syn}=statData(), m={}; for(const b of B){ const r=m[b.org]||(m[b.org]={ys:{},tot:0,n:0,first:b.y}); r.ys[b.y]=(r.ys[b.y]||0)+b.kr; r.tot+=b.kr; r.n+=b.n; if(b.y<r.first) r.first=b.y; } return {m,Y,syn}; }
@@ -751,7 +751,7 @@ function wireOrg(root,D){
       const clean={...o,name:o.name.trim(),contacts:(o.contacts||[]).filter(c=>c.name||c.email||c.phone)};
       if(!D.id){ const dups=findDuplicates(clean.name,clean.website,null); if(dups.length&&!D.dupOk){ D.dupOk=true; toast('«'+dups[0].name+'» finnes kanskje allerede. Trykk Opprett igjen for å opprette likevel.'); renderDrawer(true); return; }
         const id=uid('o'); await put('orgs',id,clean); D.id=id; D.tab='oversikt'; D.base=JSON.parse(JSON.stringify(S.orgs[id])); D.baseRev=S.orgs[id].rev; D.draft={...S.orgs[id],contacts:(S.orgs[id].contacts||[]).map(c=>({...c}))}; toast('Kontakt opprettet'); if(D.closeAfter) closeDrawer(true); else renderDrawer(true); return; }
-      const r=await saveChecked('orgs',D,clean); if(r===null) return; toast(r?'Lagret':db?'Ikke bekreftet lagret. Endringen er beholdt og sendes på nytt.':'Lagret i demo (ikke permanent)');
+      const r=await saveChecked('orgs',D,clean); if(r===null) return; toast(r?'Lagret':readOnly?'Du har lesetilgang. Endringen er ikke lagret.':db?'Ikke bekreftet lagret. Endringen er beholdt og sendes på nytt.':'Lagret i demo (ikke permanent)');
       D.draft={...S.orgs[D.id],contacts:(S.orgs[D.id].contacts||[]).map(c=>({...c}))}; if(D.closeAfter) closeDrawer(true); else renderDrawer(true); });
     root.querySelectorAll('[data-mergein]').forEach(b=>b.addEventListener('click',async()=>{ if(!b.dataset.ok){ b.dataset.ok='1'; b.textContent='Bekreft sammenslåing'; return; } await mergeOrgs(D.id,b.dataset.mergein); D.draft={...S.orgs[D.id],contacts:(S.orgs[D.id].contacts||[]).map(c=>({...c}))}; renderDrawer(true); }));
     $('#oDel')?.addEventListener('click',()=>{ D.del=true; renderDrawer(true); });
@@ -1465,7 +1465,7 @@ function wireDeal(root,D){
     const now=iso(new Date()), id=D.id||uid('d');
     const doc={...d,orgId,title:d.title.trim()||'Uten tittel',createdAt:d.createdAt||now,stageAt:d.stageAt||now};
     if(D.id){ const cur=S.deals[D.id]; doc.stage=cur.stage; doc.stageAt=cur.stageAt; doc.ownerId=cur.ownerId; doc.ownerName=cur.ownerName; doc.facts=cur.facts; if(cur.offerId) doc.offerId=cur.offerId; }
-    if(D.id){ const r=await saveChecked('deals',D,doc); if(r===null) return; toast(r?'Lagret':db?'Ikke bekreftet lagret. Endringen er beholdt og sendes på nytt.':'Lagret i demo (ikke permanent)'); }
+    if(D.id){ const r=await saveChecked('deals',D,doc); if(r===null) return; toast(r?'Lagret':readOnly?'Du har lesetilgang. Endringen er ikke lagret.':db?'Ikke bekreftet lagret. Endringen er beholdt og sendes på nytt.':'Lagret i demo (ikke permanent)'); }
     else { await put('deals',id,doc); D.id=id; d.orgId=orgId; D.base=JSON.parse(JSON.stringify(S.deals[id])); D.baseRev=S.deals[id].rev; toast('Sak opprettet'); }
     D.draft={...S.deals[id]}; if(D.closeAfter) closeDrawer(true); else renderDrawer(true);
   });
@@ -1508,7 +1508,7 @@ async function init(){
   if(ux){ try{ me=await ux.me(); }catch(e){} try{ if(await ux.can('data.write')===false) readOnly=true; }catch(e){} renderMe(); }
   if(dbx){ db=dbx; live=true; S.orgs={}; S.deals={}; S.acts={}; S.prospects={};
     restoreOutbox();
-    for(const col of ['orgs','deals','acts','prospects','audit','imports','offers']){ S[col]={}; db.collection(col).onSnapshot(snap=>{ S[col]=Object.fromEntries(snap.docs.map(d=>[d.id,{...d.data()}])); overlayQueue(col); render(); },e=>dbErr(e)); }
+    for(const col of ['orgs','deals','acts','prospects','audit','imports','offers','bookings','kdocs','members','notices','mscen','malts','mpos','mtacc','mtper','mtbat','mtsnap','mtq','mtjob']){ S[col]={}; db.collection(col).onSnapshot(snap=>{ S[col]=Object.fromEntries(snap.docs.map(d=>[d.id,{...d.data()}])); overlayQueue(col); DV++; render(); },e=>dbErr(e)); }
     flush();
     db.doc('settings/main').onSnapshot(s=>{ S.settings={...DEFAULT_SETTINGS,...(s.exists?s.data():{})}; const q=SYNC.queue.get('settings/main'); if(q) S.settings=q.doc; render(); },()=>{});
   }
