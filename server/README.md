@@ -1,6 +1,6 @@
 # server/ – plassholder for fremtidig backend
 
-Ingen kode ennå, bevisst. Backend-teknologi, database og hosting velges i en egen økt (se `docs/backend-roadmap.md`, fase 2). Ikke installer database, auth eller skytjenester før da.
+Ingen kode ennå, bevisst. Backend v1 er nå besluttet på arkitekturnivå i `docs/decisions/0001-backend-v1.md` (se også `docs/backend-roadmap.md`). Ingen backend-kode er installert ennå; implementeringen skal fortsatt skje i små, testede PR-er.
 
 ## Foreslått struktur
 
