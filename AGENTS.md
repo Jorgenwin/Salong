@@ -9,7 +9,8 @@ Les i denne rekkefølgen:
 1. `README.md`
 2. `docs/architecture.md`
 3. `docs/backend-roadmap.md`
-4. Relevant kode under `src/`
+4. `docs/decisions/0001-backend-v1.md` ved backendarbeid
+5. Relevant kode under `src/` eller `server/`
 
 Ikke anta at planlagte backend-endepunkter faktisk finnes. Arkitekturdokumentet skiller mellom det som virker i dag og målarkitekturen.
 
@@ -49,7 +50,7 @@ Viktig:
 
 ## Backend
 
-Det finnes ingen ekte backend ennå. Ikke bygg en stor backend som sideeffekt av en frontend-oppgave.
+Backend v1 bygges nå gradvis under `server/`. Ikke bygg en stor backend som sideeffekt av en frontend-oppgave, og ikke hopp over de avtalte små PR-trinnene i ADR 0001.
 
 Når backendarbeid faktisk er oppgaven:
 
@@ -66,6 +67,8 @@ Vanlig flyt:
 ```bash
 npm install
 npm run check
+npm run server:check
+npm run test:server
 npm test
 ```
 
