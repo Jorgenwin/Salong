@@ -12,7 +12,7 @@ const migration=fs.readFileSync(
 );
 
 function hasTable(name){
-  return new RegExp('CREATE TABLE\\s+'+name+'\\s*\\(','i').test(migration);
+  return new RegExp('CREATE TABLE(?: IF NOT EXISTS)?\\s+'+name+'\\s*\\(','i').test(migration);
 }
 
 test('initial migration contains the backend v1 system-of-record tables',()=>{
