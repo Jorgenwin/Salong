@@ -1,25 +1,59 @@
-# server/ – plassholder for fremtidig backend
+# server/ – backend v1
 
-Ingen kode ennå, bevisst. Backend v1 er nå besluttet på arkitekturnivå i `docs/decisions/0001-backend-v1.md` (se også `docs/backend-roadmap.md`). Ingen backend-kode er installert ennå; implementeringen skal fortsatt skje i små, testede PR-er.
+Backend v1 is decided in `docs/decisions/0001-backend-v1.md`. This directory now contains the first deliberately small server foundation: a dependency-free Node HTTP process, configuration validation and a health endpoint. Database, auth, CRM routes and enrichment workers are added in later PRs.
 
-## Foreslått struktur
+## Run locally
+
+From the repository root:
+
+```bash
+npm run server:start
+```
+
+Default address: `http://localhost:3000`.
+
+Override the port with `PORT`:
+
+```bash
+PORT=8081 npm run server:start
+```
+
+Health check:
+
+```text
+GET /health
+→ {"status":"ok","service":"salong-api"}
+```
+
+Run server tests:
+
+```bash
+npm run test:server
+```
+
+The skeleton intentionally has no third-party runtime dependencies yet.
+
+## Target structure
 
 ```
 server/
   src/
-    api/            ruter: accounts, contacts, enrichment, opportunities, calendar (samme navn som SalongServices)
-    enrichment/     jobbkø + arbeider som kjører research-pipelinen og skriver EnrichmentJob/-result
-    integrations/   apollo (samme tre operasjoner som src/services/providers/apollo.js), exa, firecrawl
-    auth/           innlogging og enkel tilgang
-    db/             skjema og migrasjoner
-  .env              (ikke i git; variabler står i ../.env.example)
+    index.js        process entrypoint and graceful shutdown
+    app.js          HTTP app / routing shell
+    config.js       environment validation
+    api/            accounts, contacts, enrichment, opportunities, calendar
+    enrichment/     persistent queue + worker
+    integrations/   Apollo, Exa/Firecrawl, LLM
+    auth/           authentication and owner/editor/reader authorization
+    db/             schema, migrations and repositories
+  test/
 ```
 
-## Kontrakten
+## Contract
 
-Serveren implementerer `SalongBackend` fra `src/services/types.js`, f.eks.:
+The server implements `SalongBackend` from `src/services/types.js`. Planned minimum mapping:
 
-| Frontend-kall | HTTP |
+| Frontend call | HTTP |
 |---|---|
 | `getAccount(id)` | `GET /api/accounts/:id` |
 | `getProspects(filter)` | `GET /api/prospects` |
@@ -28,10 +62,12 @@ Serveren implementerer `SalongBackend` fra `src/services/types.js`, f.eks.:
 | `enrichAccounts(ids)` | `POST /api/enrichment/batch` |
 | `getEnrichmentJob(id)` | `GET /api/enrichment/jobs/:id` → `EnrichmentJob` |
 
-Tabeller (forslag): `organizations`, `persons`, `cases`, `activities`, `prospects`, `enrichment_jobs`, `enrichment_results`, `sources`, `bookings` (senere).
+Until those routes are implemented, unknown endpoints return the standard service error shape with `error_code: "not_found"`.
 
-## Regler
+## Rules
 
-- Nøkler (Apollo, Exa, Firecrawl, LLM) bare her, aldri i frontend.
-- Ingen simulerte svar fra eksterne kilder. Feil er tilstander (`plan_restricted`, `blocked`, `not_connected`), ikke tomme resultater.
-- Salong sender ikke e-post uten en eksplisitt, egen beslutning.
+- Apollo, Exa, Firecrawl, LLM, database and auth secrets are server-side only.
+- No simulated provider responses in production code. Provider failure/plan states are explicit.
+- Operational CRM data belongs in PostgreSQL, never Git.
+- Research values retain provenance; undocumented values stay null.
+- Salong does not send email unless a separate explicit decision enables it.
