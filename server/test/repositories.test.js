@@ -177,7 +177,7 @@ test('calendar repository combines opportunities, bookings and actionable activi
           organization_id:'o-2',
           organization_name:'Eksempel AS',
           title:'Frokostmøte',
-          status:'bekreftet',
+          status:'forelopig',
           room:'collett',
           starts_at:new Date('2027-10-15T08:30:00.000Z')
         }]};
@@ -209,10 +209,11 @@ test('calendar repository combines opportunities, bookings and actionable activi
 
   assert.deepEqual(items.map(item=>[item.date,item.kind,item.open]),[
     ['2027-10-14','event','deal:d-1'],
-    ['2027-10-15','event','org:o-2'],
+    ['2027-10-15','hold','org:o-2'],
     ['2027-10-16','meet','deal:d-3']
   ]);
   assert.equal(items[1].time,'10:30');
+  assert.ok(calls.find(call=>/FROM bookings b/.test(call.text)).text.includes("b.status IN ('bekreftet','forelopig','holdt')"));
   assert.equal(items[2].time,'13:00');
   assert.equal(items[2].owner,'m-2');
   assert.equal(calls.length,3);
