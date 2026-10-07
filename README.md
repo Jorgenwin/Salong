@@ -31,7 +31,7 @@ Testene bruker Playwright med Chromium. I Claude Code-skyøkter er Chromium forh
 
 ## Hva du får utenfor Claude
 
-Appen starter i **demomodus**: eksempeldata (merket «Eksempel»), ingenting lagres, og research/Apollo/Spør Salong er «ikke tilkoblet», fordi de i dag går via Claude-artefaktens kapabiliteter (`db`, `mcp`, `sample`). Det er ikke en feil. Full funksjon krever artefakten eller en fremtidig backend.
+Appen starter i **demomodus**: eksempeldata (merket «Eksempel»), ingenting lagres, og research/Apollo/Spør Salong er «ikke tilkoblet», fordi de i dag går via Claude-artefaktens kapabiliteter (`db`, `mcp`, `sample`). Det er ikke en feil. Full funksjon krever artefakten eller en fremtidig backend. `data/example/seed.json` er eneste kilde for demodata og bygges inn i appen av `src/build.py`.
 
 ## Struktur
 
