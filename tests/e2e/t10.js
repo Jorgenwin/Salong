@@ -19,7 +19,7 @@ const {navTo,setup,testSeed} = require('./h.js');
     for(const [q,h] of [['Hvem bør jeg prioritere denne uken?','Prioritert for denne uken'],['Hvilke tidligere leietakere bør vi hente tilbake?','Tidligere leietakere å hente tilbake'],['Hvilke prospekter passer best for Solstad?','Prospekter som passer Solstad'],['Hvilke segmenter er svakest bearbeidet?','Segmenter som er svakest bearbeidet'],['Hva må til for å nå kvartalsmålet?','Hva må til for å nå målet for']]){
       await ask(q); const t=await p.$eval('.kn-turn:last-child',e=>({h:(e.querySelector('.i3-an h4')||{}).textContent||'',strip:!!e.querySelector('.i3-strip'),cols:e.querySelectorAll('.i3-an .i3-c').length,val:/ikke-kommersiell stiftelse/.test((e.querySelector('.i3-an')||{}).textContent||'')}));
       check('N05 «'+q+'» gir beregnet svar med Sikkert, Bygger på, Mangler og Tolkning, og verdinotat',t,v=>v.h.startsWith(h)&&v.strip&&v.cols>=3&&v.val); }
-    await p.click('[data-view="marked"]'); await p.waitForTimeout(200); await p.click('[data-m3ask]'); await p.waitForTimeout(250);
+    await p.click('[data-view="marked"]'); await p.waitForTimeout(200); await p.locator('[data-m3ask]').evaluate(el=>el.click()); await p.waitForTimeout(250);
     check('N06 «Spør Innsikt om markedet» fra Marked og posisjon velger Markedet',await p.$eval('[data-knt="marked"]',e=>e.getAttribute('aria-pressed')),'true');
     // ---------- Mål og prognose ----------
     await view('prognose');
