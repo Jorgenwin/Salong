@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Følg alltid `AGENTS.md` først. Den er felles instruks for Claude, Codex og andre kodeagenter i Salong-repoet.
+Følg alltid `AGENTS.md` først. Den er felles instruks for Claude, Codex og andre kodeagenter i Salong-repoet. Sjekk åpne issues og PR-er før du starter, slik at du ikke dupliserer arbeid som Codex eller en annen Claude-økt allerede gjør.
 
 ## Claude-spesifikt
 
