@@ -53,7 +53,7 @@ Dette lar seg ikke gjøre riktig i en nettleser og må på en server før Salong
 - **Delt scope og modulrekkefølge.** Duplikater finnes (f.eks. `enrProbe` i både `enr.js` og `enrsvc.js`; den siste vinner). Ingen ES-moduler, ingen typer utover JSDoc i `services/types.js`.
 - **Én stor fil (1,4 MB)** og ingen kodesplitting.
 - **Testkrok i produksjonskode:** `window.__salong` eksponerer intern tilstand for testene (inneholder ingen hemmeligheter).
-- **Demodata ligger i koden.** `DEMO` i `app_base.js` er identisk med `data/example/seed.json` (verifiseres av `tests/e2e/t20.js`). Én av dem bør bli kilden og injiseres ved bygging.
+- **Demodata bygges inn ved bygging.** `data/example/seed.json` er eneste kilde for eksempeldata; `src/build.py` injiserer den i den selvstendige appen. `tests/e2e/t20.js` verifiserer at bygget bruker nøyaktig denne seed-filen.
 - **Steder som later som om en backend finnes** og som er ærlig merket: `enrichmentRunner` heter `prototype_queue` («utføres av Claude-økten, ikke autonomt»); kommentarer om `POST /api/…` beskriver målformen, ikke noe som kjører; Cognism-provideren er bare en plassholder («ikke tilkoblet»); statusfeltet «Tilkoblet» betyr at artefaktdatabasen svarer, ikke at det finnes en server.
 - **Samtykke per seer** for connectorer. Én bruker kan ha tilgang til Apollo mens en annen ikke har det.
 - **Ingen skjemavalidering på serveren**, ingen rate limiting, ingen kreditt-/kostnadsstyring utover at `people_match` er manuell.
