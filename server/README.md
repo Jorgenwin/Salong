@@ -1,19 +1,30 @@
 # server/ – backend v1
 
-Dette er starten på den ekte Salong-backenden. Arkitekturvalget ligger i `docs/decisions/0001-backend-v1.md`.
+Dette er den selvstendige Salong-backenden under oppbygging. Arkitekturvalget ligger i `docs/decisions/0001-backend-v1.md`.
 
 ## Nåværende status
 
-Første steg er med vilje lite:
+På plass i kode og tester:
 
-- Node 22 HTTP-server uten tredjeparts runtime-avhengigheter
-- konfigurasjonsvalidering
-- `GET /health`
-- strukturert oppstarts-/avslutningslogg
-- request-id på svar
-- servertester i CI
+- Node 22 HTTP-server, konfigurasjonsvalidering, strukturert logging og `GET /health`
+- PostgreSQL-skjema og versjonerte migrasjoner
+- repository-lag med parameteriserte spørringer
+- read-API for accounts, prospects, contacts, opportunities og calendar
+- kalenderhåndtering eksplisitt i `Europe/Oslo`
+- frontend `httpBackend` for read-kontrakten; uferdige enrichment-kall stopper tydelig i stedet for å falle tilbake lokalt
+- persistente enrichment-jobber med atomisk claim (`FOR UPDATE SKIP LOCKED`), worker-lås, retries og status
+- provider-uavhengig worker-kjerne med injisert executor og enkel health/status
 
-Det finnes **ikke** database, auth eller providerintegrasjoner ennå. De legges til i egne PR-er.
+Ikke på plass ennå:
+
+- faktisk PostgreSQL-driver/runtime-tilkobling mot en live database
+- auth og roller
+- CRM-skrive-API
+- kobling av research-motoren til workeren
+- ekte Apollo/web/LLM-adaptere og secrets
+- produksjonsdeployment og bytte av UI til server som standard
+
+Det betyr at backendarkitekturen kan testes isolert, men det finnes fortsatt ingen produksjonsdataflyt.
 
 ## Kjør lokalt
 
@@ -40,15 +51,19 @@ Responsen inneholder bare driftsstatus, miljø, tidspunkt og request-id. Den ska
 
 ```text
 server/
+  db/
+    migrations/       versjonert PostgreSQL-skjema
   src/
-    app.js          HTTP-handler og endepunkter
-    config.js       miljøvariabler og validering
-    index.js        prosessoppstart, logging og graceful shutdown
-  test/
-    health.test.js
+    api/              HTTP-kontrakter
+    db/               repositories og migrasjonsrunner
+    worker/           persistent enrichment-worker, provider-uavhengig
+    app.js            HTTP-handler
+    config.js         miljøvariabler og validering
+    index.js          prosessoppstart, logging og graceful shutdown
+  test/               backendtester
 ```
 
-Neste planlagte steg er PostgreSQL-skjema/migrasjoner og repository-lag. API-et skal implementere `SalongBackend` fra `src/services/types.js` gradvis, uten at UI-et kobles direkte til database eller providers.
+Neste tekniske milepæl er å koble den delte research-motoren inn bak workerens executor-grense og persistere resultat/kilder/fakta. Før ekte providers kobles på skal dette være grønt med fake adaptere og offline eval.
 
 ## Regler
 
@@ -56,4 +71,6 @@ Neste planlagte steg er PostgreSQL-skjema/migrasjoner og repository-lag. API-et 
 - Ingen simulerte providerresultater i produksjonskode.
 - Forventede providerfeil skal bli eksplisitte tilstander, ikke tomme «vellykkede» resultater.
 - Produksjonsdata skal i PostgreSQL, aldri i Git.
+- Ukjente researchfelt forblir `null` / «Ikke dokumentert».
+- Hovedkontakt godkjennes av et menneske, ikke automatisk av research-motoren.
 - Salong sender ikke e-post uten en separat, eksplisitt beslutning.
