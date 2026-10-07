@@ -7,6 +7,17 @@ function requireDb(db) {
   return db;
 }
 
+function asTimestamp(value) {
+  if (!value) return null;
+  return value instanceof Date ? value.toISOString() : String(value);
+}
+
+function asDateOnly(value) {
+  if (!value) return null;
+  if (value instanceof Date) return value.toISOString().slice(0,10);
+  return String(value).slice(0,10);
+}
+
 function mapAccount(row) {
   if (!row) return null;
   return {
@@ -44,7 +55,7 @@ function mapContact(row) {
     active: row.active !== false,
     do_not_contact: Boolean(row.do_not_contact),
     verified: Boolean(row.verified_at),
-    last_enriched_at: row.last_enriched_at || row.verified_at || null
+    last_enriched_at: asTimestamp(row.last_enriched_at || row.verified_at)
   };
 }
 
@@ -57,10 +68,10 @@ function mapOpportunity(row) {
     stage: row.stage,
     value: row.value_amount == null ? 0 : Number(row.value_amount),
     room: row.room || null,
-    event_date: row.event_date || null,
+    event_date: asDateOnly(row.event_date),
     attendees: row.attendees == null ? 0 : Number(row.attendees),
     owner_id: row.owner_id || null,
-    stage_changed_at: row.stage_at || null,
+    stage_changed_at: asTimestamp(row.stage_at),
     lost_reason: row.lost_reason || null
   };
 }
@@ -176,5 +187,7 @@ module.exports={
   mapAccount,
   mapContact,
   mapOpportunity,
-  buildProspectWhere
+  buildProspectWhere,
+  asTimestamp,
+  asDateOnly
 };
