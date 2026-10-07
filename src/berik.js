@@ -89,7 +89,7 @@ function bkCopy(btn){ try{ navigator.clipboard.writeText(BK_CMD).then(()=>toast(
 function bkToast(r){
   if(r.success){ const n=r.data.queued; toast(n===1?'Berik ligger i køen. Claude-økten utfører den.':n+' accounts ligger i køen. Claude-økten utfører dem.'); }
   else toast(r.error_code==='nothing_to_do'?'Ingenting å berike: allerede klare, i kø eller utelatt.':(r.error_message||'Kunne ikke starte berik.')); return r; }
-async function bkBerik(ids,opt){ let r; if(ids.length===1) r=await crm.enrichment.start(ids[0],opt); else { const x=await enrichmentService.startMany(ids,opt||{}); r=x.queued?ok(x):fail('nothing_to_do','Ingenting å berike.'); } return bkToast(r); }
+async function bkBerik(ids,opt){ const E=SalongServices.enrichment, r=ids.length===1?await E.enrichAccount(ids[0],opt):await E.enrichAccounts(ids,opt); return bkToast(r); }
 function bkBatchPanel(b){
   const A=bkAccsOf(b); if(!A.length) return ''; const c=bkCounts(A), todo=A.filter(a=>!a.flags.disqualified&&!a.dncAcc&&!bkActive(a.job)&&!(a.flags.enriched&&a.flags.qualified)), running=c.venter>0;
   const started=A.some(a=>a.job);
@@ -107,4 +107,4 @@ function bkWirePanels(root){
   root.querySelectorAll('[data-bkcopy]').forEach(b=>b.addEventListener('click',()=>bkCopy(b)));
 }
 /* én-klikks enrichment fra lister */
-async function bkOne(id){ bkToast(await crm.enrichment.start(id)); }
+async function bkOne(id){ bkToast(await SalongServices.enrichment.enrichAccount(id)); }

@@ -233,7 +233,7 @@ async function enrRunAll(){
   const t=enrTargets(); if(!t.ids.length){ toast('Ingenting å berike.'); return {queued:0}; }
   const runId='run_'+Date.now().toString(36); ENR.fatal=''; ENR.dismissed='';
   const ids=t.sel?t.ids.slice().sort((x,y)=>{ const A=mtGet(x),B=mtGet(y); return (B?B.fit.total:0)-(A?A.fit.total:0); }):t.ids;
-  const r=await enrichmentService.startMany(ids,{force:true,runId,groupId:'',groupName:''}); if(t.sel) ENR.sel.clear();
+  const rr=await SalongServices.enrichment.enrichAccounts(ids,{force:true,runId,groupId:'',groupName:''}), r=rr.success?rr.data:{queued:0}; if(t.sel) ENR.sel.clear();
   toast(r.queued?'Beriker '+r.queued+' account'+(r.queued===1?'':'s')+' …':'Ingenting å berike.'); renderView(true); return r; }
 /* kompakt jobblinje: avledet av lagrede jobber, overlever navigasjon og reload */
 function enrRunInfo(){
