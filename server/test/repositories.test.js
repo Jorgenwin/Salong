@@ -153,3 +153,68 @@ test('repositories use parameterized account/contact queries and return mapped r
 test('createRepositories requires an injected database boundary',()=>{
   assert.throws(()=>createRepositories(null),/requires an object with query/);
 });
+
+test('calendar repository combines opportunities, bookings and actionable activities',async()=>{
+  const calls=[];
+  const db={
+    async query(text,params){
+      calls.push({text:String(text),params});
+      if(/FROM opportunities d/.test(text)){
+        return {rows:[{
+          id:'d-1',
+          title:'Årskonferanse',
+          stage:'bekreftet',
+          event_date:new Date('2027-10-14T00:00:00.000Z'),
+          organization_name:'Recovery Norge',
+          room:'solstad',
+          owner_id:'m-1'
+        }]};
+      }
+      if(/FROM bookings b/.test(text)){
+        return {rows:[{
+          id:'b-1',
+          organization_id:'o-2',
+          organization_name:'Eksempel AS',
+          title:'Frokostmøte',
+          status:'bekreftet',
+          room:'collett',
+          starts_at:new Date('2027-10-15T08:30:00.000Z')
+        }]};
+      }
+      if(/FROM activities a/.test(text)){
+        return {rows:[{
+          id:'a-1',
+          organization_id:'o-3',
+          opportunity_id:'d-3',
+          organization_name:'Forlaget',
+          opportunity_room:'hagerup',
+          opportunity_owner_id:'m-2',
+          type:'meeting',
+          text:'Møte om vårprogrammet',
+          happened_at:new Date('2027-10-16T11:00:00.000Z'),
+          due_at:null,
+          owner_id:null
+        }]};
+      }
+      return {rows:[]};
+    }
+  };
+
+  const repositories=createRepositories(db);
+  const items=await repositories.calendar.list({
+    from:'2027-10-01',
+    to:'2027-10-31'
+  });
+
+  assert.deepEqual(items.map(item=>[item.date,item.kind,item.open]),[
+    ['2027-10-14','event','deal:d-1'],
+    ['2027-10-15','event','org:o-2'],
+    ['2027-10-16','meet','deal:d-3']
+  ]);
+  assert.equal(items[1].time,'08:30');
+  assert.equal(items[2].owner,'m-2');
+  assert.equal(calls.length,3);
+  for(const call of calls){
+    assert.deepEqual(call.params,['2027-10-01','2027-10-31']);
+  }
+});
