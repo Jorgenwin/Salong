@@ -187,6 +187,7 @@ function mapEnrichmentJob(row){
     status:row.status,
     requestedBy:row.requested_by||null,
     sourceStatuses:row.source_statuses||{},
+    error:row.status==='failed'?(row.error_code||row.error_message||null):null,
     errorCode:row.error_code||null,
     errorMessage:row.error_message||null,
     attemptCount:Number(row.attempt_count)||0,
