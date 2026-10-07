@@ -12,6 +12,16 @@ function nonEmpty(value) {
   return value == null || value === '' ? null : String(value);
 }
 
+function validIsoDate(value) {
+  const text=String(value||'');
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(text)) return false;
+  const [year,month,day]=text.split('-').map(Number);
+  const date=new Date(Date.UTC(year,month-1,day));
+  return date.getUTCFullYear()===year &&
+    date.getUTCMonth()===month-1 &&
+    date.getUTCDate()===day;
+}
+
 async function handleReadRequest({ req, url, repositories }) {
   if (req.method !== 'GET' || !repositories) return null;
 
@@ -54,10 +64,9 @@ async function handleReadRequest({ req, url, repositories }) {
   }
 
   if(url.pathname==='/api/calendar'){
-    const isoDate=/^\d{4}-\d{2}-\d{2}$/;
     const from=nonEmpty(url.searchParams.get('from'));
     const to=nonEmpty(url.searchParams.get('to'))||from;
-    if(!from||!isoDate.test(from)||!to||!isoDate.test(to)||to<from){
+    if(!validIsoDate(from)||!validIsoDate(to)||to<from){
       return {
         status:400,
         body:{
@@ -74,4 +83,4 @@ async function handleReadRequest({ req, url, repositories }) {
   return null;
 }
 
-module.exports={handleReadRequest,decodePathPart,nonEmpty};
+module.exports={handleReadRequest,decodePathPart,nonEmpty,validIsoDate};
