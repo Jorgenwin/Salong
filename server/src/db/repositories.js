@@ -93,12 +93,34 @@ function calendarKindForStage(stage){
   return 'enq';
 }
 
+const CALENDAR_TIME_ZONE='Europe/Oslo';
+const CALENDAR_FORMATTER=new Intl.DateTimeFormat('en-GB',{
+  timeZone:CALENDAR_TIME_ZONE,
+  year:'numeric',
+  month:'2-digit',
+  day:'2-digit',
+  hour:'2-digit',
+  minute:'2-digit',
+  hourCycle:'h23'
+});
+
+function calendarParts(value){
+  if(!value) return {date:null,time:''};
+  const instant=value instanceof Date?value:new Date(value);
+  if(Number.isNaN(instant.getTime())) return {date:null,time:''};
+  const parts=Object.fromEntries(
+    CALENDAR_FORMATTER.formatToParts(instant)
+      .filter(part=>part.type!=='literal')
+      .map(part=>[part.type,part.value])
+  );
+  return {
+    date:parts.year+'-'+parts.month+'-'+parts.day,
+    time:parts.hour+':'+parts.minute
+  };
+}
+
 function timeOnly(value){
-  if(!value) return '';
-  const timestamp=asTimestamp(value);
-  if(!timestamp) return '';
-  const match=timestamp.match(/T(\d{2}:\d{2})/);
-  return match?match[1]:'';
+  return calendarParts(value).time;
 }
 
 function mapOpportunityCalendar(row){
@@ -116,9 +138,10 @@ function mapOpportunityCalendar(row){
 }
 
 function mapBookingCalendar(row){
+  const when=calendarParts(row.starts_at);
   return {
-    date:asDateOnly(row.starts_at),
-    time:timeOnly(row.starts_at),
+    date:when.date,
+    time:when.time,
     kind:row.status==='holdt'?'hold':'event',
     title:row.title||'',
     org:row.organization_name||'',
@@ -131,10 +154,11 @@ function mapBookingCalendar(row){
 
 function mapActivityCalendar(row){
   const source=row.due_at||row.happened_at;
+  const when=calendarParts(source);
   const kind=row.type==='visning'?'visit':row.type==='meeting'?'meet':'due';
   return {
-    date:asDateOnly(source),
-    time:timeOnly(source),
+    date:when.date,
+    time:when.time,
     kind,
     title:row.text||'',
     org:row.organization_name||'',
@@ -274,7 +298,7 @@ function createRepositories(input) {
           FROM bookings b
           LEFT JOIN organizations o ON o.id=b.organization_id
           WHERE b.starts_at IS NOT NULL
-            AND b.starts_at::date BETWEEN $1::date AND $2::date
+            AND (b.starts_at AT TIME ZONE 'Europe/Oslo')::date BETWEEN $1::date AND $2::date
           ORDER BY b.starts_at, b.created_at
         `,range);
 
@@ -292,13 +316,13 @@ function createRepositories(input) {
             AND (
               (
                 a.type IN ('visning','meeting')
-                AND COALESCE(a.due_at,a.happened_at)::date BETWEEN $1::date AND $2::date
+                AND (COALESCE(a.due_at,a.happened_at) AT TIME ZONE 'Europe/Oslo')::date BETWEEN $1::date AND $2::date
               )
               OR
               (
                 a.type='task'
                 AND a.opportunity_id IS NOT NULL
-                AND a.due_at::date BETWEEN $1::date AND $2::date
+                AND (a.due_at AT TIME ZONE 'Europe/Oslo')::date BETWEEN $1::date AND $2::date
               )
             )
           ORDER BY COALESCE(a.due_at,a.happened_at), a.created_at
@@ -323,6 +347,7 @@ module.exports={
   mapBookingCalendar,
   mapActivityCalendar,
   compareCalendarItems,
+  calendarParts,
   buildProspectWhere,
   asTimestamp,
   asDateOnly
