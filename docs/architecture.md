@@ -2,7 +2,7 @@
 
 Salong er et CRM- og prospekteringsverktøy for utleie ved Litteraturhuset. Det startet som en prototype i en Claude-artefakt og flyttes nå gradvis til en vanlig kodebase som senere kan kjøres som egen webapp. Dette dokumentet beskriver hva som finnes **i dag**, hva som først trenger en backend, hva som bevares, og hvilken gjeld prototypen har. Det er skrevet etter å ha lest hele koden, ikke etter en plan.
 
-Kort status: frontenden fungerer og er testet (22 testfiler, rundt 750 kontroller). Den har fra før et lagdelt internt tjenestelag (`crm.*` → services → repositories → store). Det som er nytt i denne omgangen er repo-strukturen, et tydelig tjenesteinnlegg for UI (`SalongServices`), en backend-klar `EnrichmentJob`-modell og Apollo bak en adapter. Ingen backend er bygget.
+Kort status: frontenden fungerer og er testet (22 testfiler, rundt 750 kontroller). Den har fra før et lagdelt internt tjenestelag (`crm.*` → services → repositories → store). Det som er nytt i denne omgangen er repo-strukturen, et tydelig tjenesteinnlegg for UI (`SalongServices`), en backend-klar `EnrichmentJob`-modell og Apollo bak en adapter. Backend v1 har nå et lite Node-skjelett med konfigurasjonsvalidering, helsesjekk og tester; database, auth, domene-API og providerintegrasjoner er fortsatt ikke koblet opp.
 
 ## Slik er koden bygget i dag
 
@@ -28,7 +28,7 @@ Kort status: frontenden fungerer og er testet (22 testfiler, rundt 750 kontrolle
 
 Apollo i dag: organisasjonsoppslag virker. Personsøk er sperret på gratisplanen (`API_INACCESSIBLE`, klassifisert som `plan_restricted`, vist som «Apollo utilgjengelig»). `people_match` koster kreditter og kjøres bare som en eksplisitt handling per person.
 
-## B. Hva trenger backend senere
+## B. Hva backend v1 fortsatt må få
 
 Dette lar seg ikke gjøre riktig i en nettleser og må på en server før Salong er en ekte webapp:
 
@@ -54,14 +54,14 @@ Dette lar seg ikke gjøre riktig i en nettleser og må på en server før Salong
 - **Én stor fil (1,4 MB)** og ingen kodesplitting.
 - **Testkrok i produksjonskode:** `window.__salong` eksponerer intern tilstand for testene (inneholder ingen hemmeligheter).
 - **Demodata bygges inn ved bygging.** `data/example/seed.json` er eneste kilde for eksempeldata; `src/build.py` injiserer den i den selvstendige appen. `tests/e2e/t20.js` verifiserer at bygget bruker nøyaktig denne seed-filen.
-- **Steder som later som om en backend finnes** og som er ærlig merket: `enrichmentRunner` heter `prototype_queue` («utføres av Claude-økten, ikke autonomt»); kommentarer om `POST /api/…` beskriver målformen, ikke noe som kjører; Cognism-provideren er bare en plassholder («ikke tilkoblet»); statusfeltet «Tilkoblet» betyr at artefaktdatabasen svarer, ikke at det finnes en server.
+- **Steder i frontenden som fortsatt beskriver mål-API-et uten at domenebackenden finnes** og som er ærlig merket: `enrichmentRunner` heter `prototype_queue` («utføres av Claude-økten, ikke autonomt»); kommentarer om `POST /api/…` beskriver målformen, ikke noe som kjører; Cognism-provideren er bare en plassholder («ikke tilkoblet»); statusfeltet «Tilkoblet» betyr at artefaktdatabasen svarer, ikke at det finnes en server.
 - **Samtykke per seer** for connectorer. Én bruker kan ha tilgang til Apollo mens en annen ikke har det.
-- **Ingen skjemavalidering på serveren**, ingen rate limiting, ingen kreditt-/kostnadsstyring utover at `people_match` er manuell.
+- **Ingen domenevalidering/rate limiting på serveren ennå.** Serverskjelettet validerer bare prosesskonfigurasjon. Kreditt-/kostnadsstyring finnes heller ikke utover at `people_match` er manuell.
 
 ## Målarkitektur (struktur, ikke implementert)
 
 ```
-Nettleser (src/)                    Backend (server/, fase 2)                Eksternt
+Nettleser (src/)                    Backend (server/, v1)                Eksternt
 ─────────────────                   ─────────────────────────                ─────────
 UI (views, drawer)                  API  ── auth, tilgang                    Apollo (org, personer)
    │                                CRM-data (organisasjoner, personer,      Exa / Firecrawl (research)
@@ -139,11 +139,11 @@ Ingen ekte kundeposter ligger i repoet. Ingenting er slettet.
 
 ## Hemmeligheter
 
-Frontenden har ingen og skal aldri få noen. `.env.example` dokumenterer variabler uten verdier for en fremtidig server; `.env` er i `.gitignore`. `tests/e2e/t20.js` skanner kildekoden for nøkkelmønstre.
+Frontenden har ingen og skal aldri få noen. `.env.example` dokumenterer backend-variabler uten hemmelige verdier; `.env` er i `.gitignore`. `tests/e2e/t20.js` skanner kildekoden for nøkkelmønstre.
 
 ## Hva kan ikke testes i skyen
 
 - Ekte Apollo-, Exa- og Gmail/Outlook-kall (krever seerens connector-samtykke i Claude). Testene bruker mockede connectorsvar.
 - Claude-artefaktens `db`-kapabilitet. Testene bruker en delt mock i Node som oppfører seg som `db`.
 - Visuell kontroll i ekte nettlesere utover Chromium, og Google Fonts (blokkert i sandkassen; siden faller tilbake til systemfonter).
-- Alt som krever en faktisk server (ikke bygget).
+- Alt som krever den ferdige domenebackenden (database, auth, HTTP-kontrakt, persistent worker og providertransport) er fortsatt ikke implementert ende-til-ende.

@@ -3,7 +3,15 @@
 const {navTo,setup,testSeed} = require('./h.js');
 (async()=>{
   const A=await setup({ai:true,mcp:true,seed:testSeed()}), {p,check,txt,all}=A;
-  const ev=(f,a)=>p.evaluate(f,a), wait=ms=>p.waitForTimeout(ms), view=async v=>{ await navTo(p,v,300); };
+  const ev=async(f,a)=>{
+    for(let attempt=0;;attempt++){
+      try{ return await p.evaluate(f,a); }
+      catch(e){
+        if(attempt>=2||!/Execution context was destroyed|Cannot find context|Target page, context or browser has been closed/i.test(String(e&&e.message||e))) throw e;
+        await p.waitForTimeout(180);
+      }
+    }
+  }, wait=ms=>p.waitForTimeout(ms), view=async v=>{ await navTo(p,v,300); };
   try{
     // ---------- fixtures: dom -> sider (team, kontakt, event) ----------
     await ev(()=>{

@@ -23,6 +23,8 @@ Forslag til branchnavn:
 ```bash
 npm install
 npm run check
+npm run server:check
+npm run test:server
 npm test
 ```
 
@@ -44,4 +46,4 @@ Salong har teknisk gjeld fra Artifact-perioden, særlig `rep()`-patcher i `src/b
 
 ## Backend
 
-Backend er et eget prosjektsteg, ikke noe som skal snike seg inn i tilfeldige frontend-PR-er. Følg `docs/backend-roadmap.md` og behold `SalongServices` som kontraktsgrense.
+Backend v1 bygges gradvis under `server/`. Følg `docs/decisions/0001-backend-v1.md` og `docs/backend-roadmap.md`, og behold `SalongServices` som kontraktsgrense. Database, auth, API-ruter, worker og providers skal fortsatt komme i små, separate PR-er.
