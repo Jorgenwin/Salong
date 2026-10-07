@@ -4,13 +4,17 @@
   "private": true,
   "description": "Salong 2027 – CRM og prospektering for utleie ved Litteraturhuset (frontend-prototype, service-lag klart for backend)",
   "license": "UNLICENSED",
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "python3 src/build.py",
     "start": "npm run build && node scripts/serve.js",
     "check": "npm run build && node --check dist/app.js",
     "test": "npm run build && node tests/run.js",
-    "test:unit": "node tests/e2e/u_cd.js"
+    "test:unit": "node tests/e2e/u_cd.js",
+    "server:start": "node server/src/index.js",
+    "test:server": "node --test server/test/*.test.js"
   },
   "devDependencies": {
     "playwright": "1.56.0"
