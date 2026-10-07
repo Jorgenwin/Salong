@@ -1,0 +1,152 @@
+'use strict';
+
+const assert=require('node:assert/strict');
+const test=require('node:test');
+
+const {
+  createRepositories,
+  mapAccount,
+  mapContact,
+  mapOpportunity,
+  buildProspectWhere
+}=require('../src/db/repositories');
+
+test('account mapper exposes the Salong account contract instead of raw rows',()=>{
+  const account=mapAccount({
+    id:'o-1',
+    name:'Eksempel AS',
+    org_number:'123',
+    domain:'example.no',
+    website:'https://example.no',
+    segment:'Forlag',
+    owner_id:'m-1',
+    relationship:'prospekt',
+    prospect_kind:'target',
+    prospect_status:'qualified',
+    prospect_stage:'research',
+    fit_score:'81.5',
+    batch_id:'b-1',
+    deleted_at:null
+  });
+
+  assert.deepEqual(account,{
+    id:'o-1',
+    name:'Eksempel AS',
+    org_number:'123',
+    domain:'example.no',
+    website:'https://example.no',
+    segment_id:'Forlag',
+    owner_id:'m-1',
+    relation:'prospekt',
+    kind:'target',
+    status:'qualified',
+    stage:'research',
+    fit_score:81.5,
+    batch_id:'b-1',
+    data_status:'active'
+  });
+  assert.equal('deleted_at' in account,false);
+});
+
+test('contact mapper keeps unknown enrichment values null',()=>{
+  const contact=mapContact({
+    id:'p-1',
+    organization_id:'o-1',
+    name:'',
+    title:null,
+    email:null,
+    email_status:null,
+    phone:null,
+    phone_status:null,
+    linkedin_url:null,
+    role_match:null,
+    relevant:null,
+    active:true,
+    do_not_contact:false,
+    verified_at:null,
+    last_enriched_at:null
+  });
+
+  assert.equal(contact.name,'');
+  assert.equal(contact.email,null);
+  assert.equal(contact.relevant,null);
+  assert.equal(contact.verified,false);
+});
+
+test('opportunity mapper follows the current frontend service shape',()=>{
+  const opportunity=mapOpportunity({
+    id:'d-1',
+    organization_id:'o-1',
+    title:'Fagdag',
+    stage:'dialog',
+    value_amount:'25000.00',
+    room:'solstad',
+    event_date:'2027-03-10',
+    attendees:200,
+    owner_id:null,
+    stage_at:'2026-10-07T10:00:00Z',
+    lost_reason:null
+  });
+
+  assert.equal(opportunity.account_id,'o-1');
+  assert.equal(opportunity.value,25000);
+  assert.equal(opportunity.attendees,200);
+});
+
+test('prospect filter is parameterized and never interpolates user values into SQL',()=>{
+  const filter=buildProspectWhere({
+    segment_id:"Forlag' OR 1=1 --",
+    owner_id:'m-1',
+    status:'qualified',
+    batch_id:'b-1'
+  });
+
+  assert.deepEqual(filter.params,[
+    "Forlag' OR 1=1 --",
+    'm-1',
+    'qualified',
+    'b-1'
+  ]);
+  assert.match(filter.where,/o\.segment = \$1/);
+  assert.match(filter.where,/batch_id = \$4/);
+  assert.equal(filter.where.includes("OR 1=1"),false);
+});
+
+test('repositories use parameterized account/contact queries and return mapped rows',async()=>{
+  const calls=[];
+  const db={
+    async query(text,params){
+      calls.push({text,params});
+      if(/FROM contacts/.test(text)){
+        return {rows:[{
+          id:'p-1',
+          organization_id:'o-1',
+          name:'Pia Testesen',
+          active:true,
+          do_not_contact:false
+        }]};
+      }
+      return {rows:[{
+        id:'o-1',
+        name:'Eksempel AS',
+        segment:'Forlag',
+        fit_score:'90',
+        deleted_at:null
+      }]};
+    }
+  };
+
+  const repositories=createRepositories(db);
+  const account=await repositories.accounts.get('o-1');
+  const contacts=await repositories.contacts.listByAccount('o-1');
+
+  assert.equal(account.id,'o-1');
+  assert.equal(account.fit_score,90);
+  assert.equal(contacts[0].name,'Pia Testesen');
+  assert.deepEqual(calls[0].params,['o-1']);
+  assert.deepEqual(calls[1].params,['o-1']);
+});
+
+test('createRepositories requires an injected database boundary',()=>{
+  assert.throws(()=>createRepositories(null),/requires an object with query/);
+});
