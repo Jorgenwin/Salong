@@ -37,5 +37,11 @@ jobs:
       - name: Syntax check
         run: npm run check
 
-      - name: Test
+      - name: Server syntax check
+        run: npm run server:check
+
+      - name: Server tests
+        run: npm run test:server
+
+      - name: Frontend tests
         run: npm test
