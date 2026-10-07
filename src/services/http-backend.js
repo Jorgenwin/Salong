@@ -19,6 +19,20 @@ function createHttpBackend(opt){
     return s?'?'+s:'';
   };
 
+  function notReadyResult(operation){
+    return {
+      success:false,
+      error_code:'backend_not_ready',
+      error_message:'HTTP-backend mangler '+operation+' ennå.'
+    };
+  }
+
+  function notReadyError(operation){
+    const error=new Error('HTTP-backend mangler '+operation+' ennå.');
+    error.code='backend_not_ready';
+    return error;
+  }
+
   async function request(path){
     let response;
     try{ response=await fetcher(base+path,{headers:{accept:'application/json'}}); }
@@ -53,6 +67,10 @@ function createHttpBackend(opt){
       filter=filter||{};
       const from=filter.from||salongLocalDate();
       return request('/api/calendar'+qs({from,to:filter.to||from}));
-    }
+    },
+    async enrichAccount(){ return notReadyResult('enrichAccount'); },
+    async enrichAccounts(){ return notReadyResult('enrichAccounts'); },
+    async getEnrichmentJob(){ throw notReadyError('getEnrichmentJob'); },
+    async getLatestEnrichmentJob(){ throw notReadyError('getLatestEnrichmentJob'); }
   };
 }
