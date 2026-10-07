@@ -1,5 +1,7 @@
 # Backend-veikart
 
+Arkitekturvalget for backend v1 er dokumentert i [docs/decisions/0001-backend-v1.md](decisions/0001-backend-v1.md).
+
 Kort, tre faser. Backend-teknologi velges i en egen økt; ingenting her er installert eller deployet.
 
 ## Fase 1 – nå
