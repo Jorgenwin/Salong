@@ -9,16 +9,20 @@ Les i denne rekkefølgen:
 1. `README.md`
 2. `docs/architecture.md`
 3. `docs/backend-roadmap.md`
-4. Relevant kode under `src/`
+4. `docs/data-policy.md`
+5. Ved backendarbeid: `docs/decisions/0001-backend-v1.md`
+6. Relevant kode under `src/`
 
 Ikke anta at planlagte backend-endepunkter faktisk finnes. Arkitekturdokumentet skiller mellom det som virker i dag og målarkitekturen.
 
 ## Arbeidsmåte
 
+- Sjekk åpne issues og Pull Requests før du starter. Ikke lag en parallell implementasjon av samme oppgave eller endre samme område som en aktiv PR uten en eksplisitt grunn.
+- GitHub `main` er kildekilden. En Claude Artifact eller en lokal kopi er ikke mer autoritativ enn `main`.
 - Jobb alltid på en egen branch fra oppdatert `main`.
 - Hold hver oppgave avgrenset. Ikke kombiner refaktorering, ny funksjonalitet og arkitekturendring uten god grunn.
 - Før merge: kjør minst `npm run check` og `npm test`.
-- Oppsummer i PR-en: hva som ble endret, hvorfor, hvilke tester som er kjørt, og eventuelle kjente begrensninger.
+- Oppsummer i PR-en: hva som ble endret, hvorfor, hvilke tester som er kjørt, og eventuelle kjente begrensninger. Knytt PR-en til relevant issue når det finnes.
 - Ikke force-push `main`.
 - Ikke rediger genererte filer i `dist/` manuelt.
 
@@ -46,6 +50,7 @@ Viktig:
 - Nye eksterne integrasjoner skal ligge bak adaptere/tjenestelag, ikke kobles direkte inn i UI.
 - Hemmeligheter og API-nøkler skal aldri ligge i frontend eller committed filer.
 - `.env.example` kan dokumentere variabelnavn, men aldri verdier.
+- Git er ikke en produksjonsdatabase. Følg `docs/data-policy.md`; reelle CRM-eksporter, e-postinnhold, personlister og driftsdata skal ikke committes.
 
 ## Backend
 
