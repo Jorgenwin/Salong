@@ -47,7 +47,15 @@ const {navTo,setup,testSeed,ROOT} = require('./h.js'); const fs=require('fs'), p
         if(/\/api\/opportunities/.test(url)) return mk([{id:'d-1',account_id:'o-1'}]);
         if(/\/api\/calendar/.test(url)) return mk([{date:'2027-04-08',kind:'event'}]);
         return mk({success:false,error_code:'not_found',error_message:'Ikke funnet'},404); };
-      const H=window.SalongServices.createHttpBackend({baseUrl:'https://salong.test/',fetch});
+      const S=window.SalongServices, H=S.createHttpBackend({baseUrl:'https://salong.test/',fetch});
+      const jobsBefore=Object.keys(window.__salong.S.mtjob||{}).length;
+      const blockedDirect=await H.enrichAccount('o-1');
+      let directJobError=''; try{ await H.getEnrichmentJob('j-1'); }catch(error){ directJobError=error.code; }
+      S.use(H);
+      const blockedService=await S.enrichment.enrichAccount('o-1');
+      let serviceJobError=''; try{ await S.enrichment.getJob('j-1'); }catch(error){ serviceJobError=error.code; }
+      const jobsAfter=Object.keys(window.__salong.S.mtjob||{}).length;
+      S.reset();
       return {
         account:await H.getAccount('o-1'),
         missing:await H.getAccount('missing'),
@@ -55,22 +63,24 @@ const {navTo,setup,testSeed,ROOT} = require('./h.js'); const fs=require('fs'), p
         prospects:await H.getProspects({segment_id:'Forlag'}),
         opportunities:await H.getOpportunities('o-1'),
         calendar:await H.getCalendar({from:'2027-04-08'}),
+        blockedDirect,blockedService,directJobError,serviceJobError,jobsBefore,jobsAfter,
         calls,
         methods:Object.keys(H).sort()
       };
     });
     check('S12 HTTP-backend følger lesekontrakten og mapper 404-konto til null',http,v=>v.account.id==='o-1'&&v.missing===null&&v.contacts.length===1&&v.prospects.length===1&&v.opportunities.length===1&&v.calendar.length===1);
     check('S13 HTTP-backend URL-koder filtre og bruker samme-origin-kompatible endepunkter',http.calls,v=>v.some(x=>/segment_id=Forlag/.test(x))&&v.some(x=>/account_id=o-1/.test(x))&&v.some(x=>/from=2027-04-08&to=2027-04-08/.test(x)));
-    check('S14 HTTP-backend eksponerer bare implementerte lesemetoder før skrive-API-et finnes',http.methods,v=>JSON.stringify(v)==='["getAccount","getCalendar","getContacts","getOpportunities","getProspects"]');
+    check('S14 HTTP-backend stopper uimplementert enrichment uten lokal fallback',http,v=>v.blockedDirect.error_code==='backend_not_ready'&&v.blockedService.error_code==='backend_not_ready'&&v.directJobError==='backend_not_ready'&&v.serviceJobError==='backend_not_ready'&&v.jobsAfter===v.jobsBefore);
+    check('S15 HTTP-backend overstyrer hele gjeldende servicekontrakt når den tas i bruk',http.methods,v=>JSON.stringify(v)==='["enrichAccount","enrichAccounts","getAccount","getCalendar","getContacts","getEnrichmentJob","getLatestEnrichmentJob","getOpportunities","getProspects"]');
     // statisk: ingen hemmeligheter i kildekoden, og UI-berik går via tjenestelaget
     const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(d,e.name)):[path.join(d,e.name)]);
     const files=walk(path.join(ROOT,'src')).concat(walk(path.join(ROOT,'scripts')),[path.join(ROOT,'.env.example')]).filter(f=>/\.(js|py|html|json|example)$/.test(f));
     const bad=files.filter(f=>/(api[_-]?key|secret|token|passw(or)?d)["']?\s*[:=]\s*["'][A-Za-z0-9_\-]{16,}["']|sk-[A-Za-z0-9]{20,}|Bearer\s+[A-Za-z0-9._-]{20,}/i.test(fs.readFileSync(f,'utf8')));
-    check('S15 ingen hemmeligheter eller nøkler i kildekoden',bad,[]);
+    check('S16 ingen hemmeligheter eller nøkler i kildekoden',bad,[]);
     const ui=fs.readFileSync(path.join(ROOT,'src/berik.js'),'utf8');
     const demo=(()=>{ const s=fs.readFileSync(path.join(ROOT,'dist/app.js'),'utf8'), i=s.indexOf('const DEMO=')+11; let d=0,j=i; for(;j<s.length;j++){ if(s[j]==='{') d++; else if(s[j]==='}'){ d--; if(!d) break; } } return JSON.parse(s.slice(i,j+1)); })();
-    check('S17 bygget DEMO kommer fra data/example/seed.json',JSON.stringify(demo)===JSON.stringify(JSON.parse(fs.readFileSync(path.join(ROOT,'data/example/seed.json'),'utf8'))),true);
-    check('S16 Berik-knappene bruker SalongServices.enrichment',/SalongServices\.enrichment/.test(ui),true);
+    check('S18 bygget DEMO kommer fra data/example/seed.json',JSON.stringify(demo)===JSON.stringify(JSON.parse(fs.readFileSync(path.join(ROOT,'data/example/seed.json'),'utf8'))),true);
+    check('S17 Berik-knappene bruker SalongServices.enrichment',/SalongServices\.enrichment/.test(ui),true);
     check('X1 ingen sidefeil',A.errs.length,0);
   }catch(e){ await A.done(e); return; }
   await A.done();
