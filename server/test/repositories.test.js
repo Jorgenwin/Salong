@@ -63,14 +63,15 @@ test('contact mapper keeps unknown enrichment values null',()=>{
     relevant:null,
     active:true,
     do_not_contact:false,
-    verified_at:null,
+    verified_at:new Date('2026-10-07T09:30:00.000Z'),
     last_enriched_at:null
   });
 
   assert.equal(contact.name,'');
   assert.equal(contact.email,null);
   assert.equal(contact.relevant,null);
-  assert.equal(contact.verified,false);
+  assert.equal(contact.verified,true);
+  assert.equal(contact.last_enriched_at,'2026-10-07T09:30:00.000Z');
 });
 
 test('opportunity mapper follows the current frontend service shape',()=>{
@@ -81,16 +82,18 @@ test('opportunity mapper follows the current frontend service shape',()=>{
     stage:'dialog',
     value_amount:'25000.00',
     room:'solstad',
-    event_date:'2027-03-10',
+    event_date:new Date('2027-03-10T00:00:00.000Z'),
     attendees:200,
     owner_id:null,
-    stage_at:'2026-10-07T10:00:00Z',
+    stage_at:new Date('2026-10-07T10:00:00.000Z'),
     lost_reason:null
   });
 
   assert.equal(opportunity.account_id,'o-1');
   assert.equal(opportunity.value,25000);
   assert.equal(opportunity.attendees,200);
+  assert.equal(opportunity.event_date,'2027-03-10');
+  assert.equal(opportunity.stage_changed_at,'2026-10-07T10:00:00.000Z');
 });
 
 test('prospect filter is parameterized and never interpolates user values into SQL',()=>{
