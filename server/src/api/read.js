@@ -53,6 +53,24 @@ async function handleReadRequest({ req, url, repositories }) {
     return {status:200,body:opportunities};
   }
 
+  if(url.pathname==='/api/calendar'){
+    const isoDate=/^\d{4}-\d{2}-\d{2}$/;
+    const from=nonEmpty(url.searchParams.get('from'));
+    const to=nonEmpty(url.searchParams.get('to'))||from;
+    if(!from||!isoDate.test(from)||!to||!isoDate.test(to)||to<from){
+      return {
+        status:400,
+        body:{
+          success:false,
+          error_code:'invalid_date_range',
+          error_message:'Kalender krever gyldig fra- og til-dato.'
+        }
+      };
+    }
+    const items=await repositories.calendar.list({from,to});
+    return {status:200,body:items};
+  }
+
   return null;
 }
 
