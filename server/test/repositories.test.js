@@ -259,6 +259,7 @@ test('enrichment job mapper exposes explicit queue and error state',()=>{
   assert.equal(job.lockedBy,'worker-1');
   assert.deepEqual(job.sourceStatuses,{web:'ok',apollo:'plan_restricted'});
   assert.equal(job.completedAt,null);
+  assert.equal(job.error,null);
 });
 
 test('enrichment queue claim is atomic and uses SKIP LOCKED',async()=>{
@@ -532,4 +533,19 @@ test('researched facts are validated and parameterized for human review',async()
     }),
     /invalid researched fact reviewState/
   );
+});
+
+
+test('failed enrichment job exposes the public error field',()=>{
+  const job=mapEnrichmentJob({
+    id:'job-failed',
+    account_id:'o-1',
+    status:'failed',
+    source_statuses:{web:'error'},
+    error_code:'provider_unavailable',
+    error_message:'Provider svarte ikke.',
+    attempt_count:3
+  });
+  assert.equal(job.error,'provider_unavailable');
+  assert.equal(job.errorCode,'provider_unavailable');
 });
