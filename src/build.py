@@ -17,16 +17,7 @@ def rep(old,new,count=1):
   global src
   assert old in src,'MANGLER: '+old[:100]
   src=src.replace(old,new,count)
-rep("deals().some(d=>d.orgId===id&&d.stage==='bekreftet')) return 'kunde'","deals().some(d=>d.orgId===id&&d.stage==='bekreftet')||bookingsAll().some(b=>b.orgId===id&&b.status==='bekreftet')) return 'kunde'")
-# dataversjon: teller opp ved hver endring, så avledede kontroller vet når de må regnes på nytt
-rep("const people={};","const people={}; let DV=0;")
-rep("  S[col][id]=doc;\n  const D=UI.drawer;","  S[col][id]=doc; DV++;\n  const D=UI.drawer;")
-rep("async function hardDel(col,id){ if(readOnly) return false; delete S[col][id];","async function hardDel(col,id){ if(readOnly) return false; delete S[col][id]; DV++;")
-rep("S[col]=Object.fromEntries(snap.docs.map(d=>[d.id,{...d.data()}])); overlayQueue(col); render(); },e=>dbErr(e)); }","S[col]=Object.fromEntries(snap.docs.map(d=>[d.id,{...d.data()}])); overlayQueue(col); DV++; render(); },e=>dbErr(e)); }")
-# lesetilgang: ikke si at endringen sendes på nytt når den aldri blir sendt
-rep("toast(r?'Lagret':db?'Ikke bekreftet lagret. Endringen er beholdt og sendes på nytt.':'Lagret i demo (ikke permanent)');","toast(r?'Lagret':readOnly?'Du har lesetilgang. Endringen er ikke lagret.':db?'Ikke bekreftet lagret. Endringen er beholdt og sendes på nytt.':'Lagret i demo (ikke permanent)');",2)
-# A init
-rep("for(const col of ['orgs','deals','acts','prospects','audit','imports','offers']){","for(const col of ['orgs','deals','acts','prospects','audit','imports','offers','bookings','kdocs','members','notices','mscen','malts','mpos','mtacc','mtper','mtbat','mtsnap','mtq','mtjob']){")
+# Første lavrisiko-kjernepatcher er brettet inn i app_base.js. Nye endringer skal gjøres i kildekoden, ikke som nye rep()-patcher.
 # B statistikk bygger på samme utvalg som kunnskapslaget
 rep("real=deals().filter(d=>d.stage==='bekreftet'&&d.date);","real=KB.realRows();")
 # C/D kundekort
