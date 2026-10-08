@@ -61,3 +61,19 @@ test('refuses http, URL credentials, incomplete configuration and oversized acce
   });
   await assert.rejects(()=>verifier('x'.repeat(16385)),/Invalid access token/);
 });
+
+
+test('configuration requires both Supabase variables and does not report legacy AUTH_SECRET as active auth',()=>{
+  const {loadConfig,publicConfigSummary}=require('../src/config');
+  assert.throws(()=>loadConfig({NODE_ENV:'test',SUPABASE_URL:'https://example.supabase.co'}),/set together/);
+  assert.throws(()=>loadConfig({NODE_ENV:'test',SUPABASE_PUBLISHABLE_KEY:'public-key'}),/set together/);
+  const invalid=loadConfig({NODE_ENV:'test',AUTH_SECRET:'legacy-secret'});
+  assert.equal(publicConfigSummary(invalid).authConfigured,false);
+  const configured=loadConfig({
+    NODE_ENV:'test',
+    SUPABASE_URL:'https://example.supabase.co',
+    SUPABASE_PUBLISHABLE_KEY:'public-key'
+  });
+  assert.equal(publicConfigSummary(configured).authConfigured,true);
+  assert.equal(JSON.stringify(publicConfigSummary(configured)).includes('public-key'),false);
+});
