@@ -22,7 +22,7 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     await db.query('DROP SCHEMA IF EXISTS public CASCADE');
     await db.query('CREATE SCHEMA public');
 
-    const migration=await runMigrations(db);
+    const migration=await db.withClient(client=>runMigrations(client));
     assert.ok(migration.applied.includes('001_initial'));
 
     await db.query(
