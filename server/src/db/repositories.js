@@ -544,6 +544,21 @@ function createRepositories(input) {
           [id]
         );
         return mapOpportunity(result.rows[0]);
+      },
+
+      async setStage(id,{stage,expectedStage=null,lostReason=null}={}){
+        const result=await db.query(`
+          UPDATE opportunities
+          SET stage=$2,
+              stage_at=now(),
+              lost_reason=CASE WHEN $2='tapt' THEN $4 ELSE NULL END,
+              updated_at=now()
+          WHERE id=$1
+            AND deleted_at IS NULL
+            AND ($3::text IS NULL OR stage=$3)
+          RETURNING *
+        `,[id,stage,expectedStage,lostReason]);
+        return mapOpportunity(result.rows[0]);
       }
     },
 
