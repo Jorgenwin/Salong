@@ -62,10 +62,15 @@ async function startWorker({
     throw error;
   }
 
-  await recoverStaleJobs(runtime.repositories,{
-    staleSeconds:Number(env.WORKER_STALE_SECONDS)||900,
-    logger
-  });
+  try{
+    await recoverStaleJobs(runtime.repositories,{
+      staleSeconds:env.WORKER_STALE_SECONDS == null || env.WORKER_STALE_SECONDS === '' ? 900 : Number(env.WORKER_STALE_SECONDS),
+      logger
+    });
+  }catch(error){
+    await runtime.close();
+    throw error;
+  }
 
   const service=createWorkerService({
     repositories:runtime.repositories,
