@@ -38,22 +38,29 @@ const {navTo,setup,testSeed,ROOT} = require('./h.js'); const fs=require('fs'), p
     check('S10 adapteren gir nøytrale former og bruker den byttede transporten',ad,v=>v.o.matched&&v.o.domain==='ekstern-test.no'&&v.pe.people[0].name==='Pia Testesen'&&v.m.email==='pia@ekstern-test.no'&&v.m.emailStatus==='verified'&&v.calls.length===3);
     check('S11 SalongServices.use bytter backend uten å endre kallene, reset går tilbake',await ev(async()=>{ const S=window.SalongServices; S.use({getAccount:async()=>({id:'fra-server'})}); const a=await S.accounts.getAccount('x'); S.reset(); const b=await S.accounts.getAccount('x'); return [a.id,b]; }),v=>v[0]==='fra-server'&&v[1]===null);
     const http=await ev(async()=>{
-      const calls=[], mk=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json','x-request-id':'req-test'}});
-      const fetch=async url=>{ calls.push(String(url));
+      const calls=[], requests=[], mk=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json','x-request-id':'req-test'}});
+      const job={id:'j-http',accountId:'o-1',status:'needs_review',startedAt:'2027-04-08T10:00:00.000Z',completedAt:'2027-04-08T10:01:00.000Z',sourceStatuses:{web:'ok'},error:null,result:{organization:{name:'HTTP AS'},eventSignals:[],contactCandidates:[{name:'Pia'}],contactData:[],recommendation:null}};
+      const fetch=async (url,init={})=>{ calls.push(String(url)); requests.push({url:String(url),method:init.method||'GET',body:init.body||null,auth:init.headers&&init.headers.authorization||null});
         if(/\/api\/accounts\/missing$/.test(url)) return mk({success:false,error_code:'account_not_found',error_message:'Kontoen finnes ikke.',requestId:'req-test'},404);
         if(/\/api\/accounts\/o-1\/contacts$/.test(url)) return mk([{id:'p-1',account_id:'o-1',name:'Pia'}]);
         if(/\/api\/accounts\/o-1$/.test(url)) return mk({id:'o-1',name:'HTTP AS'});
         if(/\/api\/prospects/.test(url)) return mk([{id:'o-2',name:'Prospekt AS'}]);
         if(/\/api\/opportunities/.test(url)) return mk([{id:'d-1',account_id:'o-1'}]);
         if(/\/api\/calendar/.test(url)) return mk([{date:'2027-04-08',kind:'event'}]);
+        if(/\/api\/enrichment\/accounts\/o-1\/latest$/.test(url)) return mk(job);
+        if(/\/api\/enrichment\/jobs\/j-http$/.test(url)) return mk(job);
+        if(/\/api\/enrichment\/accounts\/o-1$/.test(url)&&String(init.method||'GET').toUpperCase()==='POST') return mk({success:true,data:{queued:1,jobId:'j-http',jobIds:['j-http']}},202);
+        if(/\/api\/enrichment\/batch$/.test(url)&&String(init.method||'GET').toUpperCase()==='POST') return mk({success:true,data:{queued:2,jobIds:['j-http','j-http-2']}},202);
         return mk({success:false,error_code:'not_found',error_message:'Ikke funnet'},404); };
-      const S=window.SalongServices, H=S.createHttpBackend({baseUrl:'https://salong.test/',fetch});
+      const S=window.SalongServices, H=S.createHttpBackend({baseUrl:'https://salong.test/',fetch,accessToken:'token-test'});
       const jobsBefore=Object.keys(window.__salong.S.mtjob||{}).length;
-      const blockedDirect=await H.enrichAccount('o-1');
-      let directJobError=''; try{ await H.getEnrichmentJob('j-1'); }catch(error){ directJobError=error.code; }
+      const queuedDirect=await H.enrichAccount('o-1');
+      const batchDirect=await H.enrichAccounts(['o-1','o-2']);
+      const directJob=await H.getEnrichmentJob('j-http');
+      const latestDirect=await H.getLatestEnrichmentJob('o-1');
       S.use(H);
-      const blockedService=await S.enrichment.enrichAccount('o-1');
-      let serviceJobError=''; try{ await S.enrichment.getJob('j-1'); }catch(error){ serviceJobError=error.code; }
+      const queuedService=await S.enrichment.enrichAccount('o-1');
+      const serviceJob=await S.enrichment.getJob('j-http');
       const jobsAfter=Object.keys(window.__salong.S.mtjob||{}).length;
       S.reset();
       return {
@@ -63,14 +70,14 @@ const {navTo,setup,testSeed,ROOT} = require('./h.js'); const fs=require('fs'), p
         prospects:await H.getProspects({segment_id:'Forlag'}),
         opportunities:await H.getOpportunities('o-1'),
         calendar:await H.getCalendar({from:'2027-04-08'}),
-        blockedDirect,blockedService,directJobError,serviceJobError,jobsBefore,jobsAfter,
-        calls,
+        queuedDirect,batchDirect,directJob,latestDirect,queuedService,serviceJob,jobsBefore,jobsAfter,
+        calls,requests,
         methods:Object.keys(H).sort()
       };
     });
     check('S12 HTTP-backend følger lesekontrakten og mapper 404-konto til null',http,v=>v.account.id==='o-1'&&v.missing===null&&v.contacts.length===1&&v.prospects.length===1&&v.opportunities.length===1&&v.calendar.length===1);
     check('S13 HTTP-backend URL-koder filtre og bruker samme-origin-kompatible endepunkter',http.calls,v=>v.some(x=>/segment_id=Forlag/.test(x))&&v.some(x=>/account_id=o-1/.test(x))&&v.some(x=>/from=2027-04-08&to=2027-04-08/.test(x)));
-    check('S14 HTTP-backend stopper uimplementert enrichment uten lokal fallback',http,v=>v.blockedDirect.error_code==='backend_not_ready'&&v.blockedService.error_code==='backend_not_ready'&&v.directJobError==='backend_not_ready'&&v.serviceJobError==='backend_not_ready'&&v.jobsAfter===v.jobsBefore);
+    check('S14 HTTP-backend køer enrichment på server uten lokal fallback',http,v=>v.queuedDirect.success&&v.queuedDirect.data.jobId==='j-http'&&v.batchDirect.data.queued===2&&v.directJob.status==='needs_review'&&v.latestDirect.id==='j-http'&&v.queuedService.success&&v.serviceJob.id==='j-http'&&v.jobsAfter===v.jobsBefore&&v.requests.filter(r=>/\/api\/enrichment\//.test(r.url)).every(r=>r.auth==='Bearer token-test')&&v.requests.some(r=>/\/api\/enrichment\/accounts\/o-1$/.test(r.url)&&r.method==='POST'));
     check('S15 HTTP-backend overstyrer hele gjeldende servicekontrakt når den tas i bruk',http.methods,v=>JSON.stringify(v)==='["enrichAccount","enrichAccounts","getAccount","getCalendar","getContacts","getEnrichmentJob","getLatestEnrichmentJob","getOpportunities","getProspects"]');
     // statisk: ingen hemmeligheter i kildekoden, og UI-berik går via tjenestelaget
     const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(d,e.name)):[path.join(d,e.name)]);
