@@ -160,6 +160,37 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     assert.equal(exhaustedRecovery[0].errorCode,'stale_worker_attempts_exhausted');
     assert.ok(exhaustedRecovery[0].completedAt);
     assert.equal(await repositories.enrichmentJobs.claimNext('worker-next'),null);
+
+    // Exercise private artifact staging and mapping using synthetic data only.
+    await db.query('DROP SCHEMA IF EXISTS artifact_export CASCADE');
+    await db.query('DROP SCHEMA IF EXISTS public CASCADE');
+    await db.query('CREATE SCHEMA public');
+    const rerun=await db.withClient(client=>runMigrations(client));
+    assert.ok(rerun.applied.includes('002_artifact_export'));
+    const {buildImportPlan,applyImport}=require('../src/db/artifact-import');
+    const plan=buildImportPlan({collections:{
+      orgs:{
+        'o-import':{name:'Imported Example Org',website:'example.test'},
+        'o-excluded':{name:'Demo Only',example:true}
+      },
+      mtper:{'p-import':{accId:'o-import',name:'Synthetic Person'}},
+      mtjob:{'j-import':{accId:'o-import',kind:'enrich',status:'running'}},
+      audit:{'audit-import':{action:'synthetic-only'}}
+    }});
+    const imported=await db.withClient(client=>applyImport(client,plan));
+    assert.equal(imported.staged_documents,5);
+    assert.equal(imported.actual.organizations,1);
+    assert.equal(imported.actual.contacts,1);
+    assert.equal(imported.actual.enrichment_jobs,1);
+    const staging=await db.query('SELECT data FROM artifact_export.documents WHERE collection=$1 AND doc_id=$2',['audit','audit-import']);
+    assert.deepEqual(staging.rows[0].data,{action:'synthetic-only'});
+    const inert=await db.query('SELECT status FROM enrichment_jobs WHERE id=$1',['j-import']);
+    assert.equal(inert.rows[0].status,'cancelled');
+    await assert.rejects(
+      ()=>db.withClient(client=>applyImport(client,plan)),
+      /not empty/
+    );
+
   }finally{
     await db.close();
   }
