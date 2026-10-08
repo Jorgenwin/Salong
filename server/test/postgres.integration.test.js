@@ -51,6 +51,22 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     assert.equal(contacts.length,1);
     assert.equal(contacts[0].is_primary,true);
 
+    const addedContact=await repositories.contacts.add({
+      id:'c-2',accountId:'o-1',name:'Ola Kontakt',title:'Programleder',email:'ola@example.test',sourceState:'manual'
+    });
+    assert.equal(addedContact.name,'Ola Kontakt');
+    assert.equal(addedContact.is_primary,false);
+    const updatedContact=await repositories.contacts.update('c-2',{title:'Program- og arrangementsleder',relevant:true});
+    assert.equal(updatedContact.title,'Program- og arrangementsleder');
+    assert.equal(updatedContact.relevant,true);
+    const primaryContact=await repositories.contacts.setPrimary('c-2');
+    assert.equal(primaryContact.is_primary,true);
+    const afterPrimary=await repositories.contacts.listByAccount('o-1');
+    assert.equal(afterPrimary.find(contact=>contact.id==='c-1').is_primary,false);
+    assert.equal(afterPrimary.find(contact=>contact.id==='c-2').is_primary,true);
+    const dncContact=await repositories.contacts.setDoNotContact('c-2',{value:true,reason:'Ba om å ikke bli kontaktet'});
+    assert.equal(dncContact.do_not_contact,true);
+
     const created=await repositories.enrichmentJobs.create({
       id:'job-1',
       accountId:'o-1',
