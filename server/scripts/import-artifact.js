@@ -4,7 +4,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const {createPostgres}=require('../src/db/postgres');
 const {runMigrations}=require('../src/db/migrate');
-const {buildImportPlan,applyImport}=require('../src/db/artifact-import');
+const {buildImportPlan,companyFirstPlan,applyImport}=require('../src/db/artifact-import');
 
 const ROOT=path.resolve(__dirname,'../..');
 const EXPORT_DIR=path.resolve(ROOT,'data/exports');
@@ -20,7 +20,7 @@ function argumentsFor(argv){
   }
   const allowUnmapped=argv.includes('--allow-unmapped');
   if(allowUnmapped&&!apply) throw new Error('--allow-unmapped requires --apply');
-  return {file:path.resolve(process.cwd(),argv[idx+1]),apply,allowUnmapped};
+  return {file:path.resolve(process.cwd(),argv[idx+1]),apply,allowUnmapped,companiesOnly:argv.includes('--companies-only')};
 }
 function readPrivateExport(file){
   const directory=fs.realpathSync(EXPORT_DIR);
@@ -33,7 +33,8 @@ function readPrivateExport(file){
 }
 async function main(argv=process.argv.slice(2),env=process.env){
   const args=argumentsFor(argv);
-  const plan=buildImportPlan(readPrivateExport(args.file));
+  const exported=readPrivateExport(args.file);
+  const plan=args.companiesOnly?companyFirstPlan(exported):buildImportPlan(exported);
 
   if(!args.apply){
     process.stdout.write(JSON.stringify({
