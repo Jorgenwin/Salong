@@ -815,3 +815,44 @@ test('activity writes are parameterized and normalize timestamps',async()=>{
     /requires id, type and accountId or caseId/
   );
 });
+
+
+test('opportunity stage update is parameterized and optimistic',async()=>{
+  const calls=[];
+  const db={async query(text,params){
+    calls.push({text:String(text),params});
+    if(params&&params[2]==='ny') return {rows:[]};
+    return {rows:[{
+      id:'d-1',
+      organization_id:'o-1',
+      title:'Fagdag',
+      stage:params&&params[1]||'dialog',
+      value_amount:'25000',
+      room:'Wergeland',
+      event_date:'2027-03-10',
+      attendees:80,
+      owner_id:'m-1',
+      stage_at:new Date('2026-10-08T11:00:00.000Z'),
+      lost_reason:params&&params[1]==='tapt'?params[3]:null
+    }]};
+  }};
+
+  const repositories=createRepositories(db);
+  const updated=await repositories.opportunities.setStage('d-1',{
+    stage:'tilbud',
+    expectedStage:'dialog',
+    lostReason:null
+  });
+
+  assert.equal(updated.stage,'tilbud');
+  assert.deepEqual(calls[0].params,['d-1','tilbud','dialog',null]);
+  assert.match(calls[0].text,/\(\$3::text IS NULL OR stage=\$3\)/);
+  assert.match(calls[0].text,/stage_at=now\(\)/);
+  assert.equal(calls[0].text.includes('tilbud'),false);
+
+  const stale=await repositories.opportunities.setStage('d-1',{
+    stage:'tilbud',
+    expectedStage:'ny'
+  });
+  assert.equal(stale,null);
+});
