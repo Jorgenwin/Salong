@@ -84,3 +84,63 @@ test('worker startup recovery requires the persistent stale-lock operation',asyn
     /enrichmentJobs\.requeueStale/
   );
 });
+
+
+test('worker closes database when stale-lock recovery fails',async()=>{
+  let closed=0;
+  const runtimeFactory=async()=>({
+    repositories:{
+      enrichmentJobs:{
+        async requeueStale(){ throw new Error('database unavailable during recovery'); }
+      }
+    },
+    async close(){ closed++; }
+  });
+  await assert.rejects(
+    ()=>startWorker({
+      env:{
+        NODE_ENV:'test',
+        PORT:'3000',
+        DATABASE_URL:'postgres://example.invalid/salong',
+        EXA_API_KEY:'test-provider-placeholder'
+      },
+      runtimeFactory,
+      logger:()=>{}
+    }),
+    /database unavailable during recovery/
+  );
+  assert.equal(closed,1);
+});
+
+test('invalid stale threshold fails closed and releases database',async()=>{
+  let closed=0;
+  let calls=0;
+  const runtimeFactory=async()=>({
+    repositories:{
+      enrichmentJobs:{
+        async requeueStale(seconds){
+          calls++;
+          assert.equal(seconds,0);
+          throw new TypeError('staleSeconds must be a positive number');
+        }
+      }
+    },
+    async close(){ closed++; }
+  });
+  await assert.rejects(
+    ()=>startWorker({
+      env:{
+        NODE_ENV:'test',
+        PORT:'3000',
+        DATABASE_URL:'postgres://example.invalid/salong',
+        EXA_API_KEY:'test-provider-placeholder',
+        WORKER_STALE_SECONDS:'0'
+      },
+      runtimeFactory,
+      logger:()=>{}
+    }),
+    /staleSeconds must be a positive number/
+  );
+  assert.equal(calls,1);
+  assert.equal(closed,1);
+});

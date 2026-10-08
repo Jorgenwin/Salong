@@ -647,7 +647,9 @@ test('stale running enrichment jobs are requeued without losing attempt history'
   assert.equal(jobs[0].attemptCount,2);
   assert.equal(jobs[0].lockedBy,null);
   assert.equal(jobs[0].errorCode,'stale_worker_requeued');
-  assert.deepEqual(calls[0].params,[900]);
+  assert.deepEqual(calls[0].params,[900,3]);
+  assert.match(calls[0].text,/attempt_count >= \$2 THEN 'failed'/);
+  assert.match(calls[0].text,/stale_worker_attempts_exhausted/);
   assert.match(calls[0].text,/status='running'/);
   assert.match(calls[0].text,/locked_at < now\(\)-\(\$1::double precision \* interval '1 second'\)/);
   assert.match(calls[0].text,/locked_by=NULL/);
@@ -655,6 +657,10 @@ test('stale running enrichment jobs are requeued without losing attempt history'
   await assert.rejects(
     repositories.enrichmentJobs.requeueStale(0),
     /staleSeconds must be a positive number/
+  );
+  await assert.rejects(
+    repositories.enrichmentJobs.requeueStale(900,0),
+    /maxAttempts must be a positive integer/
   );
 });
 
