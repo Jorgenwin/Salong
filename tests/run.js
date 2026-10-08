@@ -2,7 +2,7 @@
 // Hver test skriver «SUM: n bestått, m feilet». Runneren feiler hvis noen test feiler, avbrytes eller krasjer.
 // Krever Playwright med Chromium (se README). Filtrer med: node tests/run.js t12 t19
 const { spawnSync } = require('child_process'), path = require('path');
-const ALL = ['t1','t2','t3','t4','t5','t6','t7','t8','t9','t10','t11','t12','t13','treg','t14','t15','t16','t17','t18','t19','t20','u_cd'];
+const ALL = ['t1','t2','t3','t4','t5','t6','t7','t8','t9','t10','t11','t12','t13','treg','t14','t15','t16','t17','t18','t19','t20','t21','u_cd'];
 const only = process.argv.slice(2), list = only.length ? ALL.filter(t => only.includes(t)) : ALL;
 let failed = [], pass = 0;
 for (const t of list) {

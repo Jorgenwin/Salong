@@ -5,33 +5,12 @@
    kandidatene lagres etter rundene, og tilstanden settes ut fra hva som faktisk ble funnet.
    Ingenting simuleres. Personer, e-post og telefon kommer fra tekst en kilde faktisk har gitt, med sitat og sideadresse. */
 
-/* ---------- aliaser for «jobber hos organisasjonen» ---------- */
-function enrAliases(a){
-  const n=String(a.name||'').trim(), out=[n], s=n.replace(/\s+(AS|ASA|SA|Ltd|Inc|AB|A\/S)\.?$/i,'').trim(); if(s&&s!==n) out.push(s);
-  for(const x of ((a.doc&&a.doc.aliases)||[])) out.push(String(x));
-  const lab=String(a.domain||'').replace(/^www\./,'').split('.')[0]; if(lab.length>=3&&lab.length<=8) out.push(lab);
-  const ab=n.split(/\s+/).filter(w=>/^[A-ZÆØÅ]/.test(w)).map(w=>w[0]).join(''); if(ab.length>=3&&ab.length<=6) out.push(ab);
-  return [...new Set(out.filter(x=>x&&String(x).trim().length>=3))]; }
-
-/* ---------- WebResearchProvider ---------- */
-const WEB_OPS={
-  /* eget nettsted: sider med ansatte, kontaktinfo, kommunikasjon, arrangement og presse. site:-søk finner sidene, så vi gjetter ikke stier. */
-  async discover(x){ const dom=x.dom, qs=[
-      ['site:'+dom+' kontakt ansatte medarbeidere team om oss','Finn sider på organisasjonens eget nettsted som lister ansatte med navn og stilling, og generelle kontaktopplysninger (e-post, telefon).'],
-      ['site:'+dom+' kommunikasjon arrangement program presse kontaktperson','Finn sider på organisasjonens eget nettsted om kommunikasjon, arrangementer, program og presse, med navngitte kontaktpersoner.']];
-    const rs=await Promise.all(qs.map(q=>enrExa(q[0],q[1],8).then(v=>({v}),e=>({e})))); const errs=rs.filter(r=>r.e);
-    if(errs.length===rs.length) throw errs[0].e; const seen=new Set(), pages=[];
-    for(const r of rs) for(const p of (r.v||[])) if(enrOwn(p.url,dom)&&!seen.has(p.url)){ seen.add(p.url); pages.push({...p,kind:cdPageKind(p.url)}); }
-    pages.sort((p,q)=>(CD_PAGEORDER[p.kind]-CD_PAGEORDER[q.kind])); return {pages}; },
-  events:enrWebCompany,
-  async profiles(x){ const r=await enrExa('category:people '+x.a.name+' '+x.terms.slice(0,5).join(' '),'Finn LinkedIn-profiler for personer som i dag jobber hos «'+x.a.name+'» med funksjoner som '+x.terms.slice(0,6).join(', ')+'. Personer i Norge foretrekkes.',10);
-    const p=cdParseLinkedIn(r,x.aliases); return {people:p.people,dropped:p.dropped,count:r.length}; },
-  async sitePages(x){ const r=await enrExa('site:'+x.dom+' '+x.terms.slice(0,6).join(' ')+(x.extra?' '+x.extra:''),x.objective||'Finn sider på nettstedet som navngir ansatte eller kontaktpersoner med disse funksjonene: stilling, navn og eventuelt e-post.',8);
-    return {pages:r.filter(p=>enrOwn(p.url,x.dom)).map(p=>({...p,kind:cdPageKind(p.url)})),count:r.length}; },
-  /* siste utvei når søket ikke fant noen kontakt- eller teamside: hent vanlige stier direkte (krever web_fetch_exa) */
-  async probe(x){ const urls=CD_PROBE.slice(0,6).map(p=>'https://'+x.dom+p), r=await enrCall('web_fetch_exa',{urls,maxCharacters:12000}), t=enrText(r), pages=[];
-    for(const b of enrParseExa(t)){ if(!b.url||!enrOwn(b.url,x.dom)||/CRAWL_NOT_FOUND|CRAWL_FAILED/i.test(b.text.slice(0,200))) continue; pages.push({...b,kind:cdPageKind(b.url)}); }
-    return {pages}; } };
+/* ---------- WebResearchProvider: Claude-connectorene som porter for den delte pipelinen (research/pipeline.js) ---------- */
+const WEB_OPS=createWebOps({
+  search:enrExa,
+  fetchPages:async(urls,maxChars)=>enrParseFetch(enrText(await enrCall('web_fetch_exa',{urls,maxCharacters:maxChars}))),
+  isFatal:enrFatalErr});
+function enrWebCompany(args){ return WEB_OPS.events(args); }
 const WebResearchProvider={id:'web',async call(op,args){ try{ return {ok:true,data:await WEB_OPS[op](args)}; }catch(e){ return {ok:false,...enrClassify(e)}; } }};
 
 /* ---------- ApolloProvider ---------- */
@@ -40,98 +19,6 @@ const APOLLO_OPS={
   async people(x){ return apolloAdapter.searchPeople({domain:x.dom,orgId:x.orgId,titles:x.titles,keywords:x.keywords}); } };
 const ApolloProvider={id:'apollo',async call(op,args){ try{ return {ok:true,data:await APOLLO_OPS[op](args)}; }catch(e){ return {ok:false,...enrClassify(e)}; } }};
 
-/* ---------- sider → kandidater og generell adresse ---------- */
-function enrPageCands(pages,a,dom,al,round,into){
-  const gen=into.general;
-  for(const pg of pages){ const k=pg.kind||cdPageKind(pg.url), g=cdParseGeneral(pg.text,dom);
-    for(const e of g.emails) if(!gen.emails.some(x=>x.v===e.v)) gen.emails.push({...e,url:pg.url});
-    for(const p of g.phones) if(!gen.phones.includes(p)) gen.phones.push(p);
-    if(!gen.url&&k==='team'&&/kontakt|contact/i.test(pg.url)) gen.url=pg.url;
-    if(k==='team'){ for(const p of cdParseRoster(pg.text)) cdMerge(into.cands,{name:p.name,title:p.title,email:p.email,quote:p.quote,sourceUrl:pg.url,cur:true,rounds:[round],ev:[{k:'team',url:pg.url,q:p.quote}]}); }
-    else { for(const c of cdParseEventContacts(pg.text,al)){ const kind=c.kind==='speaker'?'speaker':(k==='news'||/presse|press/i.test(c.quote))?'press':'organizer';
-        cdMerge(into.cands,{name:c.name,title:c.title,email:c.email,quote:c.quote,sourceUrl:pg.url,cur:true,rounds:[round],ev:[{k:kind,url:pg.url,q:c.quote}]}); } } } }
-function enrKeep(a,U,list){
-  const out=[]; for(const c of list){ const s=cdScore(a,{...c,cd:{ev:c.ev,loc:c.loc,cur:c.cur,masked:c.masked}},U), doc=c.ev.some(e=>['organizer','press','speaker'].includes(e.k)), fams=cdFamsOf(c.title);
-    if(s.score<CD_TUNE.keepMin) continue; if(!fams.length&&!doc) continue; if(s.neg.some(n=>['hr','wrong','tech','former'].includes(n.k))&&s.score<CD_TUNE.plaus) continue; out.push({c,s}); }
-  out.sort((x,y)=>y.s.score-x.s.score); return out.slice(0,CD_TUNE.keep).map(x=>x.c); }
-
-/* ---------- selve pipelinen ---------- */
-async function enrPipeline(a,io){
-  const dom=a.domain||enrHost(a.website||''), al=enrAliases(a), U=cdUnderstand(a), rep=io.report||(async()=>{});
-  const R={U,events:[],eventResults:0,cands:[],general:{emails:[],phones:[],url:''},pages:[],steps:[],pv:{web:'none',apollo:'none'},errors:[],ok:0,calls:0,pcalls:0,rounds:[],stop:'',orgId:'',pkinds:{},perr:0,okBy:{web:0,apollo:0},blockedCode:''};
-  const has=io.has||{web:true,apollo:true,fetch:false};
-  for(const p of ['web','apollo']) if(!has[p]){ R.pv[p]='blocked'; R.errors.push({provider:p,code:'server_not_connected',message:'Ingen kobling er tilgjengelig for '+(p==='web'?'web-research':'Apollo')+'.'}); R.blockedCode=R.blockedCode||'server_not_connected'; }
-  const bad={};
-  const call=async(p,op,args,counts)=>{
-    if(R.pv[p]==='blocked'||R.pv[p]==='plan'||R.pv[p]==='error') return {ok:false,kind:R.pv[p],skipped:true};
-    R.calls++; if(counts) R.pcalls++; const r=await (p==='web'?io.web:io.apollo).call(op,args);
-    if(r.ok){ R.ok++; R.okBy[p]++; bad[p]=0; if(R.pv[p]==='none') R.pv[p]='ok'; return r; }
-    R.errors.push({provider:p,op,code:r.code,message:String(r.message||'').slice(0,300)});
-    if(r.kind==='blocked'){ R.pv[p]='blocked'; R.blockedCode=R.blockedCode||r.code; } else if(r.kind==='plan') R.pv[p]='plan';
-    else { R.perr++; bad[p]=(bad[p]||0)+1; if(bad[p]>=3) R.pv[p]='error'; }
-    return r; };
-  const step=async(id,label,status,detail,count)=>{ const s=R.steps.find(x=>x.id===id), o={id,label,status,detail:detail||'',count:count==null?null:count}; if(s) Object.assign(s,o); else R.steps.push(o); await rep({steps:R.steps.map(x=>({...x}))}); };
-  const plaus=()=>enrKeep(a,U,R.cands).length&&R.cands.filter(c=>cdScore(a,{...c,cd:{ev:c.ev,loc:c.loc,cur:c.cur,masked:c.masked}},U).plaus).length;
-  const unavail=(p)=>R.pv[p]==='blocked'?'Ikke tilgjengelig':R.pv[p]==='plan'?'Ikke på planen':'Svarte ikke';
-
-  /* 1. organisasjonen: Apollo-oppslag (gratis) og eget nettsted */
-  await rep({state:'researching_company'});
-  if(dom){
-    const ao=await call('apollo','org',{a});
-    if(ao.ok){ if(ao.data.matched){ R.orgId=ao.data.id; await step('apollo_org','Apollo: selskap','done','Selskapet funnet',1); } else await step('apollo_org','Apollo: selskap','done','Organisasjon ikke matchet',0); }
-    else await step('apollo_org','Apollo: selskap','unavailable',unavail('apollo'));
-    const w=await call('web','discover',{a,dom});
-    if(w.ok){ R.pages=w.data.pages.slice(); for(const p of R.pages) R.pkinds[p.kind]=(R.pkinds[p.kind]||0)+1; enrPageCands(R.pages,a,dom,al,0,R); await step('company','Eget nettsted','done',R.pages.length+' side'+(R.pages.length===1?'':'r')+' lest · '+R.cands.length+' navngitte personer',R.pages.length); }
-    else await step('company','Eget nettsted','unavailable',unavail('web'));
-    if(w.ok&&has.fetch&&!R.pages.some(p=>p.kind==='team')){ const pr=await call('web','probe',{dom});
-      if(pr.ok&&pr.data.pages.length){ R.pages=R.pages.concat(pr.data.pages); enrPageCands(pr.data.pages,a,dom,al,0,R); await step('company','Eget nettsted','done',R.pages.length+' sider lest (inkl. direkte oppslag) · '+R.cands.length+' navngitte personer',R.pages.length); } }
-  } else { await step('company','Eget nettsted','skipped','Mangler domene'); await step('apollo_org','Apollo: selskap','skipped','Mangler domene'); }
-
-  /* 2. arrangementer: dokumenterte signaler, arrangører og ansatte talere */
-  await rep({state:'researching_events'});
-  const ev=await call('web','events',{a});
-  if(ev.ok){ R.events=ev.data.events||[]; R.eventResults=ev.data.count||0;
-    const own=(ev.data.results||[]).filter(r=>dom&&enrOwn(r.url,dom)).map(r=>({...r,kind:cdPageKind(r.url)}));
-    enrPageCands(own,a,dom,al,0,R); await step('events','Arrangementer','done',R.events.length?R.events.length+' eventsignal'+(R.events.length===1?'':'er')+' i '+R.eventResults+' kilder':'Ingen datofestede arrangementer i '+R.eventResults+' kilder',R.events.length); }
-  else await step('events','Arrangementer','unavailable',unavail('web'));
-  /* sikre det som er funnet før personsøket starter: en senere feil skal ikke koste research */
-  if(io.checkpoint) await io.checkpoint({events:R.events,general:R.general});
-
-  /* 3. personsøk i opptil fire runder. Bredt først (kandidat-recall), rangering etterpå. Stopper ved tre plausible kandidater eller når budsjettet er brukt. */
-  await rep({state:'searching_people'});
-  let webN=0, apN=0, apOk=0;
-  for(let r=1;r<=4;r++){
-    if(R.pcalls>=CD_TUNE.budget){ R.stop='budget'; break; }
-    if(plaus()>=CD_TUNE.minPlaus){ R.stop='enough'; break; }
-    const fams=r<=3?U.rounds[r]:[], terms=r<=3?U.terms[r]:[], labels=fams.map(f=>f.label), before=R.cands.length;
-    await rep({stage:'Runde '+r+': '+(r<=3?(labels.join(', ')||'ledelse'):'dokumenterte personer og bredt søk')});
-    if(dom&&r<=3&&terms.length){
-      const pr=await call('web','profiles',{a,terms,aliases:al},true);
-      if(pr.ok) for(const p of pr.data.people){ cdMerge(R.cands,{name:p.name,title:p.title,linkedin:p.linkedin,loc:p.loc,cur:p.cur,quote:p.quote,sourceUrl:p.linkedin,rounds:[r],ev:[{k:'linkedin',url:p.linkedin,q:p.quote}]}); webN++; }
-      if(R.pcalls<CD_TUNE.budget){ const sp=await call('web','sitePages',{a,dom,terms},true);
-        if(sp.ok){ enrPageCands(sp.data.pages,a,dom,al,r,R); R.pages=R.pages.concat(sp.data.pages.filter(p=>!R.pages.some(q=>q.url===p.url))); } } }
-    if(dom&&r===4){
-      const sp=await call('web','sitePages',{a,dom,terms:['program','konferanse','arrangement','kontaktperson','pressekontakt'],extra:'pdf',objective:'Finn program, pressemeldinger, nyheter og PDF-er på nettstedet som navngir arrangører, prosjektledere, talere som er ansatte, eller pressekontakter.'},true);
-      if(sp.ok){ enrPageCands(sp.data.pages,a,dom,al,r,R); R.pages=R.pages.concat(sp.data.pages.filter(p=>!R.pages.some(q=>q.url===p.url))); } }
-    if(dom&&R.pcalls<CD_TUNE.budget){
-      const ap=await call('apollo','people',{a,dom,orgId:R.orgId,titles:r<=3?terms:[],keywords:r===4?'communications events marketing program kommunikasjon arrangement':''},true);
-      if(ap.ok){ apOk++; for(const p of ap.data.people){ cdMerge(R.cands,{...p,quote:p.title,rounds:[r],ev:[{k:'apollo',url:'',q:p.title}],src:'Apollo'}); apN++; } } }
-    R.rounds.push({n:r,labels,terms:terms.slice(0,8),found:R.cands.length-before,plaus:plaus()});
-    if(R.pv.web!=='ok'&&R.pv.web!=='none'&&R.pv.apollo!=='ok'&&R.pv.apollo!=='none') break;
-  }
-  if(!R.stop) R.stop=R.rounds.length>=4?'rounds':'unavailable';
-  await step('people_web','Personer: nettsider og profiler',R.pv.web==='ok'||R.okBy.web?'done':'unavailable',R.okBy.web?(R.rounds.length+' runder · '+webN+' profiler'):unavail('web'),R.cands.length);
-  if(apOk) await step('people_apollo','Personer: Apollo','done',apN?apN+' person'+(apN===1?'':'er'):'Ingen person funnet',apN);
-  else if(R.pv.apollo==='plan') await step('people_apollo','Personer: Apollo','unavailable','Kontaktdata ikke tilgjengelig (Apollo-planen)');
-  else if(R.pv.apollo==='blocked'||R.pv.apollo==='error') await step('people_apollo','Personer: Apollo','unavailable',unavail('apollo'));
-  else await step('people_apollo','Personer: Apollo','skipped','Ikke brukt: nok kandidater fra nettsidene');
-
-  /* 4. samle kontaktdata og rangere. E-post fra Apollo koster kreditter og hentes bare etter eksplisitt bekreftelse per person. */
-  await rep({state:'enriching_people'});
-  const kept=enrKeep(a,U,R.cands);
-  await step('rank','Rangering','done',kept.length+' kandidat'+(kept.length===1?'':'er')+' beholdt av '+R.cands.length,kept.length);
-  await step('general','Generell adresse','done',(R.general.emails.length||R.general.phones.length||R.general.url)?[R.general.emails.map(e=>e.v).join(', '),R.general.phones.join(', ')].filter(Boolean).join(' · ')||'Kontaktside funnet':'Fant ingen generell adresse',R.general.emails.length+R.general.phones.length);
-  R.cands=kept; R.apOk=apOk; R.researchOk=R.okBy.web>0||apOk>0; return R; }
 
 /* ---------- lagring (siden): research først, kandidater etterpå ---------- */
 function enrMergeGeneral(old,g){
@@ -165,9 +52,16 @@ async function enrSaveCands(accId,R){
   return {n,upd}; }
 async function enrSaveCd(accId,R,runId){
   const cur=mtGet(accId); if(!cur) return; const old=((cur.doc||{}).enr)||cur.enr||{};
-  const cd={at:iso(new Date()),run:runId||'',summary:R.U.summary,notes:R.U.notes,why:R.U.why,rounds:R.rounds,stop:R.stop,calls:R.calls,pages:R.pages.length,pkinds:R.pkinds,pv:enrPvFinal(R),kept:R.cands.length};
+  const cd={at:iso(new Date()),run:runId||'',summary:R.U.summary,notes:R.U.notes,why:R.U.why,rounds:R.rounds,stop:R.stop,calls:R.calls,pages:R.pages.length,pkinds:R.pkinds,pv:enrPvFinal(R),kept:R.cands.length,read:R.read.pages,llm:{status:R.llm.status,calls:R.llm.calls},rejected:R.rejected.slice(0,12)};
   await mtPatch(accId,{enr:{...old,cd,enriched_at:old.enriched_at||iso(new Date())}}); }
 function enrPvFinal(R){ const o={}; for(const p of ['web','apollo']) o[p]=R.pv[p]==='none'?(R.errors.some(e=>e.provider===p)?'error':'none'):R.pv[p]; return o; }
+
+/* Claude som LLM-port i siden (kapabiliteten `sample`). Seeren samtykker første gang; sier de nei, spør vi ikke igjen i denne økten. */
+function enrLlmPort(){
+  if(!sample||ENR.noLlm) return null;
+  return {async complete(req){
+    try{ const r=await sample(req.system+'\n\n'+req.prompt,{modelTier:'quick',cache:false}); return {text:(r&&r.text)||''}; }
+    catch(e){ const code=(e&&e.code)||'error'; if(code==='not_granted'||code==='capability_disabled') ENR.noLlm=true; throw {code:code==='rate_limited'?'rate_limited':code,message:String((e&&e.message)||code)}; } }}; }
 
 /* ---------- kjøring av én jobb (kø-arbeider). Bruker enrPipeline via EnrichmentService-formen ---------- */
 async function enrRunJob(id){
@@ -180,7 +74,7 @@ async function enrRunJob(id){
   const hb=setInterval(()=>{ const j=S.mtjob[id]; if(j&&j.status==='running') enrichmentJobRepository.update(id,{last_updated_at:stamp()}); },20000);
   try{
     if(!(ENR.stat&&(ENR.stat.web||ENR.stat.apollo))&&mcp) await enrProbe().catch(()=>{});
-    const st=ENR.stat||{}, io={web:WebResearchProvider,apollo:ApolloProvider,has:{web:!!st.web,apollo:!!st.apollo,fetch:!!st.fetch},
+    const st=ENR.stat||{}, io={web:WebResearchProvider,apollo:ApolloProvider,llm:enrLlmPort(),has:{web:!!st.web,apollo:!!st.apollo,fetch:!!st.fetch,llm:!!sample&&!ENR.noLlm},
       report:p=>{ const {state,steps,stage,...rest}=p, ex={...(steps?{pipeline:steps}:{}),...(stage?{stage}:{}),...rest}; return state?go(state,ex):upd(ex); },
       checkpoint:x=>enrSaveResearch(a.id,x.events,x.general)};
     const R=await enrPipeline(a,io);
@@ -193,7 +87,8 @@ async function enrRunJob(id){
     const apOrg=R.steps.find(x=>x.id==='apollo_org'), apCands=R.cands.filter(c=>c.ev.some(e=>e.k==='apollo')).length;
     if(apOrg&&apOrg.status==='done') note('apollo',apOrg.count?'ok':'empty',apOrg.detail,apOrg.count||0);
     const apSt=R.apOk?(apCands?'ok':'empty'):pvf.apollo==='blocked'?'blocked':pvf.apollo==='plan'?'plan_restricted':pvf.apollo==='error'?'error':'not_connected';
-    note('apollo',apSt,apSt==='ok'||apSt==='empty'?'Personsøk':apSt==='plan_restricted'?'Personsøk er ikke på planen':apSt==='blocked'?'Ingen tilgang':apSt==='error'?'Svarte ikke':'Ikke brukt',apCands);
+    /* personsøket ble ikke forsøkt (kontakt funnet på nettsiden): da står organisasjonsoppslaget som Apollo-status */
+    if(!(apSt==='not_connected'&&PR.some(p=>p.provider==='apollo'))) note('apollo',apSt,apSt==='ok'||apSt==='empty'?'Personsøk':apSt==='plan_restricted'?'Personsøk er ikke på planen':apSt==='blocked'?'Ingen tilgang':apSt==='error'?'Svarte ikke':'Ikke brukt',apCands);
     note('cognism','not_connected','Ekstra kilde tilgjengelig via Claude',0);
     const provObj={}; for(const p of PR){ const v=p.status==='ok'||p.status==='empty'?'ok':p.status; if(!provObj[p.provider]||provObj[p.provider]==='ok') provObj[p.provider]=v; }
     const blocked=state==='provider_blocked', errd=state==='provider_error', outcome=state==='ready'?'klar':state==='needs_review'||state==='partial'?'vurdering':state==='no_person_found'?'ingen_kontakt':'';

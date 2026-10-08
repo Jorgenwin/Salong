@@ -105,7 +105,10 @@ function enrDerive(a){
   else if(st==='provider_error') detail=enrErrorText(j);
   else if(st==='not_started') detail='Ikke beriket ennå';
   else detail=(j&&j.stage)||sp.stage;
-  a.es={state:st,label:pend&&!live?'Kontakt klar':sp.l,tone:pend&&!live?'ok':sp.t,group:pend&&!live?'ready':sp.g,kready:kready,pending:pend&&!live,detail,running:ENR_RUN.includes(st),rank:R,rec:R.rec,cands:R.list,general:gen,researched,apollo:enrApolloNote(j),
+  /* quick: en anbefalt kandidat kan godkjennes med ett klikk rett fra raden, også når kontaktdata mangler (da er neste steg å finne dem) */
+  const quick=!live&&!F.enriched&&!a.active.length&&!!R.rec, lacks=st==='partial'&&a.active.some(p=>!p.general), onlyGen=st==='no_person_found'&&gen.has&&!!(gen.emails.length||gen.phones.length);
+  const label=pend&&!live?'Kontakt klar':quick?'Kontakt funnet':lacks?'Mangler kontaktdata':onlyGen?'Bare generell adresse':sp.l, tone=pend&&!live||quick?'ok':sp.t;
+  a.es={state:st,label,tone,group:pend&&!live?'ready':sp.g,kready:kready,pending:pend&&!live,quick,lacks,onlyGen,detail,running:ENR_RUN.includes(st),rank:R,rec:R.rec,cands:R.list,general:gen,researched,apollo:enrApolloNote(j),
     sig:enrSignal(a),review:rev,errs:enrTechErrors(j)};
   return a.es; }
 

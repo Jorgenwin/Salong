@@ -1,0 +1,170 @@
+{
+ "note": "Syntetisk fasit for testene. Organisasjoner, personer og sider er oppdiktede. Ekte fasit lages med record() i server/src/research/eval.js og skal ikke inneholde persondata i repoet.",
+ "now": "2026-10-07T10:00:00Z",
+ "cases": [
+  {
+   "account": {
+    "id": "o-ryddig",
+    "name": "Ryddig Forlag Test AS",
+    "domain": "ryddig-test.no",
+    "segment_id": "forlag"
+   },
+   "expect": {
+    "contacts": [
+     "Ola Prøvesen",
+     "Kari Testesen"
+    ],
+    "recommended": "Ola Prøvesen",
+    "events": [
+     "2026-11-14"
+    ],
+    "onlyListed": true
+   },
+   "cassette": {
+    "searches": {
+     "site:ryddig-test.no kontakt ansatte medarbeidere team om oss": [
+      {
+       "url": "https://ryddig-test.no/om-oss/ansatte",
+       "title": "Ansatte",
+       "text": "# Ansatte\n\nKari Testesen\nKommunikasjonssjef\nkari.testesen@ryddig-test."
+      },
+      {
+       "url": "https://ryddig-test.no/arrangement/fagdag",
+       "title": "Fagdag 2026",
+       "text": "Fagdag 2026\n14. november 2026 09:30 - 15:00\nSentralen, Øvre Slottsgate"
+      },
+      {
+       "url": "https://ryddig-test.no/kontakt",
+       "title": "Kontakt",
+       "text": "Kontakt oss\npost@ryddig-test.no\nTelefon: 22 33 44 55"
+      }
+     ],
+     "site:ryddig-test.no kommunikasjon arrangement program presse kontaktperson": [
+      {
+       "url": "https://ryddig-test.no/om-oss/ansatte",
+       "title": "Ansatte",
+       "text": "# Ansatte\n\nKari Testesen\nKommunikasjonssjef\nkari.testesen@ryddig-test."
+      },
+      {
+       "url": "https://ryddig-test.no/arrangement/fagdag",
+       "title": "Fagdag 2026",
+       "text": "Fagdag 2026\n14. november 2026 09:30 - 15:00\nSentralen, Øvre Slottsgate"
+      },
+      {
+       "url": "https://ryddig-test.no/kontakt",
+       "title": "Kontakt",
+       "text": "Kontakt oss\npost@ryddig-test.no\nTelefon: 22 33 44 55"
+      }
+     ],
+     "Ryddig Forlag Test AS (ryddig-test.no) kommende arrangementer konferanse seminar fagdag program 2026 2027": [
+      {
+       "url": "https://ryddig-test.no/arrangement/fagdag",
+       "title": "Fagdag 2026",
+       "text": "Fagdag 2026\n14. november 2026 09:30 - 15:00\nSentralen, Øvre Slottsgate 3\n120 deltakere\nKontaktperson: Ola Prøvesen, Arrangementsansvarlig"
+      }
+     ],
+     "Ryddig Forlag Test AS (ryddig-test.no) tidligere arrangement årskonferanse fagdag sted lokale": [
+      {
+       "url": "https://ryddig-test.no/arrangement/fagdag",
+       "title": "Fagdag 2026",
+       "text": "Fagdag 2026\n14. november 2026 09:30 - 15:00\nSentralen, Øvre Slottsgate 3\n120 deltakere\nKontaktperson: Ola Prøvesen, Arrangementsansvarlig"
+      }
+     ]
+    },
+    "pages": {
+     "https://ryddig-test.no/om-oss/ansatte": {
+      "text": "# Ansatte\n\nKari Testesen\nKommunikasjonssjef\nkari.testesen@ryddig-test.no\n\nOla Prøvesen\nArrangementsansvarlig\n\nPer Tallsen\nØkonomisjef",
+      "title": "Ansatte",
+      "links": [
+       {
+        "url": "https://ryddig-test.no/kontakt",
+        "text": "Kontakt oss"
+       }
+      ]
+     },
+     "https://ryddig-test.no/kontakt": {
+      "text": "Kontakt oss\npost@ryddig-test.no\nTelefon: 22 33 44 55",
+      "title": "Kontakt",
+      "links": []
+     },
+     "https://ryddig-test.no/arrangement/fagdag": {
+      "text": "Fagdag 2026\n14. november 2026 09:30 - 15:00\nSentralen, Øvre Slottsgate 3\n120 deltakere\nKontaktperson: Ola Prøvesen, Arrangementsansvarlig",
+      "title": "Fagdag 2026",
+      "links": []
+     }
+    }
+   }
+  },
+  {
+   "account": {
+    "id": "o-prosa",
+    "name": "Prosa Instituttet Test",
+    "domain": "prosa-test.no",
+    "segment_id": "forskning"
+   },
+   "expect": {
+    "contacts": [
+     "Mona Fiktivsen",
+     "Tor Oppdiktet"
+    ],
+    "events": [
+     "2026-11-20"
+    ],
+    "onlyListed": true
+   },
+   "cassette": {
+    "searches": {
+     "site:prosa-test.no kontakt ansatte medarbeidere team om oss": [
+      {
+       "url": "https://prosa-test.no/om-oss/team",
+       "title": "Vårt team",
+       "text": "Vårt team\n\nKommunikasjon og arrangement ledes av Mona Fiktivsen, som e"
+      },
+      {
+       "url": "https://prosa-test.no/aktuelt/hostmote",
+       "title": "Høstmøte for medlemmer",
+       "text": "Vi inviterer til høstmøte for alle medlemmer.\n\nDato: 20. november 2026"
+      }
+     ],
+     "site:prosa-test.no kommunikasjon arrangement program presse kontaktperson": [
+      {
+       "url": "https://prosa-test.no/om-oss/team",
+       "title": "Vårt team",
+       "text": "Vårt team\n\nKommunikasjon og arrangement ledes av Mona Fiktivsen, som e"
+      },
+      {
+       "url": "https://prosa-test.no/aktuelt/hostmote",
+       "title": "Høstmøte for medlemmer",
+       "text": "Vi inviterer til høstmøte for alle medlemmer.\n\nDato: 20. november 2026"
+      }
+     ],
+     "Prosa Instituttet Test (prosa-test.no) kommende arrangementer konferanse seminar fagdag program 2026 2027": [
+      {
+       "url": "https://prosa-test.no/aktuelt/hostmote",
+       "title": "Høstmøte for medlemmer",
+       "text": "Vi inviterer til høstmøte for alle medlemmer.\n\nDato: 20. november 2026\nSted kommer senere."
+      }
+     ],
+     "Prosa Instituttet Test (prosa-test.no) tidligere arrangement årskonferanse fagdag sted lokale": [
+      {
+       "url": "https://prosa-test.no/aktuelt/hostmote",
+       "title": "Høstmøte for medlemmer",
+       "text": "Vi inviterer til høstmøte for alle medlemmer.\n\nDato: 20. november 2026\nSted kommer senere."
+      }
+     ]
+    },
+    "pages": {
+     "https://prosa-test.no/om-oss/team": {
+      "text": "Vårt team\n\nKommunikasjon og arrangement ledes av Mona Fiktivsen, som er kommunikasjonsdirektør hos oss. Ta kontakt med henne på mona@prosa-test.no.\n\nTor Oppdiktet er arrangementsansvarlig og planlegger alle seminarene våre.",
+      "title": "Vårt team",
+      "links": []
+     }
+    },
+    "llm": {
+     "bf765decfaf7a201": "{\"people\":[{\"name\":\"Mona Fiktivsen\",\"title\":\"Kommunikasjonsdirektør\",\"email\":\"mona@prosa-test.no\",\"relation\":\"staff\",\"quote\":\"Mona Fiktivsen, som er kommunikasjonsdirektør hos oss\"},{\"name\":\"Hilde Hallusinert\",\"title\":\"Eventsjef\",\"email\":\"\",\"relation\":\"staff\",\"quote\":\"Hilde Hallusinert, eventsjef\"}]}",
+     "8aab6154ea32d451": "{\"events\":[{\"title\":\"Høstmøte for medlemmer\",\"date\":\"2026-11-20\",\"venue\":null,\"attendees\":null,\"type\":\"møte\",\"quote\":\"Dato: 20. november 2026\"}]}"
+    }
+   }
+  }
+ ]
+}

@@ -44,7 +44,7 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
     const calls=await ev(()=>window.__mcpCalls.filter(c=>c.t==='create_draft').map(c=>[c.s,c.i.to.length]));
     check('J13 utkast i Gmail lages for hver forfalt e-post, ingenting sendes',[calls.length,calls.every(c=>c[0]==='Gmail'),await ev(()=>window.__mcpCalls.some(c=>/send/.test(c.t)))],[2,true,false]);
     check('J14 utkast merkes som laget og kan ikke lages to ganger',await ev(()=>window.__salong.TIER.due().every(x=>x.drafted)),true);
-    await p.click('[data-tssentall]'); await wait(1000);
+    await p.click('[data-tssentall]'); for(let i=0;i<40;i++){ await wait(200); if(await ev(()=>window.__salong.MT.all().filter(a=>a.src==='liste').every(a=>a.seq.stepsDone.length===1&&a.touch.out===1))) break; }  // lagringen er asynkron: vent til begge er ført, ikke et fast antall ms
     const af=await ev(()=>{ const L=window.__salong.MT.all().filter(a=>a.src==='liste'); return {done:L.map(a=>a.seq.stepsDone.length),touch:L.map(a=>a.touch.out),next:L.map(a=>a.prog.next.d)}; });
     check('J15 «merk som sendt» logger utgående touch og flytter sekvensen til neste steg',[af.done.join(),af.touch.join(),af.next.join()],['1,1','1,1','7,7']);
     // økonomi

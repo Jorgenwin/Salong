@@ -3,7 +3,7 @@
 # og dist/index.html (full side for lokal kjøring og tester). Bare Python 3 standardbibliotek.
 import re,sys,os,json
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-MODS=[f for f in ['dq.js','core.js','kb.js','kbui.js','kn.js','team.js','market.js','ux.js','mseed.js','cal2.js','market2.js','u3.js','u3seed.js','k3.js','i3.js','g3.js','m3.js','c3.js','mt.js','mtui.js','mtmod.js','elig.js','services/crm.js','services/planning.js','berik.js','berikui.js','services/providers/apollo.js','enr.js','cdisc.js','enrsvc.js','enrrun.js','cov.js','drw.js','kal3.js','idag.js','idagui.js','idnew.js','idcmd.js','planui.js','maler.js','m3v.js','mkgap.js','tier.js','tierui.js','tierseq.js','strat.js','enrui2.js','services/enrichment-job.js','services/http-backend.js','services/api.js','ask.js'] if os.path.exists(f)]
+MODS=[f for f in ['dq.js','core.js','kb.js','kbui.js','kn.js','team.js','market.js','ux.js','mseed.js','cal2.js','market2.js','u3.js','u3seed.js','k3.js','i3.js','g3.js','m3.js','c3.js','mt.js','mtui.js','mtmod.js','elig.js','services/crm.js','services/planning.js','berik.js','berikui.js','services/providers/apollo.js','enr.js','enrsvc.js','enrrun.js','cov.js','drw.js','kal3.js','idag.js','idagui.js','idnew.js','idcmd.js','planui.js','maler.js','m3v.js','mkgap.js','tier.js','tierui.js','tierseq.js','strat.js','enrui2.js','services/enrichment-job.js','services/http-backend.js','services/api.js','ask.js'] if os.path.exists(f)]
 CSS=[f for f in ['p7.css','p8.css','p9.css','p10.css','p11.css','p12.css','p13.css','p14.css','p15.css','p16.css','p17.css','p18.css','p19.css','p20.css','p21.css','p22.css','p23.css'] if os.path.exists(f)]
 def rd(f): return open(f).read()
 src=rd('app_base.js')
@@ -154,8 +154,25 @@ rep("window.__salong={IDX:","window.__salong={ENR:(typeof ENR!=='undefined'?ENR:
 # nye moduler
 rep("window.__salong={ENR:","window.__salong={TIER:(typeof tierSet!=='undefined'?{set:tierSet,stats:tierStats,enrollMany:tierEnrollMany,due:tsDue,eco:stratEco,effort:stratEffort,csv:stratCsv,parse:tsParse,imp:tsImport,cfg:tierCfg,save:tierSave,draft:tierDraft,venues:stratVenues,budget:tierBudget,phase:tierPhase}:null),ENR:")
 rep("window.__salong={TIER:","window.__salong={CD:(typeof cdUnderstand!=='undefined'?{understand:cdUnderstand,score:cdScore,rank:cdRank,tune:CD_TUNE,general:cdGeneral}:null),ES2:(typeof enrPipeline!=='undefined'?{pipeline:enrPipeline,runAll:enrRunAll,targets:enrTargets,runInfo:enrRunInfo,derive:enrDerive,wf:wfStepOf,web:WebResearchProvider,apollo:ApolloProvider,advance:enrAdvance,states:ENR_ST,flow:ENR_FLOW,runJob:enrRunJob}:null),TIER:")
+# Delte research-moduler (src/research/*.js) er vanlige CommonJS-moduler som serveren gjør require() på.
+# I bunten pakkes hver modul i en funksjon med egen module/require, og det den eksporterer gjøres tilgjengelig
+# som navn i frontendens felles scope. Rekkefølgen følger avhengighetene. Ingen annen kode trenger å vite om dette.
+RMODS=['rules','events','method','pipeline']
+def wrap_module(name,known):
+  code=rd('research/'+name+'.js')
+  m=re.search(r"module\.exports\s*=\s*\{([^}]*)\}\s*;?\s*$",code)
+  assert m,'research/'+name+'.js mangler «module.exports = { ... };» til slutt'
+  names=[x.strip() for x in m.group(1).split(',') if x.strip()]
+  assert all(re.fullmatch(r"[A-Za-z_$][\w$]*",x) for x in names),'research/'+name+'.js: eksporter bare rene navn'
+  for dep in re.findall(r"require\(\s*['\"]([^'\"]+)['\"]\s*\)",code):
+    assert re.fullmatch(r"\./[\w-]+(\.js)?",dep),'research/'+name+'.js kan bare kreve ./<modul> i samme mappe, ikke '+dep
+    assert re.sub(r"^\./|\.js$","",dep) in known,'research/'+name+'.js krever '+dep+' som ikke er pakket før den'
+  req='const require=p=>({'+','.join("'./%s':__rm_%s,'./%s.js':__rm_%s"%(k,k,k,k) for k in known)+'})[p];'
+  return 'const __rm_'+name+'=(function(){ const module={exports:{}}; '+req+'\n'+code+'\nreturn module.exports; })();\nconst {'+', '.join(names)+'}=__rm_'+name+';'
+rmods=[]
+for n in RMODS: rmods.append(wrap_module(n,RMODS[:RMODS.index(n)]))
 tail="window.__salong="
-i=src.index(tail); src=src[:i]+'\n'.join(rd(f) for f in MODS)+'\n'+src[i:]
+i=src.index(tail); src=src[:i]+'\n'.join(rmods)+'\n'+'\n'.join(rd(f) for f in MODS)+'\n'+src[i:]
 head=rd('head.html'); j=head.rfind('</style>'); head=head[:j]+''.join(rd(f) for f in CSS)+head[j:]
 os.makedirs('../dist',exist_ok=True)
 frag=head+rd('body.html')+'<script>\n'+src+'\n</script>\n'
