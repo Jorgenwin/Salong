@@ -692,3 +692,28 @@ test('running enrichment job heartbeat only refreshes the owning worker lock',as
   assert.match(calls[0].text,/status='running'/);
   assert.match(calls[0].text,/locked_by=\$2/);
 });
+
+
+test('contact writes are parameterized and primary selection clears siblings',async()=>{
+  const calls=[];
+  const db={async query(text,params){calls.push({text:String(text),params}); return {rows:[{id:params&&params[0]||'c-1',organization_id:'o-1',name:'Kari Test',title:'Eventsjef',email:null,phone:null,active:true,do_not_contact:false,is_primary:/is_primary=true/.test(String(text))}]};}};
+  const repositories=createRepositories(db);
+  const added=await repositories.contacts.add({id:'c-1',accountId:'o-1',name:' Kari Test ',title:'Eventsjef'});
+  assert.equal(added.id,'c-1');
+  assert.equal(calls[0].text.includes('Kari Test'),false);
+  assert.deepEqual(calls[0].params.slice(0,4),['c-1','o-1','Kari Test','Eventsjef']);
+  await repositories.contacts.update('c-1',{title:'Programleder',email:'kari@example.test',relevant:true});
+  assert.match(calls[1].text,/UPDATE contacts SET title = \$2, email = \$3, relevant = \$4/);
+  assert.deepEqual(calls[1].params,['c-1','Programleder','kari@example.test',true]);
+  assert.equal(calls[1].text.includes('kari@example.test'),false);
+  const primary=await repositories.contacts.setPrimary('c-1');
+  assert.equal(primary.is_primary,true);
+  assert.match(calls[2].text,/WITH target AS/);
+  assert.match(calls[2].text,/id<>\$1/);
+  assert.deepEqual(calls[2].params,['c-1']);
+  await repositories.contacts.setDoNotContact('c-1',{value:true,reason:'Ba om å ikke bli kontaktet'});
+  assert.deepEqual(calls[3].params,['c-1',true,'Ba om å ikke bli kontaktet']);
+  assert.equal(calls[3].text.includes('Ba om å ikke bli kontaktet'),false);
+  await assert.rejects(repositories.contacts.add({id:'c-2',accountId:'o-1',name:'  '}),/requires id, accountId and name/);
+  await assert.rejects(repositories.contacts.update('c-1',{unknown:'x'}),/at least one supported field/);
+});
