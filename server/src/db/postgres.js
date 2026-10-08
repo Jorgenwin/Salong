@@ -45,6 +45,19 @@ function createPostgres({
       return Boolean(result&&result.rows&&result.rows[0]&&Number(result.rows[0].ok)===1);
     },
 
+    async withClient(fn){
+      if(closed) throw new Error('PostgreSQL pool is closed');
+      if(typeof fn!=='function') throw new TypeError('withClient requires a function');
+      const client=await pool.connect();
+      try{
+        return await fn({
+          query(text,params){ return client.query(text,params); }
+        });
+      }finally{
+        client.release();
+      }
+    },
+
     async close(){
       if(closed) return;
       closed=true;
