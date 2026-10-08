@@ -8,11 +8,12 @@ const CDU_KIND={team:'Teamside',organizer:'Arrangør eller kontakt',speaker:'Tal
 const awTone=t=>t==='mute'?'mute':t||'';
 
 /* ---------- Arbeidsliste og accountliste: samme seks kolonner ---------- */
-const AW_ORDER=[['now','HANDLE NÅ'],['ready','KONTAKT KLAR'],['review','TRENGER VURDERING'],['none','INGEN KONTAKT FUNNET'],['run','RESEARCH PÅGÅR'],['need','TRENGER RESEARCH'],['block','BLOKKERT'],['wait','I SEKVENS OG VENTER']];
+const AW_ORDER=[['now','HANDLE NÅ'],['ready','KONTAKT KLAR'],['review','TRENGER VURDERING'],['none','INGEN KONTAKT FUNNET'],['qual','MÅ KVALIFISERES'],['run','RESEARCH PÅGÅR'],['need','TRENGER RESEARCH'],['block','BLOKKERT'],['wait','I SEKVENS OG VENTER']];
 function awGroup(a,today){ const n=a.nx, es=a.es||{};
   if(n.k==='reply'||n.k==='deal'||(n.due&&n.due<=today&&n.k!=='followup')) return 'now';
   if(a.prog||a.flags.addressed||['followup','step','seqdone','paused'].includes(n.k)) return 'wait';
-  if(!a.flags.qualified&&!es.running) return 'need';
+  /* funnet kontakt eller generell adresse skal kunne brukes med en gang, også før accounten er kvalifisert */
+  if(!a.flags.qualified&&!es.running&&!((es.quick||es.pending||es.onlyGen)&&!a.active.length)) return es.researched?'qual':'need';
   return es.group||'need'; }
 function awBadge(a){
   const es=a.es||{}, g=awGroup(a,mtToday());
@@ -29,23 +30,30 @@ function awWhy(a){
 function awContact(a){
   const es=a.es||{}, act=a.active.filter(x=>!x.general), p=act[0]||a.active[0], b=awBadge(a);
   let who='';
-  if(p) who='<b>'+esc(p.name)+'</b><small>'+esc(p.general?'Generell adresse':(p.title||'stilling ikke oppgitt'))+(act[1]?' · + '+esc(act[1].name):'')+'</small>';
-  else if(es.rec) who='<b>'+esc(es.rec.p.name)+'</b><small>'+esc(es.rec.p.title||'stilling ikke oppgitt')+' · anbefalt</small>';
+  if(p) who='<b>'+esc(p.general?(p.email||p.phone||p.name):p.name)+'</b><small>'+esc(p.general?'Generell adresse':(p.title||'stilling ikke oppgitt'))+(act[1]?' · + '+esc(act[1].name):'')+'</small>';
+  else if(es.rec) who='<b>'+esc(es.rec.p.name)+'</b><small>'+esc(es.rec.p.title||'stilling ikke oppgitt')+(es.rec.p.hasContact?'':' · mangler e-post')+'</small>';
   else if(es.cands&&es.cands.length) who='<b>'+es.cands.length+' mulig'+(es.cands.length===1?' person':'e personer')+'</b><small>ingen anbefalt</small>';
-  else if(es.general&&es.general.has&&es.researched) who='<small>Bare generell adresse</small>';
+  else if(es.general&&es.general.has&&es.researched) who='<small>'+esc((es.general.emails[0]&&es.general.emails[0].v)||es.general.phones[0]||'Kontaktside funnet')+'</small>';
   else who='<small>'+esc(mtRoleText(a).replace(/^Ser etter: /,'Søker: '))+'</small>';
   return '<span class="aw-cn">'+who+(b[0]?'<span class="aw-st '+awTone(b[1])+'"><i></i>'+esc(b[0])+'</span>':'')+'</span>'; }
 function awAct(a){
   const es=a.es||{}, k=a.nx.k, g=awGroup(a,mtToday()), id=esc(a.id);
   if(g==='now'||g==='wait') return '<span class="aw-nx'+(a.nx.late?' late':'')+'">'+esc(a.nx.t)+(a.nx.due?' <small>'+esc(mtFd(a.nx.due))+'</small>':'')+'</span><button type="button" class="btn sm" data-mtdo="'+id+'">'+mtActLabel(a)+'</button>';
-  if(k==='research'||(!a.flags.qualified&&!es.running)) return '<button type="button" class="btn sm" data-mtdo="'+id+'">Kvalifiser</button>';
-  if(es.running){ const j=a.job; return '<span class="aw-run"><i></i>'+esc((j&&j.stage)||ENR_ST[es.state].stage)+'</span>'; }
-  if(es.pending) return '<button type="button" class="btn sm" data-cdquick="'+id+'">Bruk kontakt</button>';
+  if(es.running) return awProgress(es.state);
+  if(es.pending||es.quick) return '<button type="button" class="btn sm" data-cdquick="'+id+'">Bruk kontakt</button>';
+  if(es.onlyGen&&!a.active.length) return '<button type="button" class="btn sm" data-awgen="'+id+'">Bruk generell adresse</button>';
+  if(k==='research'||!a.flags.qualified) return (es.researched&&a.nx.t&&a.nx.t!=='Kvalifiser'?'<span class="aw-nx">'+esc(a.nx.t)+'</span>':'')+'<button type="button" class="btn sm" data-mtdo="'+id+'">Kvalifiser</button>';
   if(es.state==='ready') return '<button type="button" class="btn sm" data-mtdo="'+id+'">'+mtActLabel(a)+'</button>';
+  if(es.lacks) return '<button type="button" class="btn sm" data-awkon="'+id+'">Finn e-post</button>';
   if(es.state==='needs_review'||es.state==='partial') return '<button type="button" class="btn sm" data-awkon="'+id+'">Vurder kontakt</button>';
-  if(es.state==='no_person_found') return '<button type="button" class="btn sm" data-awkon="'+id+'">Finn kontakt</button>';
+  if(es.state==='no_person_found') return '<button type="button" class="btn sm" data-awkon="'+id+'">Legg til kontakt</button>';
   if(es.state==='provider_blocked'||es.state==='provider_error') return '<button type="button" class="btn sm" data-bkdo="'+id+'">Prøv igjen</button>';
   return '<button type="button" class="btn sm" data-bkdo="'+id+'">Berik</button>'; }
+/* fremdrift i raden: tre trinn som alle forstår. Tekniske runder og søk ligger under Kilder. */
+const AW_PG=[['Organisasjon','Leser nettsiden'],['Arrangementer','Finner arrangementer'],['Kontakt','Finner kontaktperson']];
+function awProgress(state){
+  const at=state==='queued'?-1:state==='researching_company'?0:state==='researching_events'?1:2, txt=at<0?'Venter på tur':state==='enriching_people'?'Kontrollerer mot kilden':AW_PG[at][1];
+  return '<span class="aw-pg" role="img" aria-label="'+esc(txt)+(at>=0?', trinn '+(at+1)+' av 3':'')+'">'+AW_PG.map((p,i)=>'<i class="'+(i<at?'done':i===at?'on':'')+'" title="'+esc(p[0])+'"></i>').join('')+'<em>'+esc(txt)+'</em></span>'; }
 const AW_HEAD='<th>Organisasjon</th><th class="n">Fit</th><th>Hvorfor nå</th><th>Kontakt</th><th>Neste handling</th><th>Ansvarlig</th>';
 function awTds(a,sel){
   const es=a.es||{}, meta=[mtSegLabel(a)+(a.prio?' · '+a.prio:'')].filter(Boolean).map(esc).join('');
@@ -86,7 +94,7 @@ mtListHTML=function(){
 function cdEvLinks(p){ const ev=(p.cd&&p.cd.ev)||[], seen=new Set(), out=[];
   for(const e of ev){ const k=e.k+'|'+e.url; if(seen.has(k)) continue; seen.add(k); const l=CDU_KIND[e.k]||e.k; out.push(e.url?'<a href="'+esc(bkLink(e.url))+'" target="_blank" rel="noopener">'+esc(l)+'</a>':esc(l)); }
   return out.join(' · '); }
-function cdSrcLabel(p){ const ev=(p.cd&&p.cd.ev)||[], A=p.source==='Apollo'||ev.some(e=>e.k==='apollo'), W=ev.some(e=>e.k!=='apollo')||(p.source!=='Apollo'); return A&&W?'Apollo + nettside':A?'Apollo':'Nettside'; }
+function cdSrcLabel(p){ const ev=(p.cd&&p.cd.ev)||[], A=p.source==='Apollo'||ev.some(e=>e.k==='apollo'), W=ev.some(e=>e.k!=='apollo')||(p.source!=='Apollo'), L=W&&ev.length&&ev.filter(e=>e.k!=='apollo').every(e=>e.method==='llm'); return (A&&W?'Apollo + nettside':A?'Apollo':'Nettside')+(L?' (lest av Claude, kontrollert mot siden)':''); }
 function cdCandHTML(a,x,mode){
   const p=x.p, s=x.s, ln=bkLink(p.linkedin), canPick=a.active.length<2, em=mtVerLabel(p,'email');
   const ch='<ul class="cd-ch"><li class="'+(p.email?'ok':'no')+'">'+(p.email?'<a href="mailto:'+esc(p.email)+'">E-post</a><small>'+esc(em.k==='ok'?'verifisert':'ikke verifisert')+'</small>':'E-post <em>mangler</em>')+'</li><li class="'+(p.phone?'ok':'no')+'">'+(p.phone?'<a href="tel:'+esc(String(p.phone).replace(/\s/g,''))+'">Telefon</a>':'Telefon <em>mangler</em>')+'</li><li class="'+(ln?'ok':'no')+'">'+(ln?'<a href="'+esc(ln)+'" target="_blank" rel="noopener">LinkedIn</a>':'LinkedIn <em>mangler</em>')+'</li></ul>';
@@ -146,16 +154,26 @@ function bkOversikt(a){
 
 /* ---------- Kilder: berik-jobben viser tilstand, trinn og hva som kom fra hvilken kilde ---------- */
 const CDU_STEPIC={done:'✓',skipped:'–',unavailable:'○',error:'!',running:'…',pending:'·'};
-const CDU_GRP=[['A','Organisasjonsresearch',['company','apollo_org','events']],['B','Kontaktresearch',['people_web','rank','general']],['C','Kontaktdata',['people_apollo']]];
+const CDU_GRP=[['A','Organisasjonsresearch',['company','read','apollo_org','events']],['B','Kontaktresearch',['people_web','llm','verify','rank','general']],['C','Kontaktdata',['people_apollo']]];
+/* én linje om hva research faktisk gjorde, i vanlige ord */
+function cdMethodLine(cd){
+  if(!cd) return ''; const P=[];
+  if(cd.read) P.push(cd.read+' side'+(cd.read===1?'':'r')+' lest i sin helhet');
+  if(cd.llm&&cd.llm.calls) P.push(cd.llm.calls+' lest av Claude');
+  if(cd.kept!=null) P.push(cd.kept+' kandidat'+(cd.kept===1?'':'er')+' beholdt');
+  const rj=(cd.rejected||[]).length; if(rj) P.push(rj+' forslag forkastet fordi '+(rj===1?'det':'de')+' ikke sto i kilden');
+  if(cd.stop==='recommended') P.push('stoppet tidlig: kontakt funnet');
+  return P.length?'<p class="cd-ml">'+P.map(esc).join(' · ')+'</p>':''; }
 function cdJobHTML(a){
   const j=a.job, es=a.es; if(!j) return '<section class="bk-s"><h3>RESEARCH</h3><p class="bk-e">Ikke beriket ennå.</p><div class="row"><button type="button" class="btn sm" data-bk="berik">Berik</button></div></section>';
   const cd=(a.enr&&a.enr.cd)||null, steps=j.pipeline||[], hist=(j.history||[]).map(h=>(ENR_ST[h.s]?ENR_ST[h.s].l:h.s)+' '+bkDateS(h.at)).filter((x,i,A)=>A.indexOf(x)===i);
   const stepLi=s=>'<li class="'+esc(s.status)+'"><i>'+(CDU_STEPIC[s.status]||'·')+'</i><b>'+esc(s.label)+'</b><small>'+esc(s.detail)+'</small></li>';
   const grp=CDU_GRP.map(([k,n,ids])=>{ const L=steps.filter(s=>ids.includes(s.id)); return L.length?'<h4>'+k+'. '+n+'</h4><ul class="cd-steps">'+L.map(stepLi).join('')+'</ul>':''; }).join('');
   const canRun=!es.running&&!a.flags.disqualified&&!a.dncAcc&&a.nx.k!=='deal';
-  return '<section class="bk-s"><h3>RESEARCH</h3><p class="ov-s '+awTone(es.tone)+'"><b>'+esc(es.label)+'</b>'+(es.detail&&es.detail!==es.label?' · '+esc(es.detail):'')+'</p>'+(es.apollo&&!es.running?'<p class="mt-hint">'+esc(es.apollo)+'</p>':'')+
-    (j.completed_at?'<p class="mt-hint">Sist kjørt '+esc(bkDate(j.completed_at))+(j.requested_by?' · '+esc(j.requested_by):'')+'</p>':'')+(canRun?'<div class="row"><button type="button" class="btn sm" data-bk="berik">Berik på nytt</button></div>':'')+grp+
-    '<details class="cd-tech cd-det"><summary>Detaljer</summary>'+(cd&&cd.summary?'<p class="mt-hint">Funksjoner søkt: '+esc(cd.summary)+'</p>':'')+(cd&&cd.rounds&&cd.rounds.length?'<p class="mt-hint">Runder: '+cd.rounds.map(r=>'runde '+r.n+': '+r.found+' nye, '+r.plaus+' plausible').join(' · ')+(cd.stop==='enough'?' · stoppet: nok kandidater':cd.stop==='budget'?' · stoppet: søkebudsjett brukt':'')+'</p>':'')+
+  return '<section class="bk-s"><h3>RESEARCH</h3><p class="ov-s '+awTone(es.tone)+'"><b>'+esc(es.label)+'</b>'+(es.detail&&es.detail!==es.label?' · '+esc(es.detail):'')+'</p>'+(es.apollo&&!es.running&&!es.kready?'<p class="mt-hint">'+esc(es.apollo)+'</p>':'')+
+    (j.completed_at?'<p class="mt-hint">Sist kjørt '+esc(bkDate(j.completed_at))+(j.requested_by?' · '+esc(j.requested_by):'')+'</p>':'')+cdMethodLine(cd)+(canRun?'<div class="row"><button type="button" class="btn sm" data-bk="berik">Berik på nytt</button></div>':'')+grp+
+    '<details class="cd-tech cd-det"><summary>Detaljer</summary>'+(cd&&cd.summary?'<p class="mt-hint">Funksjoner søkt: '+esc(cd.summary)+'</p>':'')+(cd&&cd.rounds&&cd.rounds.length?'<p class="mt-hint">Runder: '+cd.rounds.map(r=>'runde '+r.n+': '+r.found+' nye, '+r.plaus+' plausible').join(' · ')+(cd.stop==='enough'?' · stoppet: nok kandidater':cd.stop==='recommended'?' · stoppet: anbefalt kontakt funnet':cd.stop==='budget'?' · stoppet: søkebudsjett brukt':'')+'</p>':'')+
+    (cd&&cd.rejected&&cd.rejected.length?'<p class="mt-hint">Forkastet: '+cd.rejected.map(r=>esc(r.name)+' ('+esc(RS_REASON[String(r.reasons&&r.reasons[0]||'').split(',')[0]]||'sto ikke i kilden')+')').join(' · ')+'</p>':'')+
     (hist.length>1?'<p class="mt-hint">Forløp: '+hist.map(esc).join(' → ')+'</p>':'')+(j.result_version?'<p class="mt-hint">Resultatversjon '+esc(j.result_version)+'</p>':'')+(es.errs.length?'<ul>'+es.errs.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'')+'</details></section>'; }
 const _kilBase=bkKilder;
 bkKilder=function(a){ const h=_kilBase(a); const re=/<section class="bk-s"><h3>BERIK-JOBB<\/h3>[\s\S]*?<\/section>/; return re.test(h)?h.replace(re,()=>cdJobHTML(a)):h+cdJobHTML(a); };
@@ -176,6 +194,7 @@ const _enrWire2=V.prosp.wire; V.prosp.wire=function(v){ _enrWire2(v);
   v.querySelectorAll('[data-enrdismiss]').forEach(b=>b.addEventListener('click',()=>{ ENR.dismissed=b.dataset.enrdismiss; renderView(true); }));
   v.querySelectorAll('[data-cdquick]').forEach(b=>b.addEventListener('click',async e=>{ e.stopPropagation(); b.disabled=true; const a=mtGet(b.dataset.cdquick); if(a&&a.es&&a.es.rec) await cdPick(a.es.rec.p.id); }));
   v.querySelectorAll('[data-awtop]').forEach(b=>b.addEventListener('click',()=>{ const n=+b.dataset.awtop; ENR.sel.clear(); if(n){ enrTargets().ids.map(mtGet).filter(Boolean).sort((x,y)=>y.fit.total-x.fit.total).slice(0,n).forEach(a=>ENR.sel.add(a.id)); } renderView(true); }));
+  v.querySelectorAll('[data-awgen]').forEach(b=>b.addEventListener('click',async e=>{ e.stopPropagation(); b.disabled=true; await cdUseGeneral(b.dataset.awgen); }));
   v.querySelectorAll('[data-awkon]').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); mtOpen(b.dataset.awkon); UI.mt.dr.tab='kon'; mtOverlay(true); })); };
 const _enrWD2=mtWireDrawer; mtWireDrawer=function(root,a){ _enrWD2(root,a);
   root.querySelectorAll('[data-cdpick]').forEach(b=>b.addEventListener('click',async()=>{ b.disabled=true; await cdPick(b.dataset.cdpick); }));
@@ -253,7 +272,7 @@ function iddAll(){
   else if(ou.length===1){ const it=ou[0], a=mtGet(it.accId), p=a&&a.active[0]; add({g:4,kind:'OUTREACH',org:it.org,action:p?'Kontakt '+p.name+(p.title?' ('+p.title+')':''):it.action,why:(it.why||[]).slice(0,1).join(' · '),btns:[['Start outreach','idopen',it.key]]}); }
   const pend=mtAll().filter(a=>a.kind==='ny'&&!a.flags.disqualified&&!a.dncAcc&&idOperative(a)&&idInScope(a.ownerId,false)&&a.es&&(a.es.pending||a.es.state==='needs_review')).sort((x,y)=>y.fit.total-x.fit.total);
   if(pend.length>2) add({g:5,kind:'KONTAKT TIL GODKJENNING',org:pend.length+' foreslåtte kontakter',action:'Godkjenn eller bytt med ett klikk',why:pend.slice(0,3).map(a=>a.name).join(', ')+(pend.length>3?' …':''),btns:[['Gå gjennom','idgo','prosp-arb']]});
-  else for(const a of pend){ const r=a.es.rec; add({g:5,kind:'KONTAKT TIL GODKJENNING',org:a.name,action:r?r.p.name+(r.p.title?' ('+r.p.title+')':''):'Mulige personer – vurder',why:r?'Anbefalt · '+cdSrcLabel(r.p)+' · '+r.score:'Ingen anbefalt',btns:a.es.pending?[['Bruk kontakt','cdquick',a.id],['Vurder','iddkon',a.id]]:[['Vurder','iddkon',a.id]]}); }
+  else for(const a of pend){ const r=a.es.rec; add({g:5,kind:'KONTAKT TIL GODKJENNING',org:a.name,action:r?r.p.name+(r.p.title?' ('+r.p.title+')':''):'Mulige personer – vurder',why:r?'Anbefalt · '+cdSrcLabel(r.p)+' · '+r.score:'Ingen anbefalt',btns:(a.es.pending||a.es.quick)?[['Bruk kontakt','cdquick',a.id],['Vurder','iddkon',a.id]]:[['Vurder','iddkon',a.id]]}); }
   out.sort((x,y)=>x.g-y.g||(x.time||'99').localeCompare(y.time||'99')||x.n-y.n);
   return out; }
 function iddRow2(x,hasT){ const tm=UI.id.scope==='team'||!idWho().mine; return '<li class="idd-r'+(x.late?' late':'')+'">'+(hasT?'<span class="idd-t">'+esc(x.time||'')+'</span>':'')+'<div class="idd-m"><span class="idd-k">'+esc(x.kind)+'</span><b>'+esc(x.org)+(tm&&x.own!==undefined?' <span class="idd-ow">'+(x.own?esc(ownName(x.own)):'Ufordelt')+'</span>':'')+'</b><span class="idd-a">'+esc(x.action)+'</span>'+(x.why?'<span class="idd-w">'+esc(x.why)+'</span>':'')+'</div><div class="idd-b">'+x.btns.map((b,i)=>'<button type="button" class="'+(i?'btn ghost sm':'id-go')+'" data-'+b[1]+'="'+esc(b[2])+'"'+(b[2]===''?' disabled':'')+'>'+esc(b[0])+(i?'':' <span aria-hidden="true">→</span>')+'</button>').join('')+'</div></li>'; }

@@ -1,7 +1,7 @@
-// Enhetstest av rene kontaktfunn-funksjoner (cdisc.js). Fixtures er forkortede, ekte svar fra Exa (FHI), ikke oppdiktede personer.
-const fs=require('fs');
-const code=fs.readFileSync(require('path').resolve(__dirname,'../../src/cdisc.js'),'utf8');
-const CD=new Function(code+';return {CD_TUNE,CD_FAM,CD_SEG,cdUnderstand,cdParseRoster,cdParseEventContacts,cdParseLinkedIn,cdFromApollo,cdParseGeneral,cdPageKind,cdScore,cdMerge,cdFamsOf,cdLinePerson};')();
+// Enhetstest av rene kontaktfunn-funksjoner (src/research/rules.js). Fixtures er forkortede, ekte svar fra Exa (FHI), ikke oppdiktede personer.
+// Modulene importeres som vanlig kode: de samme filene serveren bruker og som bygget pakker inn i Artifact-bunten.
+const fs=require('fs'), path=require('path');
+const CD=require('../../src/research/rules.js'), EVENTS=require('../../src/research/events.js');
 let ok=0,bad=0; const t=(n,v,e)=>{ const pass=typeof e==='function'?!!e(v):JSON.stringify(v)===JSON.stringify(e); pass?ok++:bad++; console.log(pass?'OK  ':'FEIL',n,'=>',JSON.stringify(v).slice(0,260)); };
 const roster=`## Medarbeidere 
 
@@ -77,4 +77,9 @@ t('S07 verifisert e-post gir 10 poeng, uverifisert 5',[S('fag',{title:'Event Man
 t('S08 hvert poeng har forklaring og totalsummen går opp',s1.parts.every(p=>p.t&&p.pts)&&s1.score===Math.min(100,s1.sum),true);
 const M=[]; CD.cdMerge(M,{name:'Nora Test',title:'Eventansvarlig',ev:[{k:'organizer',url:'u1'}]}); CD.cdMerge(M,{name:'nora test',linkedin:'https://l/x',ev:[{k:'linkedin',url:'u2'}]});
 t('M01 samme person fra to kilder slås sammen med begge bevis',[M.length,M[0].ev.map(e=>e.k),M[0].linkedin],[1,['organizer','linkedin'],'https://l/x']);
+// navnenormaliseringen finnes to steder (app_base.js for resten av appen, research/events.js for den delte koden): de skal gi samme svar
+{ const app=fs.readFileSync(path.resolve(__dirname,'../../src/app_base.js'),'utf8'), stop=/^const STOP=.*$/m.exec(app), fn=/^function normName\(.*$/m.exec(app);
+  const appNorm=stop&&fn?new Function(stop[0]+'\n'+fn[0]+'\nreturn normName;')():null;
+  const samples=['Stiftelsen Fagbokforlaget AS','Norsk Forening for Æøå-studier (NFÆ)','Oslo  Universitetssykehus · HF','the Nordic Institute, Oslo & Bergen','Kari-Anne Åsgård'];
+  t('N01 rsNormName i research/events.js gir samme svar som normName i app_base.js',appNorm?samples.map(x=>appNorm(x)===EVENTS.rsNormName(x)):null,v=>v&&v.every(Boolean)); }
 console.log('\nSUM: '+ok+' bestått, '+bad+' feilet');

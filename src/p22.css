@@ -165,3 +165,12 @@ table.aw-t{width:100%; border-collapse:separate; border-spacing:0; font-size:13p
 .idd-pri .idd-r:has(.idd-t){grid-template-columns:56px 1fr auto}
 .idd-pri{padding:8px 22px 8px}
 .idd-m b{font-size:15.5px}
+
+/* Berik: fremdrift i tre trinn per rad, og en klar linje om hva research gjorde */
+.aw-pg{display:inline-flex; align-items:center; gap:5px; font-size:13px; color:var(--muted); white-space:nowrap}
+.aw-pg i{width:18px; height:4px; border-radius:2px; background:var(--rule-2)}
+.aw-pg i.done{background:var(--accent)}
+.aw-pg i.on{background:var(--accent); animation:awp 1.1s ease-in-out infinite}
+.aw-pg em{font-style:normal; margin-left:5px}
+@media (prefers-reduced-motion:reduce){.aw-pg i.on{animation:none; opacity:.6}}
+.cd-ml{font-size:13px; color:var(--ink); margin:6px 0 2px; line-height:1.5}

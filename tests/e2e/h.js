@@ -57,10 +57,10 @@ async function setup(opts={}){
           get:async()=>{ await wait(); const r=await window.__op('get',path); return {exists:r.exists,id:path.split('/').pop(),data:()=>r.data}; },
           acquire:async o=>{ await wait(); return window.__op('acquire',path,o); },
           onSnapshot:cb=>{ (DL[path]=DL[path]||[]).push(cb); const c=path.split('/').slice(0,-1).join('/'); window.__op('get',path).then(r=>cb({exists:r.exists,data:()=>r.data})); return ()=>{}; } })};
-      const sample=async(pr,o)=>{ o?.onText?.({text:'OK'}); return {text:'OK'}; };
+      const sample=async(pr,o)=>{ if(window.__sampleFn){ window.__sampleCalls=(window.__sampleCalls||0)+1; return {text:await window.__sampleFn(pr,o)}; } o?.onText?.({text:'OK'}); return {text:'OK'}; };
       sample.json=async(prompt,o)=>{ window.__prompts.push(prompt); window.__aiOpts.push(o?Object.keys(o):[]); await new Promise(r=>setTimeout(r,30)); if(window.__aiMode==='fail') throw {code:'rate_limited'}; return window.__aiFn?window.__aiFn(prompt):{fakta:[],beregninger:[],uavklart:[],forslag:[]}; };
       window.__mcpCalls=[]; window.__mcpFn=null; window.__mcpOn=true;
-      const mcpm={listTools:async()=>window.__mcpOn?{servers:[{server:'Exa',authStatus:'connected',tools:[{name:'web_search_exa',description:''}]},{server:'Apollo.io',authStatus:'connected',tools:[{name:'apollo_organizations_lookup',description:''},{name:'apollo_mixed_people_api_search',description:''},{name:'apollo_people_match',description:''}]}]}:{servers:[]},
+      const mcpm={listTools:async()=>window.__mcpOn?{servers:[{server:'Exa',authStatus:'connected',tools:[{name:'web_search_exa',description:''}].concat(window.__fetchOn?[{name:'web_fetch_exa',description:''}]:[])},{server:'Apollo.io',authStatus:'connected',tools:[{name:'apollo_organizations_lookup',description:''},{name:'apollo_mixed_people_api_search',description:''},{name:'apollo_people_match',description:''}]}]}:{servers:[]},
         callTool:async(s,t,i)=>{ window.__mcpCalls.push({s,t,i}); if(!window.__mcpFn) throw {code:'tool_error',message:'ingen mock'}; return window.__mcpFn(s,t,i); }};
       window.claude={use:async n=>{ if(n==='mcp'&&mcpOn) return mcpm; if(n==='db') return db; if(n==='user') return {me:async()=>({id:u.id,name:u.name,avatarUrl:''}),id:async()=>u.id,can:async()=>u.readOnly?false:true,profiles:async ids=>Object.fromEntries((ids||[]).map(i=>[i,{id:i,name:i===u.id?u.name:''}]))}; if(n==='sample'&&ai) return sample; return null; }};
     },{u,ai:opts.ai!==false,mcpOn:!!opts.mcp});

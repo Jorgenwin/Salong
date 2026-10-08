@@ -1,6 +1,11 @@
-/* ---------- cdisc.js: kontaktfunn i flere runder (rene funksjoner, ingen nettverk, ingen DOM) ----------
+'use strict';
+
+// research/rules.js: kontaktfunn (rollefamilier, parsere, cdScore). Rene funksjoner, ingen nettverk og ingen DOM.
+// Vanlig CommonJS-modul: serveren gjør require() på den, og frontend-bygget (src/build.py) pakker den inn i bunten.
+
+/* ---------- kontaktfunn i flere runder ----------
    Mål: kandidat-recall først, rangering etterpå. Ingenting her finner på personer. Alt som returneres kommer fra tekst en kilde faktisk har gitt,
-   og hver kandidat bærer bevis (hvilken side, hvilket sitat, hvilken kilde). Selve søket (Exa, Apollo) ligger i enrsvc.js.
+   og hver kandidat bærer bevis (hvilken side, hvilket sitat, hvilken kilde). Selve søket ligger i pipeline.js og går gjennom porter.
 
    1. FUNKSJONSFAMILIER (CD_FAM): grupper av roller som eier arrangement, med tittelutvidelse (norsk og engelsk). Ikke eksakte titler.
    2. CD_SEG: rekkefølgen av familier per segment (hvem eier arrangementene i et forlag, en ambassade, et forskningsinstitutt ...).
@@ -115,29 +120,44 @@ function cdCleanRole(r){
   r=String(r||'').replace(CD_TAILJUNK,'').replace(/\S+@\S+/g,'').replace(/\+?\d[\d\s]{6,}/g,'').trim().replace(/^[\s,;:–—-]+|[\s,;:–—-]+$/g,'');
   const parts=r.split(/\s*,\s*/); if(parts.length>1&&CD_DEGREE.test(parts[1])) r=parts[0];
   return r.slice(0,100); }
+/* stilling skrevet som setning («er arrangementsansvarlig og planlegger …») kortes til selve stillingen */
+function cdTidyTitle(t){
+  let s=String(t||'').trim().replace(/[.;:!]+$/,''); const m=s.match(/^(som er|er|is|who is|jobber som|arbeider som|works as)\s+/i);
+  if(m){ s=s.slice(m[0].length).split(/\s+(?:og|and|som|hos|ved|med|i|at|who)\s+|[.;,]/)[0].trim(); if(s) s=s[0].toUpperCase()+s.slice(1); }
+  return s; }
 /* én linje → {name,title} eller null */
 function cdLinePerson(line){
   const L=cdCleanLine(line); if(!L||L.length>160||L.length<5) return null;
   const seps=[' – ',' — ',' - ',', ',': ','\t',' | ',' / '];
   for(const sp of seps){ const i=L.indexOf(sp); if(i<3) continue; const left=L.slice(0,i).trim(), right=L.slice(i+sp.length).trim();
-    const nl=cdNameFrom(left.split(/\s+/)); if(nl&&nl.name.length===left.length&&CD_ROLEHINT.test(right)){ const t=cdCleanRole(right); if(t&&t.length<=100) return {name:nl.name,title:t}; }
+    const nl=cdNameFrom(left.split(/\s+/)); if(nl&&nl.name.length===left.length&&CD_ROLEHINT.test(right)){ const t=cdTidyTitle(cdCleanRole(right)); if(t&&t.length<=100&&CD_ROLEHINT.test(t)) return {name:nl.name,title:t}; }
     const nr=cdNameFrom(right.split(/\s+/)); if(nr&&CD_ROLEHINT.test(left)&&!cdNameFrom(left.split(/\s+/))){ const rr=right.slice(nr.name.length).trim(); if(!rr||/^[,;(–-]/.test(rr)||/@/.test(rr)) { const t=cdCleanRole(left); if(t&&t.length<=100) return {name:nr.name,title:t}; } } }
   const tk=L.split(/\s+/), nm=cdNameFrom(tk); if(!nm) return null;
   let rest=tk.slice(nm.n).join(' ').trim(); let name=nm.name;
   if(!rest&&nm.n>=3&&CD_ROLEEND.test(tk[nm.n-1])){ rest=tk[nm.n-1]; name=tk.slice(0,nm.n-1).join(' '); if(cdNameFrom(name.split(/\s+/))===null) return null; }
-  rest=cdCleanRole(rest); if(!rest||rest.length>90||!CD_ROLEHINT.test(rest)) return null;
+  rest=cdTidyTitle(cdCleanRole(rest)); if(!rest||rest.length>90||!CD_ROLEHINT.test(rest)) return null;
   if(/^(og|and|for|som|der|the)\b/i.test(rest)) return null;
   return {name,title:rest}; }
 const CD_EMAIL=/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
+/* linjene som hører til personen på linje i: linjen før, og de neste (maks fem ikke-tomme) fram til neste navnelinje.
+   Ansattsider har ofte navn, stilling, e-post og omtale på hver sin linje med blanke imellom. */
+function cdWindow(lines,i){
+  const out=[lines[i-1]||'',lines[i]||'']; let n=0;
+  for(let j=i+1;j<lines.length&&n<5;j++){ const l=lines[j]; if(!l) continue; const c=cdCleanLine(l), nm=cdNameFrom(c.split(/\s+/)); if(n>0&&nm&&nm.name===c) break; out.push(l); n++; }
+  return out; }
+/* telefon oppgitt sammen med personen (må være merket tlf/telefon/mobil, så årstall og org.nr. ikke tas med) */
+function cdPhoneFor(lines,i){
+  const m=cdWindow(lines,i).slice(1).join(' ').match(/(?:tlf|telefon|tel|mob(?:il)?|phone)\.?\s*:?\s*((?:\+|00)?47[\s-]?)?((?:\d[\s-]?){8})(?!\d)/i); if(!m) return '';
+  const d=m[2].replace(/\D/g,''); return d.length===8?'+47 '+d.replace(/(\d{2})(\d{2})(\d{2})(\d{2})/,'$1 $2 $3 $4'):''; }
 function cdEmailFor(name,lines,i){
   const toks=cdNorm(name).split(' ').filter(x=>x.length>=3); if(!toks.length) return '';
-  const win=lines.slice(Math.max(0,i-1),i+3).join(' '), em=win.match(CD_EMAIL)||[];
+  const win=cdWindow(lines,i).join(' '), em=win.match(CD_EMAIL)||[];
   for(const e of em){ const lp=cdNorm(e.split('@')[0].replace(/[._-]/g,' ')); if(toks.some(t=>lp.includes(t))) return e.toLowerCase(); }
   return ''; }
 /* 4a. ansattliste fra tekst: {name,title,email,quote} */
 function cdParseRoster(text){
   const lines=String(text||'').split(/\n/).map(s=>s.trim()), out=[], seen=new Set();
-  const add=(name,title,i,q)=>{ const k=cdNorm(name); if(seen.has(k)) return; seen.add(k); out.push({name,title,email:cdEmailFor(name,lines,i),quote:String(q).replace(/\s+/g,' ').slice(0,200)}); };
+  const add=(name,title,i,q)=>{ const k=cdNorm(name); if(seen.has(k)) return; seen.add(k); out.push({name,title,email:cdEmailFor(name,lines,i),phone:cdPhoneFor(lines,i),quote:String(q).replace(/\s+/g,' ').slice(0,200)}); };
   for(let i=0;i<lines.length;i++){
     const raw=lines[i]; if(!raw) continue; const c=cdCleanLine(raw);
     const p=cdLinePerson(raw); if(p){ add(p.name,p.title,i,c); continue; }
@@ -276,3 +296,11 @@ function cdMerge(list,c){
   x.masked=x.masked&&c.masked; x.rounds=cdUniq((x.rounds||[]).concat(c.rounds||[]));
   for(const e of (c.ev||[])) if(!x.ev.some(y=>y.k===e.k&&y.url===e.url)) x.ev.push(e);
   return x; }
+
+module.exports = {
+  CD_TUNE, CD_FAM, CD_SEG, CD_EVBOOST, CD_SEGLABEL, cdNorm, cdEsc, cdUniq, cdFamsOf, cdUnderstand, CD_CONN, CD_STOP,
+  CD_ORGW, CD_ROLEHINT, CD_ROLEEND, CD_TAILJUNK, CD_DEGREE, cdIsNameTok, cdNameFrom, cdCleanLine, cdCleanRole,
+  cdTidyTitle, cdLinePerson, CD_EMAIL, cdWindow, cdPhoneFor, cdEmailFor, cdParseRoster, CD_EVLAB,
+  cdParseEventContacts, cdLoc, cdAliasRe, cdParseLinkedIn, cdHost, cdOwn, cdFromApollo, CD_GENLOCAL, cdParseGeneral,
+  CD_PATHS, cdPageKind, CD_PROBE, CD_PAGEORDER, CD_WRONG, CD_HR, CD_TECH, CD_FORMER, cdSeniority, cdScore, cdMerge
+};
