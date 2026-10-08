@@ -58,3 +58,13 @@ Hvis orgs har innebygde kontakter, eller en post peker til en konto som er utela
 Dersom noen dokumenter uten `example: true` ikke lar seg mappe fullt ut, nekter `--apply` nå å starte en databasetransaksjon. Dette er tilsiktet: den faktiske Claude-eksporten har referanser til organisasjoner som bare finnes som eksempler, og mange Research- og audit-felter kan ennå bare lagres i staging. Undersok rapporten og godkjenn tap av normaliserte koblinger for eventuell import.
 
 Forst etter manuell gjennomgang kan en operatør eksplisitt kjore `--apply --allow-unmapped`. Da bevares alle ra dokumenter i privat staging, mens de ikke-mappede blir i staging til senere opprydding. Dette er ikke standardanbefalingen for produksjon. `--allow-unmapped` alene uten `--apply` er ugyldig.
+
+## Forste driftsfase: bare selskaper og enkel sortering
+
+Nar fokus er pa organisasjoner, segmenter og tiers (ikke kontaktberiking eller historiske jobber), bruk:
+
+    npm run import:artifact -- --file data/exports/salong-artifact-export-2026-10-08.json --companies-only --dry-run
+
+Etter manuell gjennomgang av rapportens umappede reelle selskaper kan databaseimporten godkjennes med `--companies-only --apply`. Dersom rapporten fortsatt viser manglende selskapsnavn, stopper importen som standard. Eksplisitt `--allow-unmapped` krever egen operatoergodkjenning av disse konkrete manglene.
+
+Denne modusen normaliserer bare `organizations` og `prospects`. Kontaktpersoner, aktiviteter, avtaler, batcher, gamle Berik-jobber og audit blir ikke satt inn i drifts-CRM. Alle ra dokumenter (ogsa eksempeldata) blir bevart i den private staging-tabellen, sa videre migrering kan gjores senere uten ny eksport. Fordi standardimporten nekter aa kjore mot ikke-tomt system, krever senere utfylling et separat, gjennomgaatt migreringsskript - ikke en gjentakelse av denne engangsimporten.

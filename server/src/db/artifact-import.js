@@ -235,6 +235,35 @@ function buildImportPlan(exported){
   };
 }
 
+// Lightweight first launch: only normalize companies and their basic prospect
+// classification. Everything else is still preserved in private staging.
+function companyFirstPlan(exported){
+  const plan=buildImportPlan(exported);
+  const kept=new Set(['organizations','prospects']);
+  const rows=Object.fromEntries(TABLES.map(table=>[table,kept.has(table)?plan.rows[table]:[]]));
+  const companyIssues=plan.report.not_mapped.filter(item=>
+    item.reason!=='example'&&
+    (item.collection==='orgs'||item.collection==='mtacc')
+  );
+  const reasons={};
+  for(const issue of companyIssues){
+    reasons[issue.reason]=(reasons[issue.reason]||0)+1;
+  }
+  return {
+    raw:plan.raw,
+    rows,
+    report:{
+      ...plan.report,
+      mode:'companies_only',
+      planned:Object.fromEntries(TABLES.map(t=>[t,rows[t].length])),
+      review_required_count:companyIssues.length,
+      review_reason_counts:reasons,
+      deferred_collections:['mtper','deals','acts','mtbat','mtjob','audit'],
+      note:'All original documents are preserved in private staging; only organizations and prospects are normalized.'
+    }
+  };
+}
+
 const WRITE_ORDER=[
   'organizations','prospects','contacts','opportunities','activities',
   'prospect_batches','prospect_batch_accounts','enrichment_jobs'
@@ -306,4 +335,4 @@ async function applyImport(db,plan,{allowUnmapped=false}={}){
     throw error;
   }
 }
-module.exports={rawDocuments,buildImportPlan,applyImport,insertSQL,TABLES};
+module.exports={rawDocuments,buildImportPlan,companyFirstPlan,applyImport,insertSQL,TABLES};
