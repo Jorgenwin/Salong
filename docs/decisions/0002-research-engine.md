@@ -1,6 +1,6 @@
 # ADR 0002 – Research-motor og agenttrinn
 
-Status: **Foreslått** (kode på grenen `claude/research-core`). Metoden kjører i Artifact-utgaven; serverdelen er ikke koblet til worker ennå.
+Status: **Akseptert og implementert**. Delt research-kjerne, Artifact/Berik-integrasjon og server-worker-kobling ligger på `main`.
 
 Dato: 2026-10-07
 
@@ -43,8 +43,8 @@ Sideinnhold er upålitelige data. Det pakkes inn, modellen får beskjed om ikke 
 
 ## Kobling til ADR 0001
 
-- Steg 6 (worker, ligger på `main`): `execute(job)` i `server/src/worker/runner.js` kan kalle `runResearch({account, ports, cache})` og deretter `toRows(run, {jobId, organizationId})`. `toRows` gir nøyaktig det repositoriene tar imot: `enrichmentResults.upsert(jobId, result)`, `sources.save(source)` og `researchedFacts.save(fact)`, og `job` har `status`, `errorCode` og `errorMessage` slik workeren forventer. ID-ene er deterministiske, så et nytt forsøk treffer de samme radene. Koblingen er ikke gjort i denne PR-en.
-- `runResearch` returnerer `failed` når ingen kilde svarte. Workeren regner feil som kastede unntak med `code` og `retryable`; den som skriver `execute` må oversette.
+- Steg 6 er implementert på `main`: `server/src/worker/research-executor.js` kobler `runResearch({account, ports, cache})` til den persistente workeren og bruker `toRows(run, {jobId, organizationId})` for `enrichmentResults`, `sources` og `researchedFacts`. ID-ene er deterministiske, så et nytt forsøk treffer de samme radene.
+- `runResearch` returnerer `failed` når ingen kilde svarte. `research-executor.js` oversetter dette til eksplisitte worker-feil med `code` og `retryable`.
 - Steg 7–8 (adaptere): implementer portene i `ports.js`. `apollo`-porten har samme form som `src/services/providers/apollo.js`.
 - Sidecachen er i minnet nå. Varig cache trenger en egen tabell for sidetekst (`sources` lagrer bare metadata og innholds-hash). Det er en egen migrasjon.
 
