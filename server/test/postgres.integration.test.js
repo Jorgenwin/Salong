@@ -82,6 +82,26 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     assert.equal(dncContact.do_not_contact,true);
     assert.equal(dncContact.is_primary,false);
 
+    const activity=await repositories.activities.create({
+      id:'a-1',
+      accountId:'o-1',
+      contactId:'c-1',
+      type:'task',
+      text:'Følg opp fagdag',
+      dueAt:'2026-10-12T07:00:00.000Z',
+      completed:false,
+      actorId:'m-1',
+      ownerId:'m-1',
+      taskKey:'ci-follow-up'
+    });
+    assert.equal(activity.account_id,'o-1');
+    assert.equal(activity.contact_id,'c-1');
+    assert.equal(activity.completed,false);
+    assert.equal(activity.due_at,'2026-10-12T07:00:00.000Z');
+
+    const completedActivity=await repositories.activities.complete('a-1');
+    assert.equal(completedActivity.completed,true);
+
     const created=await repositories.enrichmentJobs.create({
       id:'job-1',
       accountId:'o-1',
