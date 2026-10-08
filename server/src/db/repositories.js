@@ -360,6 +360,123 @@ function createRepositories(input) {
           ORDER BY is_primary DESC, relevant DESC NULLS LAST, name ASC
         `,[accountId]);
         return result.rows.map(mapContact);
+      },
+
+      async get(id){
+        const result=await db.query(
+          'SELECT * FROM contacts WHERE id = $1 AND deleted_at IS NULL LIMIT 1',
+          [id]
+        );
+        return mapContact(result.rows[0]);
+      },
+
+      async add({
+        id,
+        accountId,
+        name,
+        title=null,
+        email=null,
+        emailStatus=null,
+        phone=null,
+        phoneStatus=null,
+        linkedinUrl=null,
+        roleMatch=null,
+        relevant=null,
+        active=true,
+        doNotContact=false,
+        doNotContactReason=null,
+        sourceState='manual',
+        verifiedAt=null
+      }={}){
+        const cleanName=String(name||'').trim();
+        if(!id||!accountId||!cleanName){
+          throw new TypeError('contacts.add requires id, accountId and name');
+        }
+        const result=await db.query(`
+          INSERT INTO contacts(
+            id, organization_id, name, title, email, email_status,
+            phone, phone_status, linkedin_url, role_match, relevant,
+            active, do_not_contact, do_not_contact_reason, source_state, verified_at
+          )
+          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+          RETURNING *
+        `,[
+          id,accountId,cleanName,title,email,emailStatus,
+          phone,phoneStatus,linkedinUrl,roleMatch,relevant,
+          active!==false,Boolean(doNotContact),doNotContactReason,sourceState,verifiedAt
+        ]);
+        return mapContact(result.rows[0]);
+      },
+
+      async update(id,patch={}){
+        const allowed={
+          name:'name',
+          title:'title',
+          email:'email',
+          email_status:'email_status',
+          phone:'phone',
+          phone_status:'phone_status',
+          linkedin_url:'linkedin_url',
+          role_match:'role_match',
+          relevant:'relevant',
+          active:'active'
+        };
+        const sets=[];
+        const params=[id];
+        const marker=String.fromCharCode(36);
+        for(const [key,column] of Object.entries(allowed)){
+          if(!Object.prototype.hasOwnProperty.call(patch,key)) continue;
+          params.push(patch[key]);
+          sets.push(column+' = '+marker+params.length);
+        }
+        if(!sets.length) throw new TypeError('contacts.update requires at least one supported field');
+        sets.push('updated_at = now()');
+        const result=await db.query(
+          'UPDATE contacts SET '+sets.join(', ')+' WHERE id = $1 AND deleted_at IS NULL RETURNING *',
+          params
+        );
+        return mapContact(result.rows[0]);
+      },
+
+      async setPrimary(id){
+        const result=await db.query(`
+          WITH target AS (
+            SELECT organization_id
+            FROM contacts
+            WHERE id=$1 AND deleted_at IS NULL
+          ),
+          cleared AS (
+            UPDATE contacts
+            SET is_primary=false,
+                updated_at=now()
+            WHERE organization_id=(SELECT organization_id FROM target)
+              AND id<>$1
+              AND deleted_at IS NULL
+            RETURNING id
+          )
+          UPDATE contacts
+          SET is_primary=true,
+              active=true,
+              updated_at=now()
+          WHERE id=$1
+            AND deleted_at IS NULL
+          RETURNING *
+        `,[id]);
+        return mapContact(result.rows[0]);
+      },
+
+      async setDoNotContact(id,{value=true,reason=null}={}){
+        const result=await db.query(`
+          UPDATE contacts
+          SET do_not_contact=$2,
+              do_not_contact_reason=CASE WHEN $2 THEN $3 ELSE NULL END,
+              is_primary=CASE WHEN $2 THEN false ELSE is_primary END,
+              updated_at=now()
+          WHERE id=$1
+            AND deleted_at IS NULL
+          RETURNING *
+        `,[id,Boolean(value),reason]);
+        return mapContact(result.rows[0]);
       }
     },
 
