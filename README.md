@@ -29,6 +29,7 @@ Testene bruker Playwright med Chromium. I Claude Code-skyøkter er Chromium forh
 ## Utvikling og data
 
 - Arbeidsflyt for branches, tester, Claude/Codex og PR-er: [docs/development.md](docs/development.md)
+- Drift, smoke-test, API/worker og backup: [docs/operations-runbook.md](docs/operations-runbook.md)
 - Regler for hva som kan og ikke kan ligge i Git: [docs/data-policy.md](docs/data-policy.md)
 - Felles agentregler: [AGENTS.md](AGENTS.md) og [CLAUDE.md](CLAUDE.md)
 
