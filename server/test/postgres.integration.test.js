@@ -146,6 +146,20 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
       'job-restart','worker-new',{status:'partial'}
     );
     assert.equal(restarted.status,'partial');
+
+    await repositories.enrichmentJobs.create({id:'job-exhausted',accountId:'o-1',requestedBy:'m-1'});
+    const exhaustedClaim=await repositories.enrichmentJobs.claimNext('worker-crashed');
+    assert.equal(exhaustedClaim.id,'job-exhausted');
+    await db.query(
+      `UPDATE enrichment_jobs SET locked_at=now()-interval '2 hours',attempt_count=3 WHERE id=$1`,
+      ['job-exhausted']
+    );
+    const exhaustedRecovery=await repositories.enrichmentJobs.requeueStale(900,3);
+    assert.equal(exhaustedRecovery.length,1);
+    assert.equal(exhaustedRecovery[0].status,'failed');
+    assert.equal(exhaustedRecovery[0].errorCode,'stale_worker_attempts_exhausted');
+    assert.ok(exhaustedRecovery[0].completedAt);
+    assert.equal(await repositories.enrichmentJobs.claimNext('worker-next'),null);
   }finally{
     await db.close();
   }
