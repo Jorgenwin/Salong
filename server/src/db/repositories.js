@@ -423,10 +423,62 @@ function createRepositories(input) {
         };
         const sets=[];
         const params=[id];
+        const marker=String.fromCharCode(36);
         for(const [key,column] of Object.entries(allowed)){
           if(!Object.prototype.hasOwnProperty.call(patch,key)) continue;
           params.push(patch[key]);
-          sets.push(column+' = 
+          sets.push(column+' = '+marker+params.length);
+        }
+        if(!sets.length) throw new TypeError('contacts.update requires at least one supported field');
+        sets.push('updated_at = now()');
+        const result=await db.query(
+          'UPDATE contacts SET '+sets.join(', ')+' WHERE id = $1 AND deleted_at IS NULL RETURNING *',
+          params
+        );
+        return mapContact(result.rows[0]);
+      },
+
+      async setPrimary(id){
+        const result=await db.query(`
+          WITH target AS (
+            SELECT organization_id
+            FROM contacts
+            WHERE id=$1 AND deleted_at IS NULL
+          ),
+          cleared AS (
+            UPDATE contacts
+            SET is_primary=false,
+                updated_at=now()
+            WHERE organization_id=(SELECT organization_id FROM target)
+              AND id<>$1
+              AND deleted_at IS NULL
+            RETURNING id
+          )
+          UPDATE contacts
+          SET is_primary=true,
+              active=true,
+              updated_at=now()
+          WHERE id=$1
+            AND deleted_at IS NULL
+          RETURNING *
+        `,[id]);
+        return mapContact(result.rows[0]);
+      },
+
+      async setDoNotContact(id,{value=true,reason=null}={}){
+        const result=await db.query(`
+          UPDATE contacts
+          SET do_not_contact=$2,
+              do_not_contact_reason=CASE WHEN $2 THEN $3 ELSE NULL END,
+              updated_at=now()
+          WHERE id=$1
+            AND deleted_at IS NULL
+          RETURNING *
+        `,[id,Boolean(value),reason]);
+        return mapContact(result.rows[0]);
+      }
+    },
+
     opportunities:{
       async list(accountId=null) {
         const params=[];
