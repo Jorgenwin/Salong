@@ -215,6 +215,12 @@ function buildImportPlan(exported){
       stats[key]=(stats[key]||0)+1;
     }
   }
+  const reviewRequired=skipped.filter(item=>item.reason!=='example');
+  const reasonCounts={};
+  for(const item of reviewRequired){
+    const key=item.reason.startsWith('batch_account_missing:')?'batch_account_missing':item.reason;
+    reasonCounts[key]=(reasonCounts[key]||0)+1;
+  }
   return {
     raw, rows:Object.fromEntries(TABLES.map(t=>[t,[...map[t].values()]])),
     report:{
@@ -222,6 +228,8 @@ function buildImportPlan(exported){
       example_documents:raw.filter(r=>r.data.example===true).length,
       planned:Object.fromEntries(TABLES.map(t=>[t,map[t].size])),
       not_mapped:skipped,
+      review_required_count:reviewRequired.length,
+      review_reason_counts:reasonCounts,
       staging_only_fields:ignoredFields
     }
   };
@@ -256,7 +264,10 @@ function insertSQL(table,row){
     values
   };
 }
-async function applyImport(db,plan){
+async function applyImport(db,plan,{allowUnmapped=false}={}){
+  if(plan.report.review_required_count>0&&!allowUnmapped){
+    throw new Error('Import needs review: non-example documents cannot be fully mapped. Run dry-run, resolve mismatches or explicitly use --allow-unmapped with --apply after review.');
+  }
   if(!db||typeof db.query!=='function') throw new TypeError('PostgreSQL client required');
   await db.query('BEGIN');
   try{
