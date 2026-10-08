@@ -20,12 +20,20 @@ function loadConfig(env = process.env) {
   const host = String(env.HOST || '0.0.0.0').trim();
   if (!host) throw new Error('HOST must not be empty');
 
+  const supabaseUrl=String(env.SUPABASE_URL||'').trim()||null;
+  const supabasePublishableKey=String(env.SUPABASE_PUBLISHABLE_KEY||'').trim()||null;
+  if(Boolean(supabaseUrl)!==Boolean(supabasePublishableKey)){
+    throw new Error('SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY must be set together');
+  }
+
   return Object.freeze({
     nodeEnv,
     host,
     port: parsePort(env.PORT),
     databaseUrl: String(env.DATABASE_URL || '').trim() || null,
     authSecret: String(env.AUTH_SECRET || '').trim() || null,
+    supabaseUrl,
+    supabasePublishableKey,
     anthropicModel: String(env.ANTHROPIC_MODEL || 'claude-sonnet-5').trim() || 'claude-sonnet-5',
     providers: Object.freeze({
       apollo: String(env.APOLLO_API_KEY || '').trim() || null,
@@ -42,7 +50,7 @@ function publicConfigSummary(config) {
     host: config.host,
     port: config.port,
     databaseConfigured: Boolean(config.databaseUrl),
-    authConfigured: Boolean(config.authSecret),
+    authConfigured: Boolean(config.supabaseUrl&&config.supabasePublishableKey),
     providersConfigured: Object.fromEntries(
       Object.entries(config.providers).map(([name, value]) => [name, Boolean(value)])
     )

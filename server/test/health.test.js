@@ -83,7 +83,7 @@ test('public config summary never exposes secret values', () => {
   const serialized = JSON.stringify(summary);
 
   assert.equal(summary.databaseConfigured, true);
-  assert.equal(summary.authConfigured, true);
+  assert.equal(summary.authConfigured, false); // legacy AUTH_SECRET is not a configured verifier
   assert.equal(summary.providersConfigured.apollo, true);
   assert.equal(serialized.includes('secret-'), false);
 });

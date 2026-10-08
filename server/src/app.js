@@ -38,7 +38,7 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
         return;
       }
 
-      if (!authBoundary && config.nodeEnv === 'production' && url.pathname.startsWith('/api/')) {
+      if (!authBoundary && (config.nodeEnv === 'production' || Boolean(config.databaseUrl)) && url.pathname.startsWith('/api/')) {
         writeJson(res, 503, {
           success: false,
           error_code: 'auth_not_ready',
