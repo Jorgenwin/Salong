@@ -402,6 +402,30 @@ function createRepositories(input) {
         return mapEnrichmentJob(result.rows[0]);
       },
 
+      async createMany(items){
+        if(!Array.isArray(items)||!items.length){
+          throw new TypeError('enrichmentJobs.createMany requires a non-empty items array');
+        }
+        if(items.length>100) throw new TypeError('enrichmentJobs.createMany supports at most 100 jobs');
+
+        const params=[];
+        const values=items.map((item,index)=>{
+          if(!item||!item.id||!item.accountId){
+            throw new TypeError('each enrichment job requires id and accountId');
+          }
+          const base=index*4;
+          params.push(item.id,item.accountId,item.requestedBy||null,item.availableAt||null);
+          return `(${base+1},${base+2},${base+3},COALESCE(${base+4}::timestamptz,now()))`;
+        });
+
+        const result=await db.query(`
+          INSERT INTO enrichment_jobs(id,account_id,requested_by,available_at)
+          VALUES ${values.join(',')}
+          RETURNING *
+        `,params);
+        return result.rows.map(mapEnrichmentJob);
+      },
+
       async latestForAccount(accountId){
         const result=await db.query(`
           SELECT *
