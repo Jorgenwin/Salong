@@ -34,7 +34,9 @@ async function createRuntime({
     logger({event:'database_connected'});
 
     if(migrate){
-      const migration=await runMigrations(database,{logger});
+      const migration=await database.withClient(
+        client=>runMigrations(client,{logger})
+      );
       logger({
         event:'database_migrations_ready',
         applied:migration.applied.length,
