@@ -2,7 +2,7 @@
 
 CRM og prospektering for utleie ved Litteraturhuset. Salong hjelper med tre ting: hvem som skal kontaktes, hvorfor nå, og neste handling. Salong sender ingen e-post; den lager utkast.
 
-Status: frontend-prototypen er flyttet til vanlig kodebase. Backend v1 har nå Node-server, PostgreSQL-skjema og migrasjoner, repository-lag, read-API for CRM/kalender, en frontend HTTP-adapter og grunnmuren for persistente enrichment-jobber + worker. Det som fortsatt mangler før ekte drift er blant annet en live PostgreSQL-tilkobling, auth/roller, CRM-skrive-API, provideradaptere og produksjonsbyttet. Se [docs/architecture.md](docs/architecture.md), [backend-veikartet](docs/backend-roadmap.md) og [ADR 0001](docs/decisions/0001-backend-v1.md).
+Status: frontend-prototypen er flyttet til vanlig kodebase. Backend v1 har Node-server, PostgreSQL-skjema og migrasjoner, repository-lag, read-API for CRM/kalender, frontend HTTP-adapter, persistente enrichment-jobber, worker, delt research-motor og server-side rollegrense. Det som fortsatt mangler før ekte drift er blant annet live PostgreSQL-runtime, konkret auth-provider, CRM-skrive-API, ekte provideradaptere og produksjonsbyttet. Se [docs/architecture.md](docs/architecture.md), [backend-veikartet](docs/backend-roadmap.md) og [ADR 0001](docs/decisions/0001-backend-v1.md).
 
 ## Kom i gang (fra bunnen)
 
@@ -34,7 +34,7 @@ Testene bruker Playwright med Chromium. I Claude Code-skyøkter er Chromium forh
 
 ## Hva du får utenfor Claude
 
-Frontenden starter fortsatt i **demomodus** utenfor Claude: eksempeldata (merket «Eksempel») lagres ikke, og research/Apollo/Spør Salong er ikke koblet til den nye serveren ennå. Backendkoden har nå lesing, kalender, databasekø og worker-grunnmur, men det finnes fortsatt ingen live database/auth/providertransport i standardoppsettet. `data/example/seed.json` er eneste kilde for demodata og bygges inn i appen av `src/build.py`.
+Frontenden starter fortsatt i **demomodus** utenfor Claude: eksempeldata (merket «Eksempel») lagres ikke, og research/Apollo/Spør Salong er ikke koblet til den nye serveren ennå. Backendkoden har nå lesing, kalender, databasekø, worker og den samme research-motoren som Berik, men det finnes fortsatt ingen live database/auth-provider/providertransport i standardoppsettet. `data/example/seed.json` er eneste kilde for demodata og bygges inn i appen av `src/build.py`.
 
 ## Struktur
 
