@@ -3,7 +3,7 @@
 const assert=require('node:assert/strict');
 const test=require('node:test');
 
-const {startWorker,defaultWorkerId}=require('../src/worker/start');
+const {startWorker,defaultWorkerId,recoverStaleJobs}=require('../src/worker/start');
 
 test('worker bootstrap closes runtime and fails when database is unavailable',async()=>{
   let closed=0;
@@ -49,4 +49,38 @@ test('worker bootstrap refuses to consume queue without any configured provider'
 
 test('default worker id is stable enough for operational logs',()=>{
   assert.match(defaultWorkerId(),/^salong-.+-\d+$/);
+});
+
+
+test('worker startup recovery requeues stale locks and logs the count',async()=>{
+  const events=[];
+  const calls=[];
+  const repositories={
+    enrichmentJobs:{
+      async requeueStale(seconds){
+        calls.push(seconds);
+        return [{id:'job-stale-1'},{id:'job-stale-2'}];
+      }
+    }
+  };
+
+  const recovered=await recoverStaleJobs(repositories,{
+    staleSeconds:600,
+    logger:event=>events.push(event)
+  });
+
+  assert.equal(recovered.length,2);
+  assert.deepEqual(calls,[600]);
+  assert.deepEqual(events,[{
+    event:'enrichment_stale_jobs_requeued',
+    count:2,
+    staleSeconds:600
+  }]);
+});
+
+test('worker startup recovery requires the persistent stale-lock operation',async()=>{
+  await assert.rejects(
+    ()=>recoverStaleJobs({enrichmentJobs:{}},{}),
+    /enrichmentJobs\.requeueStale/
+  );
 });
