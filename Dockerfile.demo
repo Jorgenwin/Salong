@@ -1,0 +1,16 @@
+FROM node:22-alpine AS builder
+WORKDIR /app
+COPY src/ ./src/
+COPY data/example/ ./data/example/
+RUN python3 --version || true
+RUN apk add --no-cache python3
+RUN python3 src/build.py
+
+FROM node:22-alpine
+ENV NODE_ENV=production
+WORKDIR /app
+COPY --from=builder /app/dist/ ./dist/
+COPY scripts/serve.js ./scripts/serve.js
+USER node
+EXPOSE 8080
+CMD ["node","scripts/serve.js"]
