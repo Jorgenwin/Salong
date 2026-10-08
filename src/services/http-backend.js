@@ -38,13 +38,13 @@ function createHttpBackend(opt){
     const headers=Object.assign({accept:'application/json'},opt.headers||{},init.headers||{});
     const token=typeof opt.getAccessToken==='function'?await opt.getAccessToken():opt.accessToken;
     if(token) headers.authorization='Bearer '+String(token).trim();
-    let body;
+    let requestBody;
     if(init.body!==undefined){
       headers['content-type']='application/json';
-      body=JSON.stringify(init.body);
+      requestBody=JSON.stringify(init.body);
     }
     let response;
-    try{ response=await fetcher(base+path,{method:init.method||'GET',headers,body}); }
+    try{ response=await fetcher(base+path,{method:init.method||'GET',headers,body:requestBody}); }
     catch(error){
       const e=new Error('Kunne ikke kontakte Salong-serveren.');
       e.code='network_error'; e.cause=error; throw e;
