@@ -32,7 +32,10 @@ function createEnrichmentWorker({
   maxAttempts=3,
   retryDelays=[30,120,600],
   pollMs=2000,
+  lockHeartbeatMs=30000,
   sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms)),
+  setIntervalFn=setInterval,
+  clearIntervalFn=clearInterval,
   logger=()=>{}
 }={}){
   if(!jobs||typeof jobs.claimNext!=='function'){
@@ -70,6 +73,23 @@ function createEnrichmentWorker({
     state.claimed+=1;
     state.lastStartedAt=new Date().toISOString();
     emit('enrichment_job_claimed',{jobId:job.id,attemptCount:job.attemptCount});
+
+    let lockTimer=null;
+    if(typeof jobs.touch==='function'&&Number(lockHeartbeatMs)>0){
+      lockTimer=setIntervalFn(()=>{
+        Promise.resolve(jobs.touch(job.id,id)).then(updated=>{
+          if(!updated){
+            emit('enrichment_job_lock_heartbeat_lost',{jobId:job.id});
+          }
+        }).catch(error=>{
+          emit('enrichment_job_lock_heartbeat_failed',{
+            jobId:job.id,
+            code:errorCode(error),
+            message:errorMessage(error)
+          });
+        });
+      },Number(lockHeartbeatMs));
+    }
 
     const context={
       workerId:id,
@@ -145,6 +165,10 @@ function createEnrichmentWorker({
       emit('enrichment_job_failed',{jobId:job.id,code,attemptCount:attempts});
       return {claimed:true,action:'failed',job:failed,error:{code,message}};
     }finally{
+      if(lockTimer!==null){
+        clearIntervalFn(lockTimer);
+        lockTimer=null;
+      }
       state.running=false;
       state.currentJobId=null;
       state.lastCompletedAt=new Date().toISOString();
