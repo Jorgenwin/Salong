@@ -26,6 +26,7 @@ function loadConfig(env = process.env) {
     port: parsePort(env.PORT),
     databaseUrl: String(env.DATABASE_URL || '').trim() || null,
     authSecret: String(env.AUTH_SECRET || '').trim() || null,
+    anthropicModel: String(env.ANTHROPIC_MODEL || 'claude-sonnet-5').trim() || 'claude-sonnet-5',
     providers: Object.freeze({
       apollo: String(env.APOLLO_API_KEY || '').trim() || null,
       exa: String(env.EXA_API_KEY || '').trim() || null,
