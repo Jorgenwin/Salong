@@ -109,6 +109,43 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     const facts=await repositories.researchedFacts.listForAccount('o-1');
     assert.equal(facts.length,1);
     assert.equal(facts[0].sourceId,'src-1');
+
+    // Crash/restart safety: a stale running lock is requeued and can be
+    // claimed by a new worker without resetting attempt history.
+    await repositories.enrichmentJobs.create({
+      id:'job-restart',
+      accountId:'o-1',
+      requestedBy:'m-1'
+    });
+    const firstClaim=await repositories.enrichmentJobs.claimNext('worker-old');
+    assert.equal(firstClaim.id,'job-restart');
+    assert.equal(firstClaim.attemptCount,1);
+
+    await db.query(
+      `UPDATE enrichment_jobs
+       SET locked_at=now()-interval '2 hours'
+       WHERE id=$1`,
+      ['job-restart']
+    );
+
+    const recovered=await repositories.enrichmentJobs.requeueStale(900);
+    assert.deepEqual(recovered.map(job=>job.id),['job-restart']);
+    assert.equal(recovered[0].status,'queued');
+    assert.equal(recovered[0].lockedBy,null);
+
+    const secondClaim=await repositories.enrichmentJobs.claimNext('worker-new');
+    assert.equal(secondClaim.id,'job-restart');
+    assert.equal(secondClaim.status,'running');
+    assert.equal(secondClaim.lockedBy,'worker-new');
+    assert.equal(secondClaim.attemptCount,2);
+
+    const touched=await repositories.enrichmentJobs.touch('job-restart','worker-new');
+    assert.equal(touched.lockedBy,'worker-new');
+
+    const restarted=await repositories.enrichmentJobs.finish(
+      'job-restart','worker-new',{status:'partial'}
+    );
+    assert.equal(restarted.status,'partial');
   }finally{
     await db.close();
   }

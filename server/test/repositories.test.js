@@ -615,3 +615,74 @@ test('enrichment batch creation is one parameterized INSERT',async()=>{
     /non-empty items array/
   );
 });
+
+
+test('stale running enrichment jobs are requeued without losing attempt history',async()=>{
+  const calls=[];
+  const db={
+    async query(text,params){
+      calls.push({text:String(text),params});
+      return {rows:[{
+        id:'job-stale',
+        account_id:'o-1',
+        status:'queued',
+        source_statuses:{web:'ok'},
+        error_code:'stale_worker_requeued',
+        error_message:'Previous worker lock expired; job requeued.',
+        attempt_count:2,
+        available_at:new Date('2026-10-08T08:00:00.000Z'),
+        locked_at:null,
+        locked_by:null,
+        started_at:new Date('2026-10-08T07:00:00.000Z')
+      }]};
+    }
+  };
+
+  const repositories=createRepositories(db);
+  const jobs=await repositories.enrichmentJobs.requeueStale(900);
+
+  assert.equal(jobs.length,1);
+  assert.equal(jobs[0].id,'job-stale');
+  assert.equal(jobs[0].status,'queued');
+  assert.equal(jobs[0].attemptCount,2);
+  assert.equal(jobs[0].lockedBy,null);
+  assert.equal(jobs[0].errorCode,'stale_worker_requeued');
+  assert.deepEqual(calls[0].params,[900]);
+  assert.match(calls[0].text,/status='running'/);
+  assert.match(calls[0].text,/locked_at < now\(\)-\(\$1::double precision \* interval '1 second'\)/);
+  assert.match(calls[0].text,/locked_by=NULL/);
+
+  await assert.rejects(
+    repositories.enrichmentJobs.requeueStale(0),
+    /staleSeconds must be a positive number/
+  );
+});
+
+
+test('running enrichment job heartbeat only refreshes the owning worker lock',async()=>{
+  const calls=[];
+  const db={
+    async query(text,params){
+      calls.push({text:String(text),params});
+      return {rows:[{
+        id:'job-touch',
+        account_id:'o-1',
+        status:'running',
+        source_statuses:{},
+        attempt_count:1,
+        locked_by:'worker-a',
+        locked_at:new Date('2026-10-08T08:30:00.000Z')
+      }]};
+    }
+  };
+
+  const repositories=createRepositories(db);
+  const job=await repositories.enrichmentJobs.touch('job-touch','worker-a');
+
+  assert.equal(job.id,'job-touch');
+  assert.equal(job.lockedBy,'worker-a');
+  assert.deepEqual(calls[0].params,['job-touch','worker-a']);
+  assert.match(calls[0].text,/locked_at=now\(\)/);
+  assert.match(calls[0].text,/status='running'/);
+  assert.match(calls[0].text,/locked_by=\$2/);
+});

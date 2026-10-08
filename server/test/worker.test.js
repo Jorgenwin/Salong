@@ -173,3 +173,66 @@ test('worker configuration and retry delays are validated',()=>{
   assert.equal(retryDelaySeconds(1,[5,10]),5);
   assert.equal(retryDelaySeconds(9,[5,10]),10);
 });
+
+
+test('running job lock is heartbeated until execution finishes',async()=>{
+  const calls=[];
+  let timerFn=null;
+  let cleared=null;
+  let release;
+  const gate=new Promise(resolve=>{ release=resolve; });
+  let next={
+    id:'job-heartbeat',
+    accountId:'o-1',
+    status:'running',
+    attemptCount:1
+  };
+  const jobs={
+    async claimNext(workerId){
+      calls.push(['claimNext',workerId]);
+      const job=next;
+      next=null;
+      return job;
+    },
+    async touch(id,workerId){
+      calls.push(['touch',id,workerId]);
+      return {id,status:'running',lockedBy:workerId};
+    },
+    async finish(id,workerId,payload){
+      calls.push(['finish',id,workerId,payload]);
+      return {id,status:payload.status};
+    },
+    async setSourceStatus(){ return {}; },
+    async reschedule(){ return {}; }
+  };
+
+  const worker=createEnrichmentWorker({
+    jobs,
+    workerId:'worker-heartbeat',
+    lockHeartbeatMs:5000,
+    setIntervalFn(fn,ms){
+      assert.equal(ms,5000);
+      timerFn=fn;
+      return 77;
+    },
+    clearIntervalFn(id){ cleared=id; },
+    execute:async()=>{
+      await gate;
+      return {status:'needs_review'};
+    }
+  });
+
+  const running=worker.runOnce();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(typeof timerFn,'function');
+
+  timerFn();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.ok(calls.some(call=>call[0]==='touch'&&call[1]==='job-heartbeat'&&call[2]==='worker-heartbeat'));
+
+  release();
+  const result=await running;
+
+  assert.equal(result.action,'finished');
+  assert.equal(cleared,77);
+});

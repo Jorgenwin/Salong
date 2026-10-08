@@ -464,6 +464,42 @@ function createRepositories(input) {
         return mapEnrichmentJob(result.rows[0]);
       },
 
+      async touch(id,workerId){
+        const worker=requireWorkerId(workerId);
+        const result=await db.query(`
+          UPDATE enrichment_jobs
+          SET locked_at=now(),
+              updated_at=now()
+          WHERE id=$1
+            AND status='running'
+            AND locked_by=$2
+          RETURNING *
+        `,[id,worker]);
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async requeueStale(staleSeconds=900){
+        const seconds=Number(staleSeconds);
+        if(!Number.isFinite(seconds)||seconds<=0){
+          throw new TypeError('staleSeconds must be a positive number');
+        }
+        const result=await db.query(`
+          UPDATE enrichment_jobs
+          SET status='queued',
+              available_at=now(),
+              locked_at=NULL,
+              locked_by=NULL,
+              error_code='stale_worker_requeued',
+              error_message='Previous worker lock expired; job requeued.',
+              updated_at=now()
+          WHERE status='running'
+            AND locked_at IS NOT NULL
+            AND locked_at < now()-($1::double precision * interval '1 second')
+          RETURNING *
+        `,[seconds]);
+        return result.rows.map(mapEnrichmentJob);
+      },
+
       async setSourceStatus(id,workerId,source,status){
         const worker=requireWorkerId(workerId);
         const sourceKey=String(source||'').trim();
