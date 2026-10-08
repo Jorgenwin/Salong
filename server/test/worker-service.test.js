@@ -92,8 +92,11 @@ test('worker service refuses to claim jobs when no provider transport exists',()
 test('worker service composes persistent queue with shared research executor',async()=>{
   const repos=repositories();
   const ports={
-    search:async()=>[],
-    fetch:async()=>[]
+    search:async()=>{
+      const error=new Error('Search is disconnected.');
+      error.code='not_connected';
+      throw error;
+    }
   };
   const service=createWorkerService({
     repositories:repos,
