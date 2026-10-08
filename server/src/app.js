@@ -4,6 +4,7 @@ const { randomUUID } = require('node:crypto');
 const { handleReadRequest } = require('./api/read');
 const { handleEnrichmentRequest } = require('./api/enrichment');
 const { handleContactWriteRequest } = require('./api/contacts-write');
+const { handleActivityWriteRequest } = require('./api/activities-write');
 
 function writeJson(res, statusCode, body, requestId) {
   const payload = JSON.stringify(body);
@@ -57,6 +58,15 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
           return;
         }
         req.salongUser = auth.user;
+      }
+
+      const activityWriteResult = await handleActivityWriteRequest({ req, url, repositories });
+      if (activityWriteResult) {
+        const body = activityWriteResult.body && activityWriteResult.body.success === false
+          ? { ...activityWriteResult.body, requestId }
+          : activityWriteResult.body;
+        writeJson(res, activityWriteResult.status, body, requestId);
+        return;
       }
 
       const contactWriteResult = await handleContactWriteRequest({ req, url, repositories });
