@@ -196,13 +196,33 @@ function buildImportPlan(exported){
     if(r.data.example===true) continue;
     if(!known.has(r.collection)) reason(r.collection,r.docId,'staging_only_no_mapping');
   }
+  const consumed={
+    orgs:['name','website','domain','orgnr','org_number','segment','tier','former','notes','createdAt','example'],
+    mtacc:['name','website','domain','orgnr','segId','createdAt','rel','kind','status','bStage','fit','prio','example'],
+    mtper:['accId','accountId','name','title','email','emailStatus','phone','phoneStatus','linkedin','role','rel','active','dnc','isPrimary','verifiedAt','enrichedAt','createdAt','example'],
+    deals:['orgId','title','stage','room','date','attendees','pricing','value','recurring','source','lostReason','notes','stageAt','createdAt','example'],
+    acts:['orgId','dealId','pid','type','text','body','at','due','done','dir','waitReason','taskKey','createdAt','example'],
+    mtbat:['name','status','wave','segIds','accIds','createdAt','example'],
+    mtjob:['accId','status','kind','error_code','error','started_at','completed_at','requested_at','createdAt','example']
+  };
+  const ignoredFields={};
+  for(const {collection,data} of raw){
+    if(data.example===true||!consumed[collection]) continue;
+    const allowed=new Set(consumed[collection]);
+    for(const key of Object.keys(data)){
+      if(allowed.has(key)) continue;
+      const stats=ignoredFields[collection]||(ignoredFields[collection]={});
+      stats[key]=(stats[key]||0)+1;
+    }
+  }
   return {
     raw, rows:Object.fromEntries(TABLES.map(t=>[t,[...map[t].values()]])),
     report:{
       staged_documents:raw.length,
       example_documents:raw.filter(r=>r.data.example===true).length,
       planned:Object.fromEntries(TABLES.map(t=>[t,map[t].size])),
-      not_mapped:skipped
+      not_mapped:skipped,
+      staging_only_fields:ignoredFields
     }
   };
 }
@@ -242,13 +262,12 @@ async function applyImport(db,plan){
   try{
     await db.query("SELECT pg_advisory_xact_lock(hashtext('salong_artifact_import'))");
     // No accidental merge into an existing operational CRM.
-    const current=await db.query(
-      'SELECT (SELECT count(*) FROM public.organizations) AS organizations, '+
-      '(SELECT count(*) FROM public.enrichment_jobs) AS enrichment_jobs, '+
-      '(SELECT count(*) FROM artifact_export.documents) AS documents'
-    );
+    const preflightTables=[...WRITE_ORDER,'bookings','enrichment_results','sources','researched_facts'];
+    const checks=preflightTables.map(table=>' (SELECT count(*) FROM public.'+table+') AS '+table);
+    checks.push('(SELECT count(*) FROM artifact_export.documents) AS documents');
+    const current=await db.query('SELECT'+checks.join(','));
     const count=current.rows[0];
-    if(Number(count.organizations)>0||Number(count.enrichment_jobs)>0||Number(count.documents)>0){
+    if(Object.values(count).some(value=>Number(value)>0)){
       throw new Error('Import target is not empty; refusing to overwrite or mix customer data');
     }
     for(const r of plan.raw){
