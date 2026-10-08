@@ -20,6 +20,20 @@ function defaultWorkerId(){
   return 'salong-'+hostname()+'-'+process.pid;
 }
 
+async function recoverStaleJobs(repositories,{staleSeconds=900,logger=()=>{}}={}){
+  const jobs=repositories&&repositories.enrichmentJobs;
+  if(!jobs||typeof jobs.requeueStale!=='function'){
+    throw new TypeError('worker startup requires enrichmentJobs.requeueStale()');
+  }
+  const recovered=await jobs.requeueStale(staleSeconds);
+  logger({
+    event:'enrichment_stale_jobs_requeued',
+    count:recovered.length,
+    staleSeconds:Number(staleSeconds)
+  });
+  return recovered;
+}
+
 async function startWorker({
   env=process.env,
   fetchFn=global.fetch,
@@ -47,6 +61,11 @@ async function startWorker({
     error.code='providers_not_configured';
     throw error;
   }
+
+  await recoverStaleJobs(runtime.repositories,{
+    staleSeconds:Number(env.WORKER_STALE_SECONDS)||900,
+    logger
+  });
 
   const service=createWorkerService({
     repositories:runtime.repositories,
@@ -103,5 +122,6 @@ if(require.main===module){
 
 module.exports={
   startWorker,
-  defaultWorkerId
+  defaultWorkerId,
+  recoverStaleJobs
 };
