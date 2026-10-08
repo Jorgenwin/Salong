@@ -17,7 +17,7 @@ På plass i kode og tester:
 
 Ikke på plass ennå:
 
-- faktisk PostgreSQL-driver/runtime-tilkobling mot en live database
+- live PostgreSQL-miljø er ikke konfigurert i repoet; runtime-driver og `DATABASE_URL`-bootstrap finnes, men må verifiseres mot en separat testdatabase før produksjon
 - auth og roller
 - CRM-skrive-API
 - kobling av research-motoren til workeren
@@ -34,6 +34,8 @@ Fra repo-roten:
 npm install
 npm run server:check
 npm run test:server
+# Når DATABASE_URL peker på en separat utviklings/testdatabase:
+npm run db:check
 npm run server:start
 ```
 
@@ -63,7 +65,7 @@ server/
   test/               backendtester
 ```
 
-Neste tekniske milepæl er å koble den delte research-motoren inn bak workerens executor-grense og persistere resultat/kilder/fakta. Før ekte providers kobles på skal dette være grønt med fake adaptere og offline eval.
+Research-motoren og worker-grensen bygges/testes separat. PostgreSQL-runtime kan nå koble til via `DATABASE_URL`, kjøre migrasjoner og lukke poolen kontrollert. Før produksjon må `db:check` kjøres mot en separat testdatabase, auth-verifieren aktiveres og API-et fortsatt være fail-closed uten gyldig auth.
 
 ## Regler
 
