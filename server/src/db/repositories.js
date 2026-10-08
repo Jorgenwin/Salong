@@ -409,13 +409,14 @@ function createRepositories(input) {
         if(items.length>100) throw new TypeError('enrichmentJobs.createMany supports at most 100 jobs');
 
         const params=[];
+        const marker=String.fromCharCode(36);
         const values=items.map((item,index)=>{
           if(!item||!item.id||!item.accountId){
             throw new TypeError('each enrichment job requires id and accountId');
           }
           const base=index*4;
           params.push(item.id,item.accountId,item.requestedBy||null,item.availableAt||null);
-          return '(
+          return '('+marker+(base+1)+','+marker+(base+2)+','+marker+(base+3)+',COALESCE('+marker+(base+4)+'::timestamptz,now()))';
         });
 
         const result=await db.query(`
