@@ -11,7 +11,7 @@ På plass i kode og tester:
 - repository-lag med parameteriserte spørringer
 - read-API for accounts, prospects, contacts, opportunities og calendar
 - kalenderhåndtering eksplisitt i `Europe/Oslo`
-- frontend `httpBackend` for read-kontrakten; uferdige enrichment-kall stopper tydelig i stedet for å falle tilbake lokalt
+- frontend `httpBackend` for read-kontrakten og den persistente enrichment-køen; ingen lokal fallback når HTTP-backend er aktiv
 - persistente enrichment-jobber med atomisk claim (`FOR UPDATE SKIP LOCKED`), worker-lås, retries og status
 - provider-uavhengig worker-kjerne med injisert executor og enkel health/status
 - delt `runResearch()`-motor koblet til workeren med persistente resultater, kilder og researched facts
@@ -19,13 +19,12 @@ På plass i kode og tester:
 
 Ikke på plass ennå:
 
-- faktisk PostgreSQL-driver/runtime-tilkobling mot en live database
 - faktisk auth-provider/verifier og produksjonsaktivering av auth
-- CRM-skrive-API
+- øvrig CRM-skrive-API (konto/kontakt/sak)
 - ekte Apollo/web/LLM-adaptere og secrets
 - produksjonsdeployment og bytte av UI til server som standard
 
-Det betyr at backendarkitekturen kan testes isolert, men det finnes fortsatt ingen produksjonsdataflyt.
+PostgreSQL-runtime og kø-API kan nå kjøres mot en ekte database, men full produksjonsdataflyt er fortsatt ikke aktivert fordi konkret auth-provider, providertransporter og øvrige CRM-skriveendepunkter mangler.
 
 ## Kjør lokalt
 
@@ -64,7 +63,7 @@ server/
   test/               backendtester
 ```
 
-Research-kjeden er nå grønn med fake adaptere og offline eval: databasejobb → worker → `runResearch()` → kildeverifikasjon → persistente resultater/kilder/fakta → `needs_review`. Neste tekniske milepæl er live PostgreSQL-runtime, auth-provider og deretter ekte server-side provideradaptere.
+Research-kjeden er grønn med fake adaptere og offline eval: HTTP-kø → databasejobb → worker → `runResearch()` → kildeverifikasjon → persistente resultater/kilder/fakta → `needs_review`. Neste tekniske milepæl er konkret auth-provider og ekte server-side provideradaptere, deretter worker/deployment-aktivering.
 
 ## Regler
 
