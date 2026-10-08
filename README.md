@@ -2,7 +2,7 @@
 
 CRM og prospektering for utleie ved Litteraturhuset. Salong hjelper med tre ting: hvem som skal kontaktes, hvorfor nå, og neste handling. Salong sender ingen e-post; den lager utkast.
 
-Status: frontend-prototypen er flyttet til vanlig kodebase. Backend v1 har Node-server, PostgreSQL-skjema og migrasjoner, repository-lag, read-API for CRM/kalender, frontend HTTP-adapter, persistente enrichment-jobber, worker, delt research-motor og server-side rollegrense. Det som fortsatt mangler før ekte drift er blant annet live PostgreSQL-runtime, konkret auth-provider, CRM-skrive-API, ekte provideradaptere og produksjonsbyttet. Se [docs/architecture.md](docs/architecture.md), [backend-veikartet](docs/backend-roadmap.md) og [ADR 0001](docs/decisions/0001-backend-v1.md).
+Status: frontend-prototypen er flyttet til vanlig kodebase. Backend v1 har Node-server, PostgreSQL-skjema og migrasjoner, repository-lag, read-API for CRM/kalender, frontend HTTP-adapter, persistente enrichment-jobber, worker, delt research-motor og server-side rollegrense. Det som fortsatt mangler før ekte drift er blant annet konkret auth-provider, øvrige CRM-skriveendepunkter, ekte provideradaptere, worker/deployment-aktivering og produksjonsbyttet. Se [docs/architecture.md](docs/architecture.md), [backend-veikartet](docs/backend-roadmap.md) og [ADR 0001](docs/decisions/0001-backend-v1.md).
 
 ## Kom i gang (fra bunnen)
 
@@ -22,7 +22,7 @@ npm start          # bygger og kjører på http://localhost:8080
 | `npm test` | Bygger og kjører alle ende-til-ende-testene (`tests/run.js`). Filtrer: `node tests/run.js t12 t20` |
 | `npm run server:check` | Syntakssjekker backend-koden |
 | `npm run test:server` | Kjører backendens Node-tester |
-| `npm run server:start` | Starter backend-skjelettet (standard `http://localhost:3000`) |
+| `npm run server:start` | Starter backend-serveren (standard `http://localhost:3000`; bruker `DATABASE_URL` når satt) |
 
 Testene bruker Playwright med Chromium. I Claude Code-skyøkter er Chromium forhåndsinstallert: sett `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` og ikke kjør `playwright install`. Andre steder: `npx playwright install chromium`. Skjermbilder fra testene havner i en temp-mappe (`SALONG_SHOTS` overstyrer), ikke i repoet.
 
@@ -34,7 +34,7 @@ Testene bruker Playwright med Chromium. I Claude Code-skyøkter er Chromium forh
 
 ## Hva du får utenfor Claude
 
-Frontenden starter fortsatt i **demomodus** utenfor Claude: eksempeldata (merket «Eksempel») lagres ikke, og research/Apollo/Spør Salong er ikke koblet til den nye serveren ennå. Backendkoden har nå lesing, kalender, databasekø, worker og den samme research-motoren som Berik, men det finnes fortsatt ingen live database/auth-provider/providertransport i standardoppsettet. `data/example/seed.json` er eneste kilde for demodata og bygges inn i appen av `src/build.py`.
+Frontenden starter fortsatt i **demomodus** utenfor Claude: eksempeldata (merket «Eksempel») lagres ikke, og research/Apollo/Spør Salong er ikke koblet til den nye serveren ennå. Backendkoden har nå live PostgreSQL-runtime, lesing, kalender, persistent Berik-kø, worker-kjerne og den samme research-motoren som Berik. Konkret auth-provider og ekte providertransport er fortsatt ikke aktivert i standardoppsettet. `data/example/seed.json` er eneste kilde for demodata og bygges inn i appen av `src/build.py`.
 
 ## Struktur
 
