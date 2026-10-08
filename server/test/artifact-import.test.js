@@ -3,7 +3,7 @@
 const assert=require('node:assert/strict');
 const test=require('node:test');
 const {
-  rawDocuments,buildImportPlan,applyImport,insertSQL,TABLES
+  rawDocuments,buildImportPlan,companyFirstPlan,applyImport,insertSQL,TABLES
 }=require('../src/db/artifact-import');
 
 function sample(){
@@ -116,4 +116,25 @@ test('rejects import into nonempty database and rolls back without staging',asyn
   await assert.rejects(()=>applyImport(db,buildImportPlan(sample()),{allowUnmapped:true}),/not empty/);
   assert.ok(calls.includes('ROLLBACK'));
   assert.ok(!calls.some(x=>x.includes('INSERT INTO artifact_export.documents')));
+});
+
+test('company-first mode stages all documents but normalizes only companies and tiers',()=>{
+  const full=buildImportPlan(sample());
+  const lite=companyFirstPlan(sample());
+  assert.equal(lite.report.mode,'companies_only');
+  assert.equal(lite.raw.length,full.raw.length);
+  assert.equal(lite.rows.organizations.length,2);
+  assert.equal(lite.rows.prospects.length,2);
+  for(const table of TABLES.filter(t=>!['organizations','prospects'].includes(t))){
+    assert.deepEqual(lite.rows[table],[]);
+  }
+  assert.equal(lite.report.review_required_count,0);
+  assert.ok(lite.report.deferred_collections.includes('mtper'));
+  assert.equal(lite.rows.organizations[0].tier,'A');
+});
+
+test('company-first mode still blocks missing real company names',async()=>{
+  const lite=companyFirstPlan({collections:{mtacc:{'unknown-1':{status:'new'}}}});
+  assert.equal(lite.report.review_required_count,1);
+  await assert.rejects(()=>applyImport({query:()=>{throw Error('no DB write expected');}},lite),/needs review/);
 });
