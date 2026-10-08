@@ -82,6 +82,32 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     assert.equal(dncContact.do_not_contact,true);
     assert.equal(dncContact.is_primary,false);
 
+    await db.query(
+      `INSERT INTO opportunities(id,organization_id,title,stage,owner_id)
+       VALUES ($1,$2,$3,$4,$5)`,
+      ['d-1','o-1','CI Fagdag','dialog','m-1']
+    );
+    const staged=await repositories.opportunities.setStage('d-1',{
+      stage:'tilbud',
+      expectedStage:'dialog'
+    });
+    assert.equal(staged.stage,'tilbud');
+    assert.ok(staged.stage_changed_at);
+
+    const staleStage=await repositories.opportunities.setStage('d-1',{
+      stage:'bekreftet',
+      expectedStage:'dialog'
+    });
+    assert.equal(staleStage,null);
+
+    const lost=await repositories.opportunities.setStage('d-1',{
+      stage:'tapt',
+      expectedStage:'tilbud',
+      lostReason:'Valgte annet lokale'
+    });
+    assert.equal(lost.stage,'tapt');
+    assert.equal(lost.lost_reason,'Valgte annet lokale');
+
     const activity=await repositories.activities.create({
       id:'a-1',
       accountId:'o-1',
