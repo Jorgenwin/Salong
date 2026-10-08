@@ -33,9 +33,18 @@ function createHttpBackend(opt){
     return error;
   }
 
-  async function request(path){
+  async function request(path,init){
+    init=init||{};
+    const headers=Object.assign({accept:'application/json'},opt.headers||{},init.headers||{});
+    const token=typeof opt.getAccessToken==='function'?await opt.getAccessToken():opt.accessToken;
+    if(token) headers.authorization='Bearer '+String(token).trim();
+    let requestBody;
+    if(init.body!==undefined){
+      headers['content-type']='application/json';
+      requestBody=JSON.stringify(init.body);
+    }
     let response;
-    try{ response=await fetcher(base+path,{headers:{accept:'application/json'}}); }
+    try{ response=await fetcher(base+path,{method:init.method||'GET',headers,body:requestBody}); }
     catch(error){
       const e=new Error('Kunne ikke kontakte Salong-serveren.');
       e.code='network_error'; e.cause=error; throw e;
@@ -68,9 +77,24 @@ function createHttpBackend(opt){
       const from=filter.from||salongLocalDate();
       return request('/api/calendar'+qs({from,to:filter.to||from}));
     },
-    async enrichAccount(){ return notReadyResult('enrichAccount'); },
-    async enrichAccounts(){ return notReadyResult('enrichAccounts'); },
-    async getEnrichmentJob(){ throw notReadyError('getEnrichmentJob'); },
-    async getLatestEnrichmentJob(){ throw notReadyError('getLatestEnrichmentJob'); }
+    enrichAccount(accountId,options){
+      return request('/api/enrichment/accounts/'+encodeURIComponent(accountId),{
+        method:'POST',
+        body:options||{}
+      });
+    },
+    enrichAccounts(accountIds,options){
+      return request('/api/enrichment/batch',{
+        method:'POST',
+        body:{accountIds:accountIds||[],options:options||{}}
+      });
+    },
+    async getEnrichmentJob(id){
+      try{ return await request('/api/enrichment/jobs/'+encodeURIComponent(id)); }
+      catch(error){ if(error.status===404&&error.code==='enrichment_job_not_found') return null; throw error; }
+    },
+    getLatestEnrichmentJob(accountId){
+      return request('/api/enrichment/accounts/'+encodeURIComponent(accountId)+'/latest');
+    }
   };
 }
