@@ -388,6 +388,153 @@ function createRepositories(input) {
           params
         );
         return result.rows.map(mapAccount);
+      },
+
+      async findDuplicate({name=null,domain=null,orgNumber=null,excludeId=null}={}){
+        const result=await db.query(`
+          SELECT id,name,domain,org_number
+          FROM organizations
+          WHERE deleted_at IS NULL
+            AND ($4::text IS NULL OR id<>$4)
+            AND (
+              ($1::text IS NOT NULL AND lower(name)=lower($1))
+              OR ($2::text IS NOT NULL AND lower(domain)=lower($2))
+              OR ($3::text IS NOT NULL AND org_number=$3)
+            )
+          ORDER BY created_at
+          LIMIT 1
+        `,[name,domain,orgNumber,excludeId]);
+        return result.rows[0]||null;
+      },
+
+      async create({
+        id,
+        name,
+        website=null,
+        domain=null,
+        orgNumber=null,
+        segmentId=null,
+        ownerId=null,
+        relation=null,
+        kind='ny',
+        status='identifisert',
+        stage='identified',
+        fitScore=null
+      }={}){
+        const cleanName=String(name||'').trim();
+        if(!id||!cleanName) throw new TypeError('accounts.create requires id and name');
+        const result=await db.query(`
+          WITH inserted_org AS (
+            INSERT INTO organizations(
+              id,name,website,domain,org_number,segment,owner_id
+            )
+            VALUES ($1,$2,$3,$4,$5,$6,$7)
+            RETURNING *
+          ),
+          inserted_prospect AS (
+            INSERT INTO prospects(
+              organization_id,relationship,kind,status,stage,fit_score,owner_id
+            )
+            SELECT id,$8,$9,$10,$11,$12,$7
+            FROM inserted_org
+            RETURNING *
+          )
+          SELECT
+            o.id,o.name,o.org_number,o.domain,o.website,o.segment,o.owner_id,o.deleted_at,
+            p.relationship,p.kind AS prospect_kind,p.status AS prospect_status,
+            p.stage AS prospect_stage,p.fit_score,NULL::text AS batch_id
+          FROM inserted_org o
+          LEFT JOIN inserted_prospect p ON p.organization_id=o.id
+        `,[
+          id,cleanName,website,domain,orgNumber,segmentId,ownerId,
+          relation,kind,status,stage,fitScore
+        ]);
+        return mapAccount(result.rows[0]);
+      },
+
+      async update(id,{
+        name,
+        website=null,
+        domain=null,
+        orgNumber=null,
+        segmentId=null,
+        ownerId=null,
+        relation=null,
+        kind=null,
+        status=null,
+        stage=null,
+        fitScore=null
+      }={}){
+        const cleanName=String(name||'').trim();
+        if(!id||!cleanName) throw new TypeError('accounts.update requires id and name');
+        const result=await db.query(`
+          WITH updated_org AS (
+            UPDATE organizations
+            SET name=$2,
+                website=$3,
+                domain=$4,
+                org_number=$5,
+                segment=$6,
+                owner_id=$7,
+                updated_at=now()
+            WHERE id=$1
+              AND deleted_at IS NULL
+            RETURNING *
+          ),
+          updated_prospect AS (
+            INSERT INTO prospects(
+              organization_id,relationship,kind,status,stage,fit_score,owner_id
+            )
+            SELECT id,$8,$9,$10,$11,$12,$7
+            FROM updated_org
+            ON CONFLICT (organization_id) DO UPDATE SET
+              relationship=EXCLUDED.relationship,
+              kind=EXCLUDED.kind,
+              status=EXCLUDED.status,
+              stage=EXCLUDED.stage,
+              fit_score=EXCLUDED.fit_score,
+              owner_id=EXCLUDED.owner_id,
+              updated_at=now()
+            RETURNING *
+          )
+          SELECT
+            o.id,o.name,o.org_number,o.domain,o.website,o.segment,o.owner_id,o.deleted_at,
+            p.relationship,p.kind AS prospect_kind,p.status AS prospect_status,
+            p.stage AS prospect_stage,p.fit_score,NULL::text AS batch_id
+          FROM updated_org o
+          LEFT JOIN updated_prospect p ON p.organization_id=o.id
+        `,[
+          id,cleanName,website,domain,orgNumber,segmentId,ownerId,
+          relation,kind,status,stage,fitScore
+        ]);
+        return mapAccount(result.rows[0]);
+      },
+
+      async setOwner(id,ownerId){
+        const result=await db.query(`
+          WITH updated_org AS (
+            UPDATE organizations
+            SET owner_id=$2,
+                updated_at=now()
+            WHERE id=$1
+              AND deleted_at IS NULL
+            RETURNING *
+          ),
+          updated_prospect AS (
+            UPDATE prospects
+            SET owner_id=$2,
+                updated_at=now()
+            WHERE organization_id=$1
+            RETURNING *
+          )
+          SELECT
+            o.id,o.name,o.org_number,o.domain,o.website,o.segment,o.owner_id,o.deleted_at,
+            p.relationship,p.kind AS prospect_kind,p.status AS prospect_status,
+            p.stage AS prospect_stage,p.fit_score,NULL::text AS batch_id
+          FROM updated_org o
+          LEFT JOIN prospects p ON p.organization_id=o.id
+        `,[id,ownerId]);
+        return mapAccount(result.rows[0]);
       }
     },
 
