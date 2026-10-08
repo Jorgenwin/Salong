@@ -14,13 +14,14 @@ På plass i kode og tester:
 - frontend `httpBackend` for read-kontrakten; uferdige enrichment-kall stopper tydelig i stedet for å falle tilbake lokalt
 - persistente enrichment-jobber med atomisk claim (`FOR UPDATE SKIP LOCKED`), worker-lås, retries og status
 - provider-uavhengig worker-kjerne med injisert executor og enkel health/status
+- delt `runResearch()`-motor koblet til workeren med persistente resultater, kilder og researched facts
+- vendor-uavhengig auth/rollegrense (`owner` / `editor` / `reader`) med server-side håndheving når auth aktiveres
 
 Ikke på plass ennå:
 
 - faktisk PostgreSQL-driver/runtime-tilkobling mot en live database
-- auth og roller
+- faktisk auth-provider/verifier og produksjonsaktivering av auth
 - CRM-skrive-API
-- kobling av research-motoren til workeren
 - ekte Apollo/web/LLM-adaptere og secrets
 - produksjonsdeployment og bytte av UI til server som standard
 
@@ -63,7 +64,7 @@ server/
   test/               backendtester
 ```
 
-Neste tekniske milepæl er å koble den delte research-motoren inn bak workerens executor-grense og persistere resultat/kilder/fakta. Før ekte providers kobles på skal dette være grønt med fake adaptere og offline eval.
+Research-kjeden er nå grønn med fake adaptere og offline eval: databasejobb → worker → `runResearch()` → kildeverifikasjon → persistente resultater/kilder/fakta → `needs_review`. Neste tekniske milepæl er live PostgreSQL-runtime, auth-provider og deretter ekte server-side provideradaptere.
 
 ## Regler
 
