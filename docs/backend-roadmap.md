@@ -26,19 +26,18 @@ På `main`:
 - Atomisk jobbclaim med PostgreSQL, retries, worker-lås og eksplisitte kilde-/feiltilstander.
 - Delt `runResearch()` koblet til workeren.
 - Prosess-livssyklus for workeren med heartbeat og graceful shutdown.
-- Server-side adaptere for Exa, Apollo og Anthropic. Adapterne er inaktive uten servernøkler.
+- Server-side adaptere for Exa, Apollo og Anthropic, med eksplisitt `worker:start`-runtime. Adapterne er inaktive uten servernøkler.
 - Server-side rollegrense for owner/editor/reader.
 - Frontend HTTP-adapter uten stille fallback til lokal lagring.
 - Berik UI har tydeligere research-/kilde-/statusvisning og mobilpolish.
 
 Neste arbeid:
 
-1. Merge/aktivér provider-runtime og eksplisitt `worker:start` (PR #54).
-2. Koble konkret auth-provider til den eksisterende auth-grensen.
-3. Implementer de CRM-skriveendepunktene UI-et fortsatt trenger.
-4. Kjør en privat fasit/eval på 20–30 virkelige organisasjoner før større providerforbruk.
-5. Bytt produksjons-UI eksplisitt til `httpBackend` først når auth, writes og deployment er på plass.
-6. Deployment/runbook: API + worker som separate prosesser, secrets, backup/restore og observability.
+1. Koble konkret auth-provider til den eksisterende auth-grensen.
+2. Implementer de CRM-skriveendepunktene UI-et fortsatt trenger.
+3. Kjør en privat fasit/eval på 20–30 virkelige organisasjoner før større providerforbruk.
+4. Bytt produksjons-UI eksplisitt til `httpBackend` først når auth, writes og deployment er på plass.
+5. Deployment/runbook: API + worker som separate prosesser, secrets, backup/restore og observability.
 
 ## Fase 3 – booking, e-post og automatisering
 
