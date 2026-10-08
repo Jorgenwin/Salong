@@ -5,6 +5,7 @@ const { handleReadRequest } = require('./api/read');
 const { handleEnrichmentRequest } = require('./api/enrichment');
 const { handleContactWriteRequest } = require('./api/contacts-write');
 const { handleActivityWriteRequest } = require('./api/activities-write');
+const { handleOpportunityWriteRequest } = require('./api/opportunities-write');
 
 function writeJson(res, statusCode, body, requestId) {
   const payload = JSON.stringify(body);
@@ -58,6 +59,15 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
           return;
         }
         req.salongUser = auth.user;
+      }
+
+      const opportunityWriteResult = await handleOpportunityWriteRequest({ req, url, repositories });
+      if (opportunityWriteResult) {
+        const body = opportunityWriteResult.body && opportunityWriteResult.body.success === false
+          ? { ...opportunityWriteResult.body, requestId }
+          : opportunityWriteResult.body;
+        writeJson(res, opportunityWriteResult.status, body, requestId);
+        return;
       }
 
       const activityWriteResult = await handleActivityWriteRequest({ req, url, repositories });
