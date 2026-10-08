@@ -42,7 +42,14 @@ const {navTo,setup,testSeed,ROOT} = require('./h.js'); const fs=require('fs'), p
       const job={id:'j-http',accountId:'o-1',status:'needs_review',startedAt:'2027-04-08T10:00:00.000Z',completedAt:'2027-04-08T10:01:00.000Z',sourceStatuses:{web:'ok'},error:null,result:{organization:{name:'HTTP AS'},eventSignals:[],contactCandidates:[{name:'Pia'}],contactData:[],recommendation:null}};
       const fetch=async (url,init={})=>{ calls.push(String(url)); requests.push({url:String(url),method:init.method||'GET',body:init.body||null,auth:init.headers&&init.headers.authorization||null});
         if(/\/api\/accounts\/missing$/.test(url)) return mk({success:false,error_code:'account_not_found',error_message:'Kontoen finnes ikke.',requestId:'req-test'},404);
-        if(/\/api\/accounts\/o-1\/contacts$/.test(url)) return mk([{id:'p-1',account_id:'o-1',name:'Pia'}]);
+        if(/\/api\/accounts\/o-1\/contacts$/.test(url)&&String(init.method||'GET').toUpperCase()==='GET') return mk([{id:'p-1',account_id:'o-1',name:'Pia'}]);
+        if(/\/api\/accounts\/o-1\/contacts$/.test(url)&&String(init.method||'GET').toUpperCase()==='POST') return mk({success:true,data:{id:'p-2',account_id:'o-1',name:'Kari'}},201);
+        if(/\/api\/contacts\/p-2$/.test(url)&&String(init.method||'GET').toUpperCase()==='PATCH') return mk({success:true,data:{id:'p-2',account_id:'o-1',name:'Kari',title:'Eventsjef'}});
+        if(/\/api\/contacts\/p-2\/primary$/.test(url)&&String(init.method||'GET').toUpperCase()==='POST') return mk({success:true,data:{id:'p-2',account_id:'o-1',name:'Kari',is_primary:true}});
+        if(/\/api\/contacts\/p-2\/do-not-contact$/.test(url)&&String(init.method||'GET').toUpperCase()==='POST'){
+          const parsed=init.body?JSON.parse(init.body):{};
+          return mk({success:true,data:{id:'p-2',account_id:'o-1',name:'Kari',do_not_contact:parsed.value===true}});
+        }
         if(/\/api\/accounts\/o-1$/.test(url)) return mk({id:'o-1',name:'HTTP AS'});
         if(/\/api\/prospects/.test(url)) return mk([{id:'o-2',name:'Prospekt AS'}]);
         if(/\/api\/opportunities/.test(url)) return mk([{id:'d-1',account_id:'o-1'}]);
@@ -54,6 +61,11 @@ const {navTo,setup,testSeed,ROOT} = require('./h.js'); const fs=require('fs'), p
         return mk({success:false,error_code:'not_found',error_message:'Ikke funnet'},404); };
       const S=window.SalongServices, H=S.createHttpBackend({baseUrl:'https://salong.test/',fetch,accessToken:'token-test'});
       const jobsBefore=Object.keys(window.__salong.S.mtjob||{}).length;
+      const contactAdded=await H.addContact('o-1',{name:'Kari'});
+      const contactUpdated=await H.updateContact('p-2',{title:'Eventsjef'});
+      const contactPrimary=await H.setPrimaryContact('p-2');
+      const contactDnc=await H.setDoNotContact('p-2','Ba om pause');
+      const contactDncCleared=await H.clearDoNotContact('p-2');
       const queuedDirect=await H.enrichAccount('o-1');
       const batchDirect=await H.enrichAccounts(['o-1','o-2']);
       const directJob=await H.getEnrichmentJob('j-http');
@@ -70,6 +82,7 @@ const {navTo,setup,testSeed,ROOT} = require('./h.js'); const fs=require('fs'), p
         prospects:await H.getProspects({segment_id:'Forlag'}),
         opportunities:await H.getOpportunities('o-1'),
         calendar:await H.getCalendar({from:'2027-04-08'}),
+        contactAdded,contactUpdated,contactPrimary,contactDnc,contactDncCleared,
         queuedDirect,batchDirect,directJob,latestDirect,queuedService,serviceJob,jobsBefore,jobsAfter,
         calls,requests,
         methods:Object.keys(H).sort()
@@ -78,7 +91,8 @@ const {navTo,setup,testSeed,ROOT} = require('./h.js'); const fs=require('fs'), p
     check('S12 HTTP-backend følger lesekontrakten og mapper 404-konto til null',http,v=>v.account.id==='o-1'&&v.missing===null&&v.contacts.length===1&&v.prospects.length===1&&v.opportunities.length===1&&v.calendar.length===1);
     check('S13 HTTP-backend URL-koder filtre og bruker samme-origin-kompatible endepunkter',http.calls,v=>v.some(x=>/segment_id=Forlag/.test(x))&&v.some(x=>/account_id=o-1/.test(x))&&v.some(x=>/from=2027-04-08&to=2027-04-08/.test(x)));
     check('S14 HTTP-backend køer enrichment på server uten lokal fallback',http,v=>v.queuedDirect.success&&v.queuedDirect.data.jobId==='j-http'&&v.batchDirect.data.queued===2&&v.directJob.status==='needs_review'&&v.latestDirect.id==='j-http'&&v.queuedService.success&&v.serviceJob.id==='j-http'&&v.jobsAfter===v.jobsBefore&&v.requests.filter(r=>/\/api\/enrichment\//.test(r.url)).every(r=>r.auth==='Bearer token-test')&&v.requests.some(r=>/\/api\/enrichment\/accounts\/o-1$/.test(r.url)&&r.method==='POST'));
-    check('S15 HTTP-backend overstyrer hele gjeldende servicekontrakt når den tas i bruk',http.methods,v=>JSON.stringify(v)==='["enrichAccount","enrichAccounts","getAccount","getCalendar","getContacts","getEnrichmentJob","getLatestEnrichmentJob","getOpportunities","getProspects"]');
+    check('S15 HTTP-backend har eksplisitte kontakt-skriv uten lokal fallback',http,v=>v.contactAdded.success&&v.contactAdded.data.id==='p-2'&&v.contactUpdated.data.title==='Eventsjef'&&v.contactPrimary.data.is_primary===true&&v.contactDnc.data.do_not_contact===true&&v.contactDncCleared.data.do_not_contact===false&&v.requests.some(r=>/\/api\/accounts\/o-1\/contacts$/.test(r.url)&&r.method==='POST'&&r.auth==='Bearer token-test')&&v.requests.some(r=>/\/api\/contacts\/p-2$/.test(r.url)&&r.method==='PATCH')&&v.requests.filter(r=>/\/api\/contacts\/p-2\/do-not-contact$/.test(r.url)).length===2);
+    check('S19 HTTP-backend eksponerer lesing, enrichment og kontakt-skriv eksplisitt',http.methods,v=>['addContact','clearDoNotContact','enrichAccount','enrichAccounts','getAccount','getCalendar','getContacts','getEnrichmentJob','getLatestEnrichmentJob','getOpportunities','getProspects','setDoNotContact','setPrimaryContact','updateContact'].every(k=>v.includes(k)));
     // statisk: ingen hemmeligheter i kildekoden, og UI-berik går via tjenestelaget
     const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(d,e.name)):[path.join(d,e.name)]);
     const files=walk(path.join(ROOT,'src')).concat(walk(path.join(ROOT,'scripts')),[path.join(ROOT,'.env.example')]).filter(f=>/\.(js|py|html|json|example)$/.test(f));
