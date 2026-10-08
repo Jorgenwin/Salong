@@ -754,3 +754,64 @@ test('contact writes are parameterized and primary selection clears siblings',as
     /at least one supported field/
   );
 });
+
+
+test('activity writes are parameterized and normalize timestamps',async()=>{
+  const calls=[];
+  const db={async query(text,params){
+    calls.push({text:String(text),params});
+    return {rows:[{
+      id:params&&params[0]||'a-1',
+      organization_id:'o-1',
+      opportunity_id:'d-1',
+      contact_id:'c-1',
+      type:'task',
+      text:'Følg opp',
+      body:null,
+      happened_at:new Date('2026-10-08T10:00:00.000Z'),
+      due_at:new Date('2026-10-12T07:00:00.000Z'),
+      done:/SET done=true/.test(String(text)),
+      actor_id:'m-actor',
+      owner_id:'m-owner',
+      direction:null,
+      wait_reason:null,
+      task_key:'follow-up',
+      updated_at:new Date('2026-10-08T10:00:00.000Z')
+    }]};
+  }};
+
+  const repositories=createRepositories(db);
+  const created=await repositories.activities.create({
+    id:'a-1',
+    accountId:'o-1',
+    caseId:'d-1',
+    contactId:'c-1',
+    type:'task',
+    text:'Følg opp',
+    dueAt:'2026-10-12T07:00:00.000Z',
+    completed:false,
+    actorId:'m-actor',
+    ownerId:'m-owner',
+    taskKey:'follow-up'
+  });
+
+  assert.equal(created.id,'a-1');
+  assert.equal(created.completed,false);
+  assert.equal(created.due_at,'2026-10-12T07:00:00.000Z');
+  assert.equal(calls[0].text.includes('Følg opp'),false);
+  assert.deepEqual(calls[0].params,[
+    'a-1','o-1','d-1','c-1','task',
+    'Følg opp',null,null,'2026-10-12T07:00:00.000Z',false,
+    'm-actor','m-owner',null,null,'follow-up'
+  ]);
+
+  const completed=await repositories.activities.complete('a-1');
+  assert.equal(completed.completed,true);
+  assert.deepEqual(calls[1].params,['a-1']);
+  assert.match(calls[1].text,/SET done=true/);
+
+  await assert.rejects(
+    repositories.activities.create({id:'a-2',type:'task'}),
+    /requires id, type and accountId or caseId/
+  );
+});
