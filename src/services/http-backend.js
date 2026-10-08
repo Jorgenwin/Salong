@@ -71,6 +71,35 @@ function createHttpBackend(opt){
     },
     getProspects(filter){ return request('/api/prospects'+qs(filter||{})); },
     getContacts(accountId){ return request('/api/accounts/'+encodeURIComponent(accountId)+'/contacts'); },
+    addContact(accountId,fields){
+      return request('/api/accounts/'+encodeURIComponent(accountId)+'/contacts',{
+        method:'POST',
+        body:fields||{}
+      });
+    },
+    updateContact(id,patch){
+      return request('/api/contacts/'+encodeURIComponent(id),{
+        method:'PATCH',
+        body:patch||{}
+      });
+    },
+    setPrimaryContact(id){
+      return request('/api/contacts/'+encodeURIComponent(id)+'/primary',{
+        method:'POST'
+      });
+    },
+    setDoNotContact(id,reason){
+      return request('/api/contacts/'+encodeURIComponent(id)+'/do-not-contact',{
+        method:'POST',
+        body:{value:true,reason:reason||''}
+      });
+    },
+    clearDoNotContact(id){
+      return request('/api/contacts/'+encodeURIComponent(id)+'/do-not-contact',{
+        method:'POST',
+        body:{value:false}
+      });
+    },
     getOpportunities(accountId){ return request('/api/opportunities'+qs(accountId?{account_id:accountId}:{})); },
     getCalendar(filter){
       filter=filter||{};
