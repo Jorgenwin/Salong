@@ -116,3 +116,20 @@ test('production API fails closed when auth boundary is not wired',async()=>{
     assert.equal(body.requestId,'req-prod-auth');
   });
 });
+
+
+test('a configured real database is protected even in development mode',async()=>{
+  const config=loadConfig({
+    NODE_ENV:'development',PORT:'3000',
+    DATABASE_URL:'postgres://example.invalid/private_db'
+  });
+  const repositories={
+    accounts:{async get(){return {id:'o-private',name:'Private company'};}}
+  };
+  await withServer(createApp({config,repositories}),async baseUrl=>{
+    assert.equal((await fetch(baseUrl+'/health')).status,200);
+    const response=await fetch(baseUrl+'/api/accounts/o-private');
+    assert.equal(response.status,503);
+    assert.equal((await response.json()).error_code,'auth_not_ready');
+  });
+});
