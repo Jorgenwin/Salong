@@ -4,6 +4,8 @@ const http = require('node:http');
 const { createApp } = require('./app');
 const { loadConfig, publicConfigSummary } = require('./config');
 const { createRuntime } = require('./runtime');
+const { createAuthBoundary } = require('./auth/authorization');
+const { createSupabaseVerifier } = require('./auth/supabase');
 
 function log(level, event, data = {}) {
   const entry = { level, event, time: new Date().toISOString(), ...data };
@@ -39,9 +41,31 @@ async function start() {
     return;
   }
 
+  let authBoundary=null;
+  if(config.supabaseUrl){
+    try{
+      if(!runtime.repositories||!runtime.repositories.members){
+        throw new Error('Supabase Auth requires a configured PostgreSQL members repository');
+      }
+      authBoundary=createAuthBoundary({
+        verifyToken:createSupabaseVerifier({
+          url:config.supabaseUrl,
+          publishableKey:config.supabasePublishableKey
+        }),
+        members:runtime.repositories.members
+      });
+    }catch(error){
+      log('error','auth_start_failed',{message:error.message});
+      await runtime.close();
+      process.exitCode=1;
+      return;
+    }
+  }
+
   const server = http.createServer(createApp({
     config,
-    repositories: runtime.repositories
+    repositories: runtime.repositories,
+    authBoundary
   }));
 
   server.on('clientError', (error, socket) => {
