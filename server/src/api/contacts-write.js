@@ -99,6 +99,7 @@ async function handleContactWriteRequest({
   makeContactId=()=> 'contact_'+randomUUID()
 }={}){
   if(!url||!req) return null;
+  if(!['POST','PATCH'].includes(req.method)) return null;
   const isContactPath=url.pathname.startsWith('/api/contacts/');
   const isAccountContacts=/^\/api\/accounts\/[^/]+\/contacts$/.test(url.pathname);
   if(!isContactPath&&!isAccountContacts) return null;
