@@ -582,3 +582,36 @@ test('member lookup maps auth subject and preserves role/active state',async()=>
   assert.equal(calls[0].text.includes('auth-123'),false);
   assert.equal(await repositories.members.getByAuthSubject(''),null);
 });
+
+
+test('enrichment batch creation is one parameterized INSERT',async()=>{
+  const calls=[];
+  const db={
+    async query(text,params){
+      calls.push({text:String(text),params});
+      return {rows:[
+        {id:'j-1',account_id:'o-1',status:'queued',source_statuses:{},attempt_count:0,requested_by:'m-1'},
+        {id:'j-2',account_id:'o-2',status:'queued',source_statuses:{},attempt_count:0,requested_by:'m-1'}
+      ]};
+    }
+  };
+  const repositories=createRepositories(db);
+  const jobs=await repositories.enrichmentJobs.createMany([
+    {id:'j-1',accountId:'o-1',requestedBy:'m-1'},
+    {id:'j-2',accountId:'o-2',requestedBy:'m-1'}
+  ]);
+
+  assert.deepEqual(jobs.map(job=>job.id),['j-1','j-2']);
+  assert.equal(calls.length,1);
+  assert.match(calls[0].text,/INSERT INTO enrichment_jobs/);
+  assert.match(calls[0].text,/VALUES \(\$1,\$2,\$3,COALESCE\(\$4::timestamptz,now\(\)\)\),\(\$5,\$6,\$7,COALESCE\(\$8::timestamptz,now\(\)\)\)/);
+  assert.deepEqual(calls[0].params,[
+    'j-1','o-1','m-1',null,
+    'j-2','o-2','m-1',null
+  ]);
+
+  await assert.rejects(
+    repositories.enrichmentJobs.createMany([]),
+    /non-empty items array/
+  );
+});
