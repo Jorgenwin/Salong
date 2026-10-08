@@ -77,6 +77,28 @@ function mapOpportunity(row) {
   };
 }
 
+function mapActivity(row) {
+  if (!row) return null;
+  return {
+    id:row.id,
+    account_id:row.organization_id||null,
+    case_id:row.opportunity_id||null,
+    contact_id:row.contact_id||null,
+    type:row.type,
+    text:row.text||'',
+    body:row.body||null,
+    happened_at:asTimestamp(row.happened_at),
+    due_at:asTimestamp(row.due_at),
+    completed:Boolean(row.done),
+    actor_id:row.actor_id||null,
+    owner_id:row.owner_id||null,
+    direction:row.direction||null,
+    wait_reason:row.wait_reason||null,
+    task_key:row.task_key||null,
+    updated_at:asTimestamp(row.updated_at)
+  };
+}
+
 const STAGE_STATUS={
   ny:'Ny forespørsel',
   dialog:'Dialog',
@@ -309,6 +331,25 @@ function createRepositories(input) {
 
   return {
     members:{
+      async get(id){
+        const result=await db.query(`
+          SELECT id, auth_subject, name, email, role, active
+          FROM members
+          WHERE id=$1
+          LIMIT 1
+        `,[id]);
+        const row=result.rows[0];
+        if(!row) return null;
+        return {
+          id:row.id,
+          authSubject:row.auth_subject,
+          name:row.name,
+          email:row.email||null,
+          role:row.role,
+          active:row.active!==false
+        };
+      },
+
       async getByAuthSubject(authSubject){
         const subject=String(authSubject||'').trim();
         if(!subject) return null;
@@ -495,6 +536,76 @@ function createRepositories(input) {
           ORDER BY event_date ASC NULLS LAST, created_at DESC
         `,params);
         return result.rows.map(mapOpportunity);
+      },
+
+      async get(id){
+        const result=await db.query(
+          'SELECT * FROM opportunities WHERE id=$1 AND deleted_at IS NULL LIMIT 1',
+          [id]
+        );
+        return mapOpportunity(result.rows[0]);
+      }
+    },
+
+    activities:{
+      async get(id){
+        const result=await db.query(
+          'SELECT * FROM activities WHERE id=$1 AND deleted_at IS NULL LIMIT 1',
+          [id]
+        );
+        return mapActivity(result.rows[0]);
+      },
+
+      async create({
+        id,
+        accountId=null,
+        caseId=null,
+        contactId=null,
+        type,
+        text='',
+        body=null,
+        happenedAt=null,
+        dueAt=null,
+        completed=true,
+        actorId=null,
+        ownerId=null,
+        direction=null,
+        waitReason=null,
+        taskKey=null
+      }={}){
+        if(!id||!type||(!accountId&&!caseId)){
+          throw new TypeError('activities.create requires id, type and accountId or caseId');
+        }
+        const result=await db.query(`
+          INSERT INTO activities(
+            id, organization_id, opportunity_id, contact_id, type,
+            text, body, happened_at, due_at, done,
+            actor_id, owner_id, direction, wait_reason, task_key
+          )
+          VALUES (
+            $1,$2,$3,$4,$5,
+            $6,$7,COALESCE($8::timestamptz,now()),$9::timestamptz,$10,
+            $11,$12,$13,$14,$15
+          )
+          RETURNING *
+        `,[
+          id,accountId,caseId,contactId,type,
+          text,body,happenedAt,dueAt,Boolean(completed),
+          actorId,ownerId,direction,waitReason,taskKey
+        ]);
+        return mapActivity(result.rows[0]);
+      },
+
+      async complete(id){
+        const result=await db.query(`
+          UPDATE activities
+          SET done=true,
+              updated_at=now()
+          WHERE id=$1
+            AND deleted_at IS NULL
+          RETURNING *
+        `,[id]);
+        return mapActivity(result.rows[0]);
       }
     },
 
@@ -909,6 +1020,7 @@ module.exports={
   mapAccount,
   mapContact,
   mapOpportunity,
+  mapActivity,
   mapOpportunityCalendar,
   mapBookingCalendar,
   mapActivityCalendar,
