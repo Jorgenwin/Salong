@@ -15,7 +15,7 @@ Legg eksakt råeksport i gitignored data/exports/. Formatet har toppnivå collec
 
     npm run import:artifact -- --file data/exports/salong-artifact-export-2026-10-08.json --dry-run
 
-Kommandoen viser planlagt antall per tabell og hvilke poster som ikke kan mappes. Den kontakter ingen API-er og skriver ikke til database.
+Kommandoen viser planlagt antall per tabell og hvilke poster som ikke kan mappes, med `review_required_count` og `review_reason_counts`. Den kontakter ingen API-er og skriver ikke til database.
 
 ## 3. Migrer og importer med eksplisitt godkjenning
 
@@ -52,3 +52,9 @@ Hvis orgs har innebygde kontakter, eller en post peker til en konto som er utela
 - Ingen Apollo/Exa/Anthropic-kall under import.
 - Ingen automatisk produksjonsaktivering eller kontogodkjenning.
 - Hvis import må gjentas: gjenopprett et tomt målsystem fra backup eller bruk et nytt miljø. Verktøyet overskriver ikke tidligere data.
+
+## Importstopp for umappede reelle dokumenter
+
+Dersom noen dokumenter uten `example: true` ikke lar seg mappe fullt ut, nekter `--apply` nå å starte en databasetransaksjon. Dette er tilsiktet: den faktiske Claude-eksporten har referanser til organisasjoner som bare finnes som eksempler, og mange Research- og audit-felter kan ennå bare lagres i staging. Undersok rapporten og godkjenn tap av normaliserte koblinger for eventuell import.
+
+Forst etter manuell gjennomgang kan en operatør eksplisitt kjore `--apply --allow-unmapped`. Da bevares alle ra dokumenter i privat staging, mens de ikke-mappede blir i staging til senere opprydding. Dette er ikke standardanbefalingen for produksjon. `--allow-unmapped` alene uten `--apply` er ugyldig.
