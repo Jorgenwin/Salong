@@ -189,3 +189,13 @@ test('do-not-contact requires reason and can be cleared',async()=>{
     ['dnc','c-1',{value:false,reason:null}]
   ]);
 });
+
+
+test('write handler ignores GET contact routes so read API remains authoritative',async()=>{
+  const result=await handleContactWriteRequest({
+    req:req('GET'),
+    url:new URL('http://x/api/accounts/o-1/contacts'),
+    repositories:{}
+  });
+  assert.equal(result,null);
+});
