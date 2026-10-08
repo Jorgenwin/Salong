@@ -93,3 +93,26 @@ test('mutating API methods require editor or higher at the app boundary',async()
     assert.deepEqual(seen,['editor']);
   });
 });
+
+
+test('production API fails closed when auth boundary is not wired',async()=>{
+  const config=loadConfig({NODE_ENV:'production',PORT:'3000'});
+  const repositories={
+    accounts:{async get(){return {id:'o-1',name:'Skal ikke eksponeres'};}}
+  };
+
+  await withServer(createApp({
+    config,
+    repositories,
+    makeRequestId:()=> 'req-prod-auth'
+  }),async baseUrl=>{
+    const health=await fetch(baseUrl+'/health');
+    assert.equal(health.status,200);
+
+    const response=await fetch(baseUrl+'/api/accounts/o-1');
+    const body=await response.json();
+    assert.equal(response.status,503);
+    assert.equal(body.error_code,'auth_not_ready');
+    assert.equal(body.requestId,'req-prod-auth');
+  });
+});

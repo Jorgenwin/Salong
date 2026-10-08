@@ -37,6 +37,16 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
         return;
       }
 
+      if (!authBoundary && config.nodeEnv === 'production' && url.pathname.startsWith('/api/')) {
+        writeJson(res, 503, {
+          success: false,
+          error_code: 'auth_not_ready',
+          error_message: 'Autentisering er ikke aktivert.',
+          requestId
+        }, requestId);
+        return;
+      }
+
       if (authBoundary && url.pathname.startsWith('/api/')) {
         const minimumRole = req.method === 'GET' ? 'reader' : 'editor';
         const auth = await authBoundary.authorizeRequest(req, { minimumRole });
