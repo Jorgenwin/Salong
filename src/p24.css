@@ -1,0 +1,177 @@
+/* ===== Berik visual polish v2 =====
+   Finishes the research-core UI added after p23. Presentation only. */
+
+.bk-lvl{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  flex-wrap:wrap;
+  padding:9px 11px;
+  margin:0 0 12px;
+  border:1px solid var(--rule);
+  border-radius:10px;
+  background:var(--surface-2);
+}
+
+.bk-sgl{
+  gap:10px;
+}
+.bk-sg{
+  padding:12px 13px;
+  border:1px solid var(--rule);
+  border-radius:11px;
+  background:var(--surface-2);
+}
+.bk-sg>div:first-child{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-bottom:7px;
+}
+.bk-sg>div:first-child>b,
+.bk-sg>div:first-child>a{
+  font-size:14.5px;
+  font-weight:650;
+}
+.bk-sg dl{
+  grid-template-columns:minmax(86px,108px) minmax(0,1fr);
+  row-gap:5px;
+  margin-top:8px;
+}
+.bk-sg dt{
+  font-size:12.5px;
+}
+.bk-sg dd{
+  font-size:13.5px;
+  line-height:1.38;
+}
+.bk-sg small{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+}
+
+.bk-vl,
+.bk-pl{
+  gap:6px;
+}
+.bk-vl li,
+.bk-pl li{
+  padding:8px 10px;
+  border:1px solid var(--rule);
+  border-radius:9px;
+  background:var(--surface-2);
+  line-height:1.4;
+}
+.bk-pl li b{
+  color:var(--ink);
+}
+.bk-pl li small{
+  color:var(--muted);
+}
+
+.bk-qn{
+  padding:8px 10px;
+  border:1px solid var(--rule);
+  border-radius:9px;
+  background:var(--surface-2);
+  line-height:1.4;
+}
+.bk-qn.ok{
+  border-color:color-mix(in srgb,var(--ok,#2f7d4f) 30%,var(--rule));
+  background:color-mix(in srgb,var(--ok,#2f7d4f) 7%,var(--surface));
+}
+
+.bk-rf{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  flex-wrap:wrap;
+}
+.bk-rf b{
+  font-family:var(--serif);
+  font-size:19px;
+  line-height:1.2;
+}
+
+.bk-s .mt-ok{
+  margin:8px 0 0;
+}
+.bk-s .mt-ok dt{
+  color:var(--muted);
+}
+.bk-s .mt-ok dd{
+  overflow-wrap:anywhere;
+}
+
+.bk-stp+.bk-stp{
+  margin-top:7px;
+  padding-top:7px;
+  border-top:1px dashed var(--rule);
+}
+.bk-stp li.ok{
+  border-color:color-mix(in srgb,var(--ok,#2f7d4f) 22%,var(--rule));
+}
+.bk-stp li.feil{
+  border-color:color-mix(in srgb,var(--bad,#b3382c) 24%,var(--rule));
+}
+.bk-stp li.hoppet,
+.bk-stp li.mangler{
+  opacity:.78;
+}
+
+.bk-chip{
+  display:inline-flex;
+  align-items:center;
+  min-height:24px;
+  padding:3px 8px;
+  border:1px solid currentColor;
+  border-radius:999px;
+  font-size:11.5px;
+  font-weight:650;
+  line-height:1;
+}
+.bk-wt{
+  display:inline-flex;
+  align-items:center;
+  min-height:30px;
+  padding:5px 8px;
+  border-radius:8px;
+  background:var(--surface-2);
+}
+.bk-vv{
+  margin-top:2px;
+  font-size:11.5px;
+  font-weight:600;
+}
+
+.bk-s>.row:last-child{
+  margin-top:10px;
+}
+.bk-s .mt-hint{
+  line-height:1.45;
+}
+
+@media (max-width:720px){
+  .bk-sg dl{
+    grid-template-columns:1fr;
+    gap:1px;
+  }
+  .bk-sg dt{
+    margin-top:5px;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  .bk-sg dd{
+    margin:0 0 2px;
+  }
+  .bk-lvl{
+    align-items:flex-start;
+  }
+  .bk-vl li,
+  .bk-pl li{
+    padding:9px 10px;
+  }
+}
