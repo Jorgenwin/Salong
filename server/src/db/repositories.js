@@ -54,6 +54,7 @@ function mapContact(row) {
     relevant: row.relevant == null ? null : Boolean(row.relevant),
     active: row.active !== false,
     do_not_contact: Boolean(row.do_not_contact),
+    is_primary: Boolean(row.is_primary),
     verified: Boolean(row.verified_at),
     last_enriched_at: asTimestamp(row.last_enriched_at || row.verified_at)
   };
