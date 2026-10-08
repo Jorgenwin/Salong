@@ -18,7 +18,9 @@ function argumentsFor(argv){
   if(idx<0||!argv[idx+1]||argv[idx+1].startsWith('--')){
     throw new Error('Usage: node server/scripts/import-artifact.js --file data/exports/export.json [--dry-run|--apply]');
   }
-  return {file:path.resolve(process.cwd(),argv[idx+1]),apply};
+  const allowUnmapped=argv.includes('--allow-unmapped');
+  if(allowUnmapped&&!apply) throw new Error('--allow-unmapped requires --apply');
+  return {file:path.resolve(process.cwd(),argv[idx+1]),apply,allowUnmapped};
 }
 function readPrivateExport(file){
   const directory=fs.realpathSync(EXPORT_DIR);
@@ -49,7 +51,7 @@ async function main(argv=process.argv.slice(2),env=process.env){
   });
   try{
     await database.withClient(client=>runMigrations(client));
-    const report=await database.withClient(client=>applyImport(client,plan));
+    const report=await database.withClient(client=>applyImport(client,plan,{allowUnmapped:args.allowUnmapped}));
     process.stdout.write(JSON.stringify({mode:'applied',...report},null,2)+'\n');
     return report;
   }finally{

@@ -208,7 +208,7 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
       mtjob:{'j-import':{accId:'o-import',kind:'enrich',status:'running'}},
       audit:{'audit-import':{action:'synthetic-only'}}
     }});
-    const imported=await db.withClient(client=>applyImport(client,plan));
+    const imported=await db.withClient(client=>applyImport(client,plan,{allowUnmapped:true}));
     assert.equal(imported.staged_documents,5);
     assert.equal(imported.actual.organizations,1);
     assert.equal(imported.actual.contacts,1);
@@ -218,7 +218,7 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     const inert=await db.query('SELECT status FROM enrichment_jobs WHERE id=$1',['j-import']);
     assert.equal(inert.rows[0].status,'cancelled');
     await assert.rejects(
-      ()=>db.withClient(client=>applyImport(client,plan)),
+      ()=>db.withClient(client=>applyImport(client,plan,{allowUnmapped:true})),
       /not empty/
     );
 

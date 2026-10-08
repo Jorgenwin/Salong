@@ -74,6 +74,14 @@ test('never uses untrusted field names as SQL identifiers',()=>{
   assert.equal(sql.includes('Robert'),false);
   assert.equal(values[1],'Robert ); DROP TABLE');
 });
+test('unmapped real records require manual override before any transaction',async()=>{
+  const plan=buildImportPlan(sample());
+  let queried=false;
+  await assert.rejects(()=>applyImport({async query(){queried=true;}},plan),/needs review/);
+  assert.equal(queried,false);
+  assert.ok(plan.report.review_required_count>0);
+  assert.ok(plan.report.review_reason_counts.staging_only_no_mapping>0);
+});
 test('import stages all raw documents before CRM inserts and commits',async()=>{
   const p=buildImportPlan(sample());
   const calls=[];
@@ -85,7 +93,7 @@ test('import stages all raw documents before CRM inserts and commits',async()=>{
       return {rows:[]};
     }
   };
-  const report=await applyImport(db,p);
+  const report=await applyImport(db,p,{allowUnmapped:true});
   assert.equal(report.staged_documents,0);
   assert.deepEqual(Object.keys(report.actual),TABLES);
   assert.equal(calls[0].sql,'BEGIN');
@@ -105,7 +113,7 @@ test('rejects import into nonempty database and rolls back without staging',asyn
       return {rows:[{organizations:'1',enrichment_jobs:'0',documents:'0'}]};
     return {rows:[]};
   }};
-  await assert.rejects(()=>applyImport(db,buildImportPlan(sample())),/not empty/);
+  await assert.rejects(()=>applyImport(db,buildImportPlan(sample()),{allowUnmapped:true}),/not empty/);
   assert.ok(calls.includes('ROLLBACK'));
   assert.ok(!calls.some(x=>x.includes('INSERT INTO artifact_export.documents')));
 });
