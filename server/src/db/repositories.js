@@ -478,25 +478,34 @@ function createRepositories(input) {
         return mapEnrichmentJob(result.rows[0]);
       },
 
-      async requeueStale(staleSeconds=900){
+      async requeueStale(staleSeconds=900,maxAttempts=3){
         const seconds=Number(staleSeconds);
+        const attempts=Number(maxAttempts);
         if(!Number.isFinite(seconds)||seconds<=0){
           throw new TypeError('staleSeconds must be a positive number');
         }
+        if(!Number.isInteger(attempts)||attempts<=0){
+          throw new TypeError('maxAttempts must be a positive integer');
+        }
         const result=await db.query(`
           UPDATE enrichment_jobs
-          SET status='queued',
-              available_at=now(),
+          SET status=CASE WHEN attempt_count >= $2 THEN 'failed' ELSE 'queued' END,
+              available_at=CASE WHEN attempt_count < $2 THEN now() ELSE available_at END,
+              completed_at=CASE WHEN attempt_count >= $2 THEN now() ELSE completed_at END,
               locked_at=NULL,
               locked_by=NULL,
-              error_code='stale_worker_requeued',
-              error_message='Previous worker lock expired; job requeued.',
+              error_code=CASE WHEN attempt_count >= $2
+                THEN 'stale_worker_attempts_exhausted'
+                ELSE 'stale_worker_requeued' END,
+              error_message=CASE WHEN attempt_count >= $2
+                THEN 'Worker lock expired after maximum attempts; job failed.'
+                ELSE 'Previous worker lock expired; job requeued.' END,
               updated_at=now()
           WHERE status='running'
             AND locked_at IS NOT NULL
             AND locked_at < now()-($1::double precision * interval '1 second')
           RETURNING *
-        `,[seconds]);
+        `,[seconds,attempts]);
         return result.rows.map(mapEnrichmentJob);
       },
 
