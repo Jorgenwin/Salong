@@ -2,6 +2,7 @@
 
 const { randomUUID } = require('node:crypto');
 const { handleReadRequest } = require('./api/read');
+const { handleEnrichmentRequest } = require('./api/enrichment');
 
 function writeJson(res, statusCode, body, requestId) {
   const payload = JSON.stringify(body);
@@ -55,6 +56,15 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
           return;
         }
         req.salongUser = auth.user;
+      }
+
+      const enrichmentResult = await handleEnrichmentRequest({ req, url, repositories });
+      if (enrichmentResult) {
+        const body = enrichmentResult.body && enrichmentResult.body.success === false
+          ? { ...enrichmentResult.body, requestId }
+          : enrichmentResult.body;
+        writeJson(res, enrichmentResult.status, body, requestId);
+        return;
       }
 
       const readResult = await handleReadRequest({ req, url, repositories });
