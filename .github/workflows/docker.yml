@@ -1,0 +1,17 @@
+name: Docker images
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        flavor: [demo, api, worker]
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build container
+        run: docker build --file Dockerfile.${{ matrix.flavor }} --tag salong-${{ matrix.flavor }}:ci .

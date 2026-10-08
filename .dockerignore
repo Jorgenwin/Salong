@@ -1,0 +1,20 @@
+# Never upload customer exports or private credentials to the Docker builder
+.git
+.github
+.env
+.env.*
+!.env.example
+data/exports
+data/private
+data/local
+node_modules
+dist
+test-results
+playwright-report
+secrets
+credentials*.json
+*.pem
+*.key
+*.sqlite
+*.sqlite3
+*.db
