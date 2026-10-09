@@ -113,7 +113,12 @@ test('real I dag page supports first contact, persistent tasks and completion',{
     await page.locator('#activity-form [name="direction"]').selectOption('out');
     await page.locator('#activity-form [name="text"]').fill('Faktisk e-post sendt');
     await page.locator('#activity-save').click();
-    await page.waitForFunction(()=>document.querySelector('#today-list').textContent.indexOf('Forlag Nyhet')===-1);
+    // Wait for the refreshed queue, not just the temporary empty loading state.
+    await page.waitForFunction(()=>{
+      const rows=[...document.querySelectorAll('#today-list .today-row')];
+      return rows.length===1 && /Institusjon Nyhet/.test(rows[0].textContent) &&
+        !/Forlag Nyhet/.test(document.querySelector('#today-list').textContent);
+    });
     assert.equal(contacted,true);
     assert.equal(await page.locator('#today-list .today-row').count(),1);
     await page.locator('#logout').click();
