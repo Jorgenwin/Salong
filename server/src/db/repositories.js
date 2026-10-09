@@ -1,4 +1,5 @@
 'use strict';
+const {mapOrganization,createOrganizationWrites}=require('./organization-writes');
 
 function requireDb(db) {
   if (!db || typeof db.query !== 'function') {
@@ -334,15 +335,15 @@ function createRepositories(input) {
     accounts:{
       async listOrganizations(){
         const result=await db.query(
-          'SELECT id,name,org_number,website,domain,segment,tier,former,notes,owner_id FROM organizations WHERE deleted_at IS NULL ORDER BY lower(name),id'
+          'SELECT id,name,org_number,website,domain,segment,tier,former,notes,owner_id,quality_manual_override FROM organizations WHERE deleted_at IS NULL ORDER BY lower(name),id'
         );
-        return result.rows.map(row=>({
-          id:row.id,name:row.name,org_number:row.org_number||null,
-          website:row.website||null,domain:row.domain||null,
-          segment:row.segment||null,priority:row.tier||null,
-          previous_customer:row.former===true,
-          notes:row.notes||null,owner_id:row.owner_id||null
-        }));
+        return result.rows.map(mapOrganization);
+      },
+      async createOrganization(input,meta){
+        return createOrganizationWrites(db).create(input,meta);
+      },
+      async updateOrganization(id,patch,meta){
+        return createOrganizationWrites(db).update(id,patch,meta);
       },
       async get(id) {
         const result=await db.query(
