@@ -354,6 +354,51 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     assert.equal(op[0].stage,'tilbud');
     assert.equal(op[0].last_activity_at,'2027-01-12T09:00:00.000Z');
 
+    // Real pipeline writes: company existence, no double-create, stage CAS and audit.
+    const createdOpportunity=await repositories.opportunities.create({
+      accountId:'previous',title:'Møte om boklansering',eventDate:'2027-03-12',
+      value:19500.5,room:'Wergeland',notes:'Syntetisk test'
+    },{id:'opp-persist',actorId:'salong-owner',auditId:'audit-pipeline-new'});
+    assert.equal(createdOpportunity.opportunity.stage,'ny');
+    assert.equal(createdOpportunity.opportunity.value,19500.5);
+    const duplicateOpportunity=await repositories.opportunities.create({
+      accountId:'previous',title:'Møte om boklansering',eventDate:'2027-03-12'
+    },{id:'opp-collision',actorId:'salong-owner',auditId:'audit-pipeline-duplicate'});
+    assert.equal(duplicateOpportunity.duplicate,true);
+    const offered=await repositories.opportunities.changeStage('opp-persist',{
+      stage:'tilbud',expectedStage:'ny'
+    },{actorId:'salong-owner',auditId:'audit-pipeline-offer'});
+    assert.equal(offered.opportunity.stage,'tilbud');
+    assert.equal(offered.opportunity.account_id,'previous');
+    const oldChange=await repositories.opportunities.changeStage('opp-persist',{
+      stage:'bekreftet',expectedStage:'ny'
+    },{actorId:'salong-owner',auditId:'audit-pipeline-stale'});
+    assert.equal(oldChange.conflict,true);
+    assert.equal(oldChange.currentStage,'tilbud');
+    const noOp=await repositories.opportunities.changeStage('opp-persist',{
+      stage:'tilbud',expectedStage:'tilbud'
+    },{actorId:'salong-owner',auditId:'audit-pipeline-noop'});
+    assert.equal(noOp.unchanged,true);
+    const lost=await repositories.opportunities.changeStage('opp-persist',{
+      stage:'tapt',expectedStage:'tilbud',lostReason:'Datoen passer ikke'
+    },{actorId:'salong-owner',auditId:'audit-pipeline-lost'});
+    assert.equal(lost.opportunity.stage,'tapt');
+    assert.equal(lost.opportunity.lost_reason,'Datoen passer ikke');
+    const eventHistory=await db.query(
+      'SELECT action,before_data,after_data FROM crm_opportunity_events WHERE opportunity_id=$1 ORDER BY created_at,id',
+      ['opp-persist']
+    );
+    assert.equal(eventHistory.rows.length,3);
+    assert.ok(eventHistory.rows.some(e=>e.action==='opportunity_created'));
+    assert.ok(eventHistory.rows.some(e=>e.action==='opportunity_stage_changed'&&e.after_data.stage==='tapt'));
+    const privateAudit=await db.query(
+      "SELECT relrowsecurity FROM pg_class WHERE oid='public.crm_opportunity_events'::regclass"
+    );
+    assert.equal(privateAudit.rows[0].relrowsecurity,true);
+    assert.equal((await repositories.opportunities.get('opp-persist')).stage,'tapt');
+
+
+
 
     const task=await repositories.activities.create({
       id:'task-followup',accountId:'previous',type:'task',
