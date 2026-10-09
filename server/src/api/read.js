@@ -22,6 +22,34 @@ function validIsoDate(value) {
     date.getUTCDate()===day;
 }
 
+const CONTACT_GOAL={count:500,start:'2026-12-01',deadline:'2027-05-31'};
+function osloToday(date=new Date()){
+  const pieces=Object.fromEntries(new Intl.DateTimeFormat('en-GB',{
+    timeZone:'Europe/Oslo',year:'numeric',month:'2-digit',day:'2-digit'
+  }).formatToParts(date).filter(part=>part.type!=='literal').map(part=>[part.type,part.value]));
+  return pieces.year+'-'+pieces.month+'-'+pieces.day;
+}
+function workdaysInclusive(start,end){
+  if(start>end)return 0;
+  const a=new Date(start+'T12:00:00Z'),b=new Date(end+'T12:00:00Z');
+  if(!Number.isFinite(a.getTime())||!Number.isFinite(b.getTime()))return 0;
+  let count=0;
+  for(const d=new Date(a);d<=b;d.setUTCDate(d.getUTCDate()+1)){
+    if(d.getUTCDay()>0&&d.getUTCDay()<6)count++;
+  }
+  return count;
+}
+function progressFromStoredOutreach(summary,{today=osloToday(),config=CONTACT_GOAL}={}){
+  const contacted=Math.max(0,Number(summary.contacted)||0);
+  const remaining=Math.max(0,config.count-contacted);
+  const from=today>config.start?today:config.start;
+  const weekdays=workdaysInclusive(from,config.deadline);
+  return {...summary,contacted,goal:config.count,start:config.start,
+    deadline:config.deadline,today,remaining,weekdays,
+    daily_required:remaining?Math.ceil(remaining/Math.max(weekdays,1)):0,
+    deadline_passed:today>config.deadline&&remaining>0};
+}
+
 async function handleReadRequest({ req, url, repositories }) {
   if (req.method !== 'GET' || !repositories) return null;
 
@@ -29,6 +57,24 @@ async function handleReadRequest({ req, url, repositories }) {
     if(!req.salongUser)return {status:401,body:{success:false,error_code:'unauthorized',error_message:'Innlogging mangler.'}};
     const {id,name,role}=req.salongUser;
     return {status:200,body:{id,name,role}};
+  }
+
+  if(url.pathname==='/api/outreach/summary'){
+    if(!repositories.activities||typeof repositories.activities.outreachSummary!=='function')
+      return {status:503,body:{success:false,error_code:'backend_not_ready'}};
+    const summary=await repositories.activities.outreachSummary(CONTACT_GOAL);
+    return {status:200,body:progressFromStoredOutreach(summary)};
+  }
+
+  const activityMatch=url.pathname.match(/^\/api\/accounts\/([^/]+)\/activities$/);
+  if(activityMatch){
+    const id=decodePathPart(activityMatch[1]);
+    if(!id)return {status:400,body:{success:false,error_code:'invalid_id'}};
+    if(!await repositories.accounts.get(id))
+      return {status:404,body:{success:false,error_code:'account_not_found'}};
+    if(!repositories.activities||typeof repositories.activities.listForAccount!=='function')
+      return {status:503,body:{success:false,error_code:'backend_not_ready'}};
+    return {status:200,body:await repositories.activities.listForAccount(id)};
   }
 
   if(url.pathname==='/api/organizations'){
@@ -94,4 +140,4 @@ async function handleReadRequest({ req, url, repositories }) {
   return null;
 }
 
-module.exports={handleReadRequest,decodePathPart,nonEmpty,validIsoDate};
+module.exports={handleReadRequest,decodePathPart,nonEmpty,validIsoDate,workdaysInclusive,osloToday,progressFromStoredOutreach};
