@@ -48,7 +48,7 @@ test('Prospekter retains every original view and provides clear tab guidance', {
     assert.equal(await page.locator('.ps-focus [data-mtstart]').count(),1);
     assert.equal(await page.locator('.tp-b').count(),0,'Time budgeting must not be the landing view');
     await page.locator('.mt-top .mt-tabs [data-mttab="mal"]').click();
-    assert.match(await page.locator('.mt-guide').textContent(),/nye selskaper/i);
+    assert.match(await page.locator('.mt-guide').textContent(),/velg selskaper/i);
     await page.locator('.mt-top .mt-tabs [data-mttab="arb"]').click();
     assert.match(await page.locator('.mt-guide').textContent(),/Følg opp aktive prospekter/);
     assert.match(await page.locator('#mode').textContent(),/demo|lagres ikke/i);
