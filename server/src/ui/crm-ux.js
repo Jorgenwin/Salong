@@ -287,7 +287,26 @@
   function editingTarget(target){
     return target&&target.closest&&target.closest('input,textarea,select,[contenteditable="true"]');
   }
+  function trapDrawerFocus(event){
+    const dialog=!get('activity-dialog').hidden?get('activity-dialog'):
+      !get('editor').hidden?get('editor'):
+      !get('read-drawer').hidden?get('read-drawer'):null;
+    if(!dialog)return false;
+    const nodes=Array.from(dialog.querySelectorAll('button,input,select,textarea,a[href],[tabindex]'))
+      .filter(node=>!node.disabled&&node.getClientRects().length&&
+        node.getAttribute('aria-hidden')!=='true');
+    if(!nodes.length)return false;
+    const first=nodes[0],last=nodes[nodes.length-1];
+    if(event.shiftKey&&(document.activeElement===first||!dialog.contains(document.activeElement))){
+      event.preventDefault();last.focus();return true;
+    }
+    if(!event.shiftKey&&(document.activeElement===last||!dialog.contains(document.activeElement))){
+      event.preventDefault();first.focus();return true;
+    }
+    return false;
+  }
   function onKeydown(event){
+    if(event.key==='Tab'&&modalOpen()){trapDrawerFocus(event);return;}
     if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){
       if(!available())return;event.preventDefault();
       if(mode!=='companies')showView('companies');
