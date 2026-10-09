@@ -11,6 +11,7 @@ const { handleEnrichmentRequest } = require('./api/enrichment');
 const { handleContactWriteRequest } = require('./api/contacts-write');
 const { handleActivityWriteRequest } = require('./api/activities-write');
 const { handleOrganizationsWrite } = require('./api/organizations-write');
+const { handleOpportunityWriteRequest } = require('./api/opportunities-write');
 
 function prepareCrmWorkspace(source){
   const marker='<script>\n';
@@ -140,6 +141,14 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
           return;
         }
         req.salongUser = auth.user;
+      }
+
+      const opportunityWriteResult=await handleOpportunityWriteRequest({req,url,repositories});
+      if(opportunityWriteResult){
+        const body=opportunityWriteResult.body&&opportunityWriteResult.body.success===false
+          ?{...opportunityWriteResult.body,requestId}:opportunityWriteResult.body;
+        writeJson(res,opportunityWriteResult.status,body,requestId);
+        return;
       }
 
       const orgWriteResult=await handleOrganizationsWrite({req,url,repositories});
