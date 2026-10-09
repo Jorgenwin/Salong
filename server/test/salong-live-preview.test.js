@@ -78,6 +78,31 @@ test('preview starts without synthetic data, rejects foreign messages and applie
   assert.equal(h.notify().length,1);
 });
 
+test('authorized company actions are delegated to the authenticated parent and may refresh data',()=>{
+  const h=runPreview(true);
+  h.ctx.globalTest.load();
+  h.listeners.message({origin:'https://salong.test',source:h.ctx.window.parent,
+    data:{type:'salong:crm-organizations',organizations:[{id:'a',name:'Første',priority:'A'}],canWrite:true}
+  });
+  assert.equal(h.ctx.window.SALONG_CRM_CAN_WRITE,true);
+  const button={
+    dataset:{salongEdit:'a'},
+    matches:()=>false,
+    closest(selector){return selector==='[data-salong-edit]'?this:null;}
+  };
+  let cancelled=false;
+  h.documentListeners.click({target:{closest:()=>button},preventDefault:()=>{cancelled=true;},
+    stopImmediatePropagation:()=>{}});
+  assert.equal(cancelled,true);
+  assert.equal(h.notify()[1].type,'salong:crm-edit');
+  assert.equal(h.notify()[1].id,'a');
+  h.listeners.message({origin:'https://salong.test',source:h.ctx.window.parent,
+    data:{type:'salong:crm-organizations-refresh',organizations:[{id:'b',name:'Oppdatert',priority:'B'}],canWrite:true}
+  });
+  assert.equal(h.ctx.S.orgs.a,undefined);
+  assert.equal(h.ctx.S.orgs.b.name,'Oppdatert');
+  assert.equal(h.notify()[2].count,1);
+});
 test('preview blocks mutation buttons before browser UI handlers run',()=>{
   const h=runPreview(true);let prevented=false,stopped=false;
   const btn={matches:()=>false,closest:()=>null};
