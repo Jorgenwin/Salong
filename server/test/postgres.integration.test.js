@@ -306,6 +306,48 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     const companies=await repositories.accounts.listOrganizations();
     assert.equal(companies.find(row=>row.id==='previous').priority,'C');
     assert.equal(companies.find(row=>row.id==='new-org').org_number,'123456789');
+    // Distinct-company outreach must count real outgoing touch events only.
+    const a1=await repositories.activities.create({
+      id:'touch-out-1',accountId:'previous',type:'email',
+      text:'Invitasjon sendt',direction:'out',actorId:'salong-owner',
+      happenedAt:'2027-01-11T09:00:00Z'
+    });
+    const a2=await repositories.activities.create({
+      id:'touch-out-2',accountId:'previous',type:'call',
+      text:'Oppfølging per telefon',direction:'out',actorId:'salong-owner',
+      happenedAt:'2027-01-12T09:00:00Z'
+    });
+    const incoming=await repositories.activities.create({
+      id:'touch-in',accountId:'new-org',type:'email',
+      text:'Innkommende',direction:'in',actorId:'salong-owner',
+      happenedAt:'2027-01-12T10:00:00Z'
+    });
+    const a3=await repositories.activities.create({
+      id:'touch-out-3',accountId:'new-org',type:'meeting',
+      text:'Møte',direction:'out',actorId:'salong-owner',
+      happenedAt:'2027-02-10T10:00:00Z'
+    });
+    assert.equal(a1.completed,true);
+    assert.equal(a2.account_id,'previous');
+    assert.equal(incoming.direction,'in');
+    assert.equal(a3.type,'meeting');
+    const counter=await repositories.activities.outreachSummary();
+    assert.equal(counter.contacted,2);
+    assert.equal(counter.touch_count,3);
+    const history=await repositories.activities.listForAccount('previous');
+    assert.equal(history.length,2);
+    assert.equal(history[0].id,'touch-out-2');
+
+    const task=await repositories.activities.create({
+      id:'task-followup',accountId:'previous',type:'task',
+      text:'Ring om en uke',dueAt:'2027-01-15T09:00:00Z',
+      completed:false,actorId:'salong-owner'
+    });
+    assert.equal(task.completed,false);
+    const completedTask=await repositories.activities.complete('task-followup');
+    assert.equal(completedTask.completed,true);
+    assert.equal((await repositories.activities.outreachSummary()).contacted,2);
+
 
   }finally{
     await db.close();
