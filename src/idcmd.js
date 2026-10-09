@@ -56,21 +56,61 @@ function idcDone(){
     const cv=idCoverage(); if(cv&&cv.behind[0]) sug.push(['Bearbeid underdekket segment: '+mtSegShort(cv.behind[0].name),(cv.behind[0].qualified-cv.behind[0].addressed)+' ikke adressert','seg:'+cv.behind[0].id]); }
   return '<section class="idc-done"><h3>Dagens arbeid er gjort.</h3>'+(sug.length?'<ul>'+sug.slice(0,2).map(s=>'<li><button type="button" class="btn" data-idgo="'+esc(s[2])+'">'+esc(s[0])+'</button><span>'+esc(s[1])+'</span></li>').join('')+'</ul>':'')+'</section>'; }
 
+/* Dagens prioriteringer: 5–7 unike kontoer fra PriorityService sin
+   normaliserte kø; ingen ny task- eller lead-database i frontend. */
+function idcNextRow(it){
+  const a=it.accId&&typeof mtGet==='function'?mtGet(it.accId):null;
+  const person=a&&(a.active||[]).find(p=>p.phone&&!p.dnc);
+  const step=a&&a.prog&&a.prog.next, stopped=a&&a.seq&&
+    ['replied','bounced','opt_out','completed','paused'].includes(a.seq.status);
+  const canCall=!!(a&&person&&!a.dncAcc&&!a.flags.disqualified&&!stopped&&
+    ((step&&step.ch==='telefon'&&step.due<=mtToday())||
+     (a.nx&&a.nx.k==='followup')));
+  const phoneLog=canCall?
+    '<details class="idc-quick"><summary class="btn primary sm">Logg samtale</summary>'+
+    '<div class="idc-quick-btns" role="group" aria-label="Resultat av samtalen til '+esc(person.name)+'">'+
+    [['reached','Nådd'],['not_reached','Ikke nådd'],['call_later','Svarer senere']]
+    .map(([k,label])=>'<button type="button" class="btn sm" data-idquick="'+esc(it.key)+'|'+k+'">'+label+'</button>').join('')+
+    '</div></details>':'';
+  const label=it.obj==='acc'?(a&&a.nx&&a.nx.k==='enrich'?'Åpne Berik':
+    a&&a.nx&&a.nx.k==='step'?'Start outreach':'Åpne kontakt'):'Åpne';
+  const next=it.action||'Vurder neste handling';
+  const why=(it.why||[]).filter(Boolean).slice(0,2).join(' · ');
+  const who=person?'<span>Kontakt: '+esc(person.name)+'</span>':'';
+  const tag=it.rank===1?'SVAR FRA KUNDE':it.rank===5?'OUTREACH':it.rank===4?'OPPFØLGING':
+    it.obj==='deal'?'NY FORESPØRSEL':'NESTE HANDLING';
+  return '<li class="idc-r idd-r" data-key="'+esc(it.key)+'"><div class="idc-m">'+
+    '<span class="idc-why">'+tag+'</span><b>'+esc(it.org)+'</b>'+
+    '<span>'+esc(next)+'</span><span class="idc-meta">'+esc(why)+'</span>'+who+'</div>'+
+    '<div class="idc-ac">'+phoneLog+
+    '<button type="button" class="btn sm'+(phoneLog?'':' primary')+'" data-idopen="'+esc(it.key)+'">'+label+'</button>'+
+    (it.done?'<button type="button" class="btn ghost sm" data-idone="'+esc(it.key)+'">Ferdig</button>':'')+
+    '</div></li>';
+}
 function idDagHTML(){
   if(UI.id.focus){ const Q=idQueue(); UI.id.cache=Object.fromEntries(Q.all.map(i=>[i.key,i])); return idFocusHTML(Q); }
   const Q=idQueue(); UI.id.cache=Object.fromEntries(Q.all.map(i=>[i.key,i]));
-  const P=planningService.getPlan(), prog=P.status==='active'||P.status==='upcoming'?idProgressHTML():P.status==='not_set'?'<p class="idc-goal">Ingen seksmånedersmål er satt. <button type="button" class="lnk" data-idgo="maal">Sett seksmånedersmål</button></p>':'';
+  const P=planningService.getPlan(), prog=P.status==='active'||P.status==='upcoming'?idProgressHTML():
+    P.status==='not_set'?'<p class="idc-goal">Ingen seksmånedersmål er satt. <button type="button" class="lnk" data-idgo="maal">Sett seksmånedersmål</button></p>':'';
   if(idNoData()&&!idGoalSet()) return '<header class="idn-hd"><h2>'+esc(idcHello())+'</h2></header>'+idEmpty(Q);
-  const day=idcDay(), nw=idcNew(), ct=idcContacts(), nwKeys=new Set(nw.map(x=>x.key)), fu=idcFollow(nwKeys), meet=day.filter(i=>i.kind==='visit'||i.kind==='meet').length;
-  const enq=dealsOp().filter(d=>idDealOk(d)&&d.stage==='ny'&&idInScope(d.ownerId,true)).length;
-  const counts=[meet?idcCount(meet,'møte','møter'):'',ct.length?idcCount(ct.length,'kontakt i sekvens','kontakter i sekvens'):'',enq?idcCount(enq,'ny forespørsel','nye forespørsler'):'',fu.length?idcCount(fu.length,'oppfølging','oppfølginger'):''].filter(Boolean);
+  const day=idcDay(), nw=idcNew(), ct=idcContacts(), nwKeys=new Set(nw.map(x=>x.key)), fu=idcFollow(nwKeys);
   const S1=day.length?(()=>{ const l=idcList(day,idcDayRow); return idcSection('DAGEN MIN',day.length,l.body,l.more); })():'';
   const S2=nw.length?(()=>{ const l=idcList(nw,idcNewRow); return '<section class="idc-s"><div class="idc-h"><h3>NYTT SIDEN SIST</h3><span>'+nw.length+'</span><button type="button" class="lnk" data-idcseen="1">Merk som sett</button></div><ul class="idc-l">'+l.body+'</ul>'+l.more+'</section>'; })():'';
   const S3=ct.length?(()=>{ const l=idcList(ct,idcContactRow); return idcSection('KONTAKT I DAG',ct.length,l.body,l.more); })():'';
   const S4=fu.length?(()=>{ const l=idcList(fu,i=>idRow(i)); return idcSection('MÅ FØLGES OPP',fu.length,l.body,l.more); })():'';
-  const any=S1||S2||S3||S4;
-  return '<header class="idn-hd"><h2>'+esc(idcHello())+'</h2>'+(counts.length?'<p class="idc-cs">'+counts.join('<span aria-hidden="true">·</span>')+'</p>':'')+'</header>'+prog+idcTierLine()+
-    (any?'':idcDone())+'<div class="idc">'+S1+S2+S3+S4+'</div>'+(any&&!S3&&!S4?idcDone().replace('Dagens arbeid er gjort.','Det som haster er gjort.'):''); }
+  const core=Q.shown.length?
+    '<section class="idc-s idd-pri"><div class="idc-h"><h3>DAGENS PRIORITERINGER</h3><span>'+Q.shown.length+'</span></div>'+
+    '<p class="idc-why">Én foreslått neste handling per konto. Resten blir liggende i CRM.</p>'+
+    '<ul class="idc-l">'+Q.shown.map(idcNextRow).join('')+'</ul>'+
+    (Q.more?'<p class="idc-meta">'+Q.more+' andre kontoer står i køen.</p>':'')+'</section>':idcDone();
+  const visits=day.filter(x=>x.kind==='visit'||x.kind==='meet');
+  const cal=visits.length?'<section class="idc-s"><div class="idc-h"><h3>Avtaler i dag</h3><span>'+visits.length+'</span></div><ul class="idc-l">'+visits.slice(0,3).map(idcDayRow).join('')+'</ul></section>':'';
+  const old=S1+S2+S3+S4;
+  const extra=old?'<details class="idc-other"><summary>Flere detaljer fra CRM'+(nw.length?' · '+nw.length+' nye':'')+'</summary><div class="idc">'+old+'</div></details>':'';
+  return '<header class="idn-hd"><h2>'+esc(idcHello())+'</h2></header>'+
+    '<div class="idc idc-action-first">'+cal+core+'</div>'+extra+
+    '<details class="idc-other"><summary>Plan og nøkkeltall</summary>'+prog+idcTierLine()+'</details>';
+}
 
 /* klikk for blokkene i I dag */
 (function(){ const _w=V.idag.wire; V.idag.wire=function(v){ _w.apply(this,arguments); const prev=v.onclick;
