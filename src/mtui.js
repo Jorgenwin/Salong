@@ -123,10 +123,17 @@ function mtSeqHTML(){
 /* ---------- view ---------- */
 V.prosp={html(){
   const U=UI.mt, nw=mtWorking().length;
+  const help={
+    pri:'Start her: vurder hvilke prospekter som bør prioriteres, og hva neste steg er.',
+    arb:'Følg opp aktive prospekter. Se hva som må gjøres, og åpne et selskap for detaljer.',
+    mal:'Utforsk hele målmarkedet. Filtrer og sorter for å finne relevante nye kunder.',
+    seq:'Hold oversikt over planlagte kontaktløp. Salong sender ikke e-post automatisk.',
+    str:'Se prioriteringer og begrunnelser for segmentene dere ønsker å jobbe med.'
+  }[U.tab]||'';
   const tabs='<div class="seg mt-tabs" role="group" aria-label="Prospekter">'+[['pri','Prioritet',null],['arb','Arbeidsliste',nw],['mal','Målmarked',null],['seq','Sekvenser',null],['str','Strategi',null]].map(([k,n,c])=>'<button type="button" data-mttab="'+k+'" aria-pressed="'+(U.tab===k)+'">'+n+(c!=null?' <span class="s">'+c+'</span>':'')+'</button>').join('')+'</div>';
   const menu='<details class="mt-menu"'+(U.menu?' open':'')+'><summary class="btn">Mer<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></summary><div class="mt-mi" role="menu">'+
    [['add','Legg til account'],['scout','Market Scout (importkø)'],['cog','Importer Cognism-kontakter'],['exp','Eksporter → Apollo CSV (fallback)'],['enr','Eksporter → accounts for enrichment (fallback)'],['apo','Importer Apollo-status (CSV, fallback)'],['snap','Snapshots av målmarkedet'],['seg','Segmenter og bølger']].map(([k,n])=>'<button type="button" role="menuitem" data-mtmodal="'+k+'">'+n+'</button>').join('')+'</div></details>';
-  return '<div class="mt"><div class="mt-top">'+tabs+'<div class="mt-top-r">'+menu+'<button type="button" class="btn primary" data-mtmodal="batch">Start neste batch</button></div></div>'+(U.tab==='pri'?tierPriHTML():U.tab==='str'?stratHTML():U.tab==='arb'?mtArbHTML():U.tab==='seq'?mtSeqHTML():mtMalHTML())+'</div>'; },
+  return '<div class="mt"><div class="mt-top">'+tabs+'<div class="mt-top-r">'+menu+'<button type="button" class="btn primary" data-mtmodal="batch">Start neste batch</button></div></div><p class="mt-guide">'+esc(help)+'</p>'+(U.tab==='pri'?tierPriHTML():U.tab==='str'?stratHTML():U.tab==='arb'?mtArbHTML():U.tab==='seq'?mtSeqHTML():mtMalHTML())+'</div>'; },
  wire(v){
   const U=UI.mt, rr=()=>renderView(true);
   v.querySelectorAll('[data-mttab]').forEach(b=>b.addEventListener('click',()=>{ U.tab=b.dataset.mttab; U.menu=false; rr(); }));
