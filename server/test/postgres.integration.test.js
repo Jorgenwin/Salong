@@ -372,6 +372,18 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     },{id:'opp-created',auditId:'audit-opp-created',actorId:'salong-owner'});
     assert.equal(pipelineCreated.opportunity.stage,'ny');
     assert.equal(pipelineCreated.opportunity.value,125000.5);
+
+    const duplicatePipeline=await repositories.opportunities.create({
+      accountId:'new-org',title:'  Fagdag   2027 ',eventDate:'2027-04-20',
+      value:125000.5
+    },{id:'opp-double',auditId:'audit-opp-double',actorId:'salong-owner'});
+    assert.equal(duplicatePipeline.duplicate,true);
+    assert.equal(duplicatePipeline.existingId,'opp-created');
+    const unestimated=await repositories.opportunities.create({
+      accountId:'previous',title:'Fagdager uten verdi'
+    },{id:'opp-no-value',auditId:'audit-no-value',actorId:'salong-owner'});
+    assert.equal(unestimated.opportunity.value,null);
+
     const pipelineStale=await repositories.opportunities.changeStage('opp-created',{
       stage:'tilbud',expectedStage:'dialog',lostReason:null,
       auditId:'audit-no-stage',actorId:'salong-owner'
