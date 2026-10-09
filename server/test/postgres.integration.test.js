@@ -269,13 +269,13 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     assert.deepEqual(rawStored.rows[0].data,sampleCompany.collections.mtacc.cultural);
 
     // Editing must not corrupt the imported rows or lose manual A/B/C changes.
-    const created=await repositories.accounts.createOrganization({
+    const createdCompany=await repositories.accounts.createOrganization({
       name:'Synthetic New Institution',org_number:'123456789',priority:'A',
       website:'https://new.example.test/',domain:'new.example.test',
       segment:'forlag',previous_customer:false
     },{id:'new-org',actorId:'salong-owner',auditId:'audit-new'});
-    assert.equal(created.organization.priority,'A');
-    assert.equal(created.organization.quality_manual_override,true);
+    assert.equal(createdCompany.organization.priority,'A');
+    assert.equal(createdCompany.organization.quality_manual_override,true);
     const duplicate=await repositories.accounts.createOrganization({
       name:'Synthetic New Institution',org_number:'123456789'
     },{id:'new-org-2',actorId:'salong-owner',auditId:'audit-nope'});
