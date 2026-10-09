@@ -289,7 +289,7 @@
   }
   function onKeydown(event){
     if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){
-      event.preventDefault();if(!available())return;
+      if(!available())return;event.preventDefault();
       if(mode!=='companies')showView('companies');
       get('search').focus();get('search').select();return;
     }
@@ -342,6 +342,8 @@
       renderPipeline();
     }));
     get('search').addEventListener('input',()=>{if(mode==='pipeline')renderPipeline();});
+    get('open-workspace').addEventListener('click',()=>showView('workspace'));
+    get('back-list').addEventListener('click',()=>showView('companies'));
     document.addEventListener('keydown',onKeydown);
     get('crm-quick-add').addEventListener('click',()=>bridge.canWrite()?bridge.openEditor(null):null);
     get('crm-quick-add').hidden=!bridge.canWrite();
