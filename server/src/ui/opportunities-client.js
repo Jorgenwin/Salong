@@ -77,10 +77,7 @@
   function onCompanyEditor(org){
     drawerBtn.hidden=!org||!bridge.canWrite();
   }
-  function decorateCard(btn,deal){
-    if(!bridge.canWrite())return btn;
-    const container=document.createElement('div');container.className='opp-card-wrap';
-    container.append(btn);
+  function stageControl(deal){
     const label=document.createElement('label');label.className='opp-stage-label';
     label.textContent='Fase';
     const select=document.createElement('select');
@@ -112,7 +109,13 @@
         if(/endret fase|konflikt|oppdater/i.test(error.message||''))ux.pipelineRefresh();
       }finally{select.disabled=false;}
     });
-    label.append(select);container.append(label);
+    label.append(select);
+    return label;
+  }
+  function decorateCard(btn,deal){
+    if(!bridge.canWrite())return btn;
+    const container=document.createElement('div');container.className='opp-card-wrap';
+    container.append(btn,stageControl(deal));
     return container;
   }
   newBtn.addEventListener('click',()=>open());
@@ -140,7 +143,7 @@
     finally{save.disabled=false;}
   });
   window.SalongOpportunityUI={
-    open,close,onAuth,onNavigate,onCompanyEditor,decorateCard,isOpen:()=>!dialog.hidden,
+    open,close,onAuth,onNavigate,onCompanyEditor,decorateCard,stageControl,isOpen:()=>!dialog.hidden,
     getDialog:()=>dialog
   };
 })();
