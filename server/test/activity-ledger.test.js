@@ -33,7 +33,8 @@ test('activity ledger uses parameterized SQL and excludes unsent/undone/internal
   const repo=createActivityRepository(db);
   const result=await repo.outreachSummary();
   assert.equal(result.contacted,2);
-  assert.deepEqual(calls[0].params,['2026-12-01','2027-05-31']);
+  assert.deepEqual(calls[0].params,[]);
+  assert.doesNotMatch(calls[0].sql,/a\.happened_at\s*(?:>=|<)/,'Early/late contacts must still count');
   assert.match(calls[0].sql,/count\(DISTINCT a\.organization_id\)/i);
   assert.match(calls[0].sql,/a\.direction='out'/);
   assert.match(calls[0].sql,/a\.done=true/);

@@ -55,7 +55,9 @@ function createActivityRepository(db){
       );
       return mapActivity(result.rows[0]);
     },
-    async outreachSummary({start='2026-12-01',deadline='2027-05-31'}={}){
+    // All real outreach already completed counts, including contacts logged
+    // before the December planning window and progress made after the deadline.
+    async outreachSummary(){
       const result=await db.query(
         `SELECT
           count(DISTINCT a.organization_id)::int AS contacted,
@@ -70,9 +72,7 @@ function createActivityRepository(db){
           AND a.type IN ('call','email','meeting','visning')
           AND a.direction='out'
           AND a.done=true
-          AND a.happened_at >= $1::date AT TIME ZONE 'Europe/Oslo'
-          AND a.happened_at < ($2::date + interval '1 day') AT TIME ZONE 'Europe/Oslo'
-        `,[start,deadline]
+        `,[]
       );
       return {
         contacted:Number(result.rows[0]?.contacted)||0,

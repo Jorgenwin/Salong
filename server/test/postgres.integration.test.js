@@ -331,9 +331,15 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     assert.equal(a2.account_id,'previous');
     assert.equal(incoming.direction,'in');
     assert.equal(a3.type,'meeting');
+    // October contacts also count toward the 500-company goal.
+    await repositories.activities.create({
+      id:'early-outbound',accountId:'cultural',type:'call',
+      text:'Tidlig kontakt',direction:'out',actorId:'salong-owner',
+      happenedAt:'2026-10-09T09:00:00Z'
+    });
     const counter=await repositories.activities.outreachSummary();
-    assert.equal(counter.contacted,2);
-    assert.equal(counter.touch_count,3);
+    assert.equal(counter.contacted,3);
+    assert.equal(counter.touch_count,4);
     const history=await repositories.activities.listForAccount('previous');
     assert.equal(history.length,2);
     assert.equal(history[0].id,'touch-out-2');
@@ -346,7 +352,7 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     assert.equal(task.completed,false);
     const completedTask=await repositories.activities.complete('task-followup');
     assert.equal(completedTask.completed,true);
-    assert.equal((await repositories.activities.outreachSummary()).contacted,2);
+    assert.equal((await repositories.activities.outreachSummary()).contacted,3);
 
 
   }finally{

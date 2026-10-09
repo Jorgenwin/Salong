@@ -5,6 +5,7 @@ Salong må ikke forveksle «de sju første oppgavene på skjermen» med maks ant
 ## Resultatmål og tempo
 
 - **500 unike organisasjoner med registrert første utgående kontakt**, ikke 500 oppgaver, kontakter eller e-poster.
+- Alle faktiske utgående kontakter som loggføres teller mot 500, også når de utføres før 1. desember 2026. Startdatoen nedenfor brukes bare til å beregne forventet tempo, ikke til å slette tidlig fremdrift.
 - Standard startdato: **1. desember 2026**.
 - Standard frist: **31. mai 2027**. Dette er seneste planlagte frist; hvis arbeidet går raskere blir estimert dagsbehov lavere. Sett en tidligere frist hvis ønskelig.
 - Tempo: `ceil((mål - allerede kontaktet) / gjenværende mandag–fredag)`, med kalenderdager uten helger; helligdager/ferie er ikke trukket fra og må hensyntas manuelt.
