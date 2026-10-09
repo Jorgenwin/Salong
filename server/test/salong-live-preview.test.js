@@ -113,6 +113,22 @@ test('authorized company actions are delegated to the authenticated parent and m
   assert.equal(h.notify()[3].type,'salong:crm-log');
   assert.equal(h.notify()[3].id,'b');
 });
+test('preview does not show an empty local contact page as real contact data',()=>{
+  const h=runPreview(true);
+  h.ctx.globalTest.load();
+  let cancelled=false,stopped=false;
+  const nav={dataset:{view:'kontakter'},closest(sel){
+    return sel==='#nav button[data-view]'?this:null;
+  }};
+  h.documentListeners.click({target:{closest:()=>nav},
+    preventDefault:()=>{cancelled=true;},
+    stopImmediatePropagation:()=>{stopped=true;}
+  });
+  assert.equal(cancelled,true);
+  assert.equal(stopped,true);
+  assert.equal(h.ctx.UI.view,'prosp');
+});
+
 test('preview blocks mutation buttons before browser UI handlers run',()=>{
   const h=runPreview(true);let prevented=false,stopped=false;
   const btn={matches:()=>false,closest:()=>null};
