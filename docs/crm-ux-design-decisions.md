@@ -8,6 +8,7 @@ Mål: gi en rask, ryddig og tilgjengelig CRM-arbeidsflyt for **utleie ved Litter
 - **Tastatur:** Ctrl/Cmd + K søker, N åpner ny organisasjon, J/K velger neste/forrige rad, E åpner valgt selskap, Escape lukker panel. Hurtigtaster overstyrer ikke input/tekstfelt.
 - **Sidoskuff:** høyre panel med selskapets informasjon, kontaktpersoner og tidslinje over **lagrede aktiviteter**. Leser får en sikker visning uten lagringsknapper. Mobil bruker hele bredden.
 - **Inline-edit:** kvalitet A/B/C kan endres direkte i listen, men kun med gyldig Supabase Auth og editorrolle. Før UI sier «Lagret», kreves positivt API-svar; ved feil gjenopprettes originalvalg.
+- **Sikker pipeline i både Kanban og tabell:** Eier/editor kan endre fase fra begge visninger. Duplikat av samme selskap, normaliserte tittel og arrangementsdato avvises med tydelig 409, også ved gjentatt innsending. Manglende estimert beløp vises som ukjent, ikke som bekreftet 0 kr.
 - **Ekte Kanban:** de syv eksisterende fasene i `public.opportunities`: ny, dialog, visning, tilbud, holdt, bekreftet, tapt. Visningen kan byttes mellom Kanban og tabell. Summer og antall regnes fra faktisk lagrede muligheter.
 - **KPI og tomtilstander:** ekte antall selskaper og A/B/C i toppfeltet; pipeline viser åpen verdi og åpent antall, og forklarer hvorfor listen er tom. Vektet verdi vises som **«Ikke beregnet»** fremfor å late som et estimat er kildebelagt.
 - **Reell aktivitetsalder:** varsel ved siste *lagrede, fullførte* kontakt eldre enn syv dager. Ikke basert på siste visning eller importerestempel.
