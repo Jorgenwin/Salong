@@ -332,6 +332,18 @@ function createRepositories(input) {
     },
 
     accounts:{
+      async listOrganizations(){
+        const result=await db.query(
+          'SELECT id,name,org_number,website,domain,segment,tier,former,notes,owner_id FROM organizations WHERE deleted_at IS NULL ORDER BY lower(name),id'
+        );
+        return result.rows.map(row=>({
+          id:row.id,name:row.name,org_number:row.org_number||null,
+          website:row.website||null,domain:row.domain||null,
+          segment:row.segment||null,priority:row.tier||null,
+          previous_customer:row.former===true,
+          notes:row.notes||null,owner_id:row.owner_id||null
+        }));
+      },
       async get(id) {
         const result=await db.query(
           ACCOUNT_SELECT+' WHERE o.id = $1 AND o.deleted_at IS NULL LIMIT 1',
