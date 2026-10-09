@@ -6,10 +6,13 @@ const path=require('node:path');
 const {HTML:CRM_HTML,JS:CRM_JS}=require('./ui/crm-page');
 const CRM_UX_JS=fs.readFileSync(path.join(__dirname,'ui/crm-ux.js'),'utf8');
 const CRM_UX_CSS=fs.readFileSync(path.join(__dirname,'ui/crm-ux.css'),'utf8');
+const CRM_OPP_JS=fs.readFileSync(path.join(__dirname,'ui/opportunities-client.js'),'utf8');
+const CRM_OPP_CSS=fs.readFileSync(path.join(__dirname,'ui/opportunities-client.css'),'utf8');
 const { handleReadRequest } = require('./api/read');
 const { handleEnrichmentRequest } = require('./api/enrichment');
 const { handleContactWriteRequest } = require('./api/contacts-write');
 const { handleActivityWriteRequest } = require('./api/activities-write');
+const { handleOpportunityWrite } = require('./api/opportunities-write');
 const { handleOrganizationsWrite } = require('./api/organizations-write');
 
 function prepareCrmWorkspace(source){
@@ -80,7 +83,7 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
 
       // A separate private CRM interface; not the public static demo.
       // Public auth configuration contains only a Supabase publishable key.
-      if(req.method==='GET' && ['/crm','/crm/','/crm/client.js','/crm/config.js','/crm/ux.js','/crm/ux.css'].includes(url.pathname)){
+      if(req.method==='GET' && ['/crm','/crm/','/crm/client.js','/crm/config.js','/crm/ux.js','/crm/ux.css','/crm/opportunities.js'].includes(url.pathname)){
         if(!config.supabaseUrl||!config.supabasePublishableKey){
           writeJson(res,503,{success:false,error_code:'crm_auth_not_configured'},requestId);
           return;
@@ -91,15 +94,19 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
           data=CRM_JS;contentType='application/javascript; charset=utf-8';
         }else if(url.pathname==='/crm/ux.js'){
           data=CRM_UX_JS;contentType='application/javascript; charset=utf-8';
+        }else if(url.pathname==='/crm/opportunities.js'){
+          data=CRM_OPP_JS;contentType='application/javascript; charset=utf-8';
         }else if(url.pathname==='/crm/ux.css'){
-          data=CRM_UX_CSS;contentType='text/css; charset=utf-8';
+          data=CRM_UX_CSS+'\n'+CRM_OPP_CSS;contentType='text/css; charset=utf-8';
         }else if(url.pathname==='/crm/config.js'){
           data='window.SALONG_PUBLIC_CONFIG='+JSON.stringify({
             supabaseUrl:config.supabaseUrl,publishableKey:config.supabasePublishableKey
           }).replace(/</g,'\\u003c')+';';
           contentType='application/javascript; charset=utf-8';
         }else{
-          data=CRM_HTML;contentType='text/html; charset=utf-8';
+          data=CRM_HTML.replace('</body>',
+            '<script src="/crm/opportunities.js" defer></script></body>');
+          contentType='text/html; charset=utf-8';
         }
         res.statusCode=200;
         res.setHeader('content-type',contentType);
@@ -147,6 +154,14 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
         const body=orgWriteResult.body&&orgWriteResult.body.success===false
           ? {...orgWriteResult.body,requestId}:orgWriteResult.body;
         writeJson(res,orgWriteResult.status,body,requestId);
+        return;
+      }
+
+      const opportunityWriteResult=await handleOpportunityWrite({req,url,repositories});
+      if(opportunityWriteResult){
+        const body=opportunityWriteResult.body&&opportunityWriteResult.body.success===false
+          ? {...opportunityWriteResult.body,requestId}:opportunityWriteResult.body;
+        writeJson(res,opportunityWriteResult.status,body,requestId);
         return;
       }
 

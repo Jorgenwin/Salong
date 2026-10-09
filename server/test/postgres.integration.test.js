@@ -365,6 +365,46 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     assert.equal(completedTask.completed,true);
     assert.equal((await repositories.activities.outreachSummary()).contacted,3);
 
+    // Opportunity edits are real transactions with immutable audit history.
+    const pipelineCreated=await repositories.opportunities.create({
+      accountId:'new-org',title:'Fagdag 2027',value:125000.5,
+      eventDate:'2027-04-20',room:'Wergeland',notes:'Testmulighet'
+    },{id:'opp-created',auditId:'audit-opp-created',actorId:'salong-owner'});
+    assert.equal(pipelineCreated.opportunity.stage,'ny');
+    assert.equal(pipelineCreated.opportunity.value,125000.5);
+    const pipelineStale=await repositories.opportunities.changeStage('opp-created',{
+      stage:'tilbud',expectedStage:'dialog',lostReason:null,
+      auditId:'audit-no-stage',actorId:'salong-owner'
+    });
+    assert.equal(pipelineStale.stale,true);
+    const pipelineDialog=await repositories.opportunities.changeStage('opp-created',{
+      stage:'dialog',expectedStage:'ny',lostReason:null,
+      auditId:'audit-opp-dialog',actorId:'salong-owner'
+    });
+    assert.equal(pipelineDialog.opportunity.stage,'dialog');
+    const pipelineLost=await repositories.opportunities.changeStage('opp-created',{
+      stage:'tapt',expectedStage:'dialog',lostReason:'Datoen passet ikke',
+      auditId:'audit-opp-lost',actorId:'salong-owner'
+    });
+    assert.equal(pipelineLost.opportunity.lost_reason,'Datoen passet ikke');
+    const pipelineAgain=await repositories.opportunities.changeStage('opp-created',{
+      stage:'tapt',expectedStage:'tapt',lostReason:'Datoen passet ikke',
+      auditId:'audit-no-repeat',actorId:'salong-owner'
+    });
+    assert.equal(pipelineAgain.unchanged,true);
+    const pipelineReopened=await repositories.opportunities.changeStage('opp-created',{
+      stage:'dialog',expectedStage:'tapt',lostReason:null,
+      auditId:'audit-opp-reopened',actorId:'salong-owner'
+    });
+    assert.equal(pipelineReopened.opportunity.lost_reason,null);
+    const oppAudit=await db.query(
+      "SELECT action FROM crm_audit_events WHERE organization_id='new-org' "+
+      "AND action LIKE 'opportunity_%' ORDER BY created_at"
+    );
+    assert.equal(oppAudit.rows.length,4);
+    assert.equal(oppAudit.rows[0].action,'opportunity_created');
+    assert.ok(oppAudit.rows.slice(1).every(row=>row.action==='opportunity_stage_changed'));
+
 
   }finally{
     await db.close();
