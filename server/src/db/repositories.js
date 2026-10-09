@@ -70,7 +70,7 @@ function mapOpportunity(row) {
     account_id: row.organization_id,
     title: row.title || '',
     stage: row.stage,
-    value: row.value_amount == null ? 0 : Number(row.value_amount),
+    value: row.value_amount == null ? null : Number(row.value_amount),
     room: row.room || null,
     event_date: asDateOnly(row.event_date),
     attendees: row.attendees == null ? 0 : Number(row.attendees),
