@@ -30,6 +30,7 @@
     get('crm-pipeline-tabs').hidden=mode!=='pipeline';
     get('crm-company-toolbar').hidden=mode==='pipeline';
     get('crm-quicksearch').hidden=mode==='workspace';
+    window.SalongOpportunityUI?.onNavigate(mode);
   }
   function showView(next){
     if(!available()||!['companies','pipeline','workspace'].includes(next))return;
@@ -131,7 +132,7 @@
     const btn=document.createElement('button');btn.type='button';btn.className='pipeline-card';
     btn.append(text('strong',company?.name||'Ukjent organisasjon'));
     const name=text('small',deal.title||'Salgsmulighet');btn.append(name);
-    btn.append(text('span',money(deal.value),'card-value'));
+    btn.append(text('span',deal.value==null?'Verdi ikke oppgitt':money(deal.value),'card-value'));
     if(deal.event_date)btn.append(text('small','Dato: '+deal.event_date));
     if(deal.last_activity_at){
       const age=Math.floor((Date.now()-new Date(deal.last_activity_at).getTime())/86400000);
@@ -140,7 +141,7 @@
     }else btn.append(text('small','Ingen registrert kontakt'));
     btn.addEventListener('click',()=>company?openAccount(company.id):
       bridge.message('Salgsmuligheten mangler kobling til et eksisterende selskap.'));
-    return btn;
+    return window.SalongOpportunityUI?.decorateCard(btn,deal)||btn;
   }
   function pipelineMatches(deal){
     const q=searchText();if(!q)return true;
@@ -188,7 +189,7 @@
       const row=document.createElement('tr');row.tabIndex=0;
       row.append(text('td',company?.name||'Ukjent selskap'),
         text('td',deal.title||'–'),text('td',stages.find(x=>x[0]===deal.stage)?.[1]||deal.stage),
-        text('td',money(deal.value)),
+        text('td',deal.value==null?'Ikke oppgitt':money(deal.value)),
         text('td',deal.last_activity_at?
           new Date(deal.last_activity_at).toLocaleDateString('nb-NO'):'Ikke registrert'));
       if(company){
@@ -263,6 +264,7 @@
     focusBeforeDrawer=document.activeElement;
     get('drawer-log').hidden=!org;
     get('drawer-history').replaceChildren();
+    window.SalongOpportunityUI?.onCompanyEditor(org);
     if(org){
       get('editor-timeline-title').textContent='Aktivitet · '+org.name;
       loadTimeline(org.id,get('drawer-history'));
@@ -272,6 +274,7 @@
     }
   }
   function onEditorClose(){
+    window.SalongOpportunityUI?.onCompanyEditor(null);
     focusBeforeDrawer?.focus?.();focusBeforeDrawer=null;
   }
   function moveRow(delta){
@@ -282,13 +285,14 @@
     selectedId=rows[idx].dataset.orgId;rows[idx].focus();rows[idx].scrollIntoView({block:'nearest'});
   }
   function modalOpen(){
-    return !get('editor').hidden||!get('activity-dialog').hidden||!get('read-drawer').hidden;
+    return !!window.SalongOpportunityUI?.isOpen()||!get('editor').hidden||!get('activity-dialog').hidden||!get('read-drawer').hidden;
   }
   function editingTarget(target){
     return target&&target.closest&&target.closest('input,textarea,select,[contenteditable="true"]');
   }
   function trapDrawerFocus(event){
-    const dialog=!get('activity-dialog').hidden?get('activity-dialog'):
+    const dialog=window.SalongOpportunityUI?.isOpen()?window.SalongOpportunityUI.getDialog():
+      !get('activity-dialog').hidden?get('activity-dialog'):
       !get('editor').hidden?get('editor'):
       !get('read-drawer').hidden?get('read-drawer'):null;
     if(!dialog)return false;
@@ -313,6 +317,7 @@
       get('search').focus();get('search').select();return;
     }
     if(event.key==='Escape'){
+      if(window.SalongOpportunityUI?.isOpen()){window.SalongOpportunityUI.close();return;}
       if(!get('activity-dialog').hidden){get('activity-close').click();return;}
       if(!get('editor').hidden){get('editor-close').click();return;}
       if(!get('read-drawer').hidden){closeReadDrawer();return;}
@@ -333,6 +338,7 @@
   function reset(){
     pipelineView='board';opportunities=null;mode='companies';pending=false;
     selectedId=null;readerId=null;get('read-drawer').hidden=true;
+    window.SalongOpportunityUI?.close();
     get('pipeline-panel').hidden=true;get('table-wrap').hidden=false;get('org-empty').hidden=true;
     setActiveNav();
   }
@@ -371,7 +377,7 @@
   window.SalongCRMUX={
     init,renderCompanies,showView,openAccount,onEditorOpen,onEditorClose,reset,
     focusSearch(){if(available()){showView('companies');get('search').focus();get('search').select();}},
-    onAuth(){get('crm-quick-add').hidden=!bridge.canWrite();renderCounts();setActiveNav();},
+    onAuth(){get('crm-quick-add').hidden=!bridge.canWrite();renderCounts();setActiveNav();window.SalongOpportunityUI?.onAuth();},
     pipelineRefresh(){opportunities=null;if(mode==='pipeline')fetchPipeline();}
   };
   if(window.SalongCRMBridge)window.SalongCRMUX.init(window.SalongCRMBridge);

@@ -1,4 +1,5 @@
 'use strict';
+const {createOpportunityWrites}=require('./opportunity-writes');
 const {mapOrganization,createOrganizationWrites}=require('./organization-writes');
 const {createActivityRepository}=require('./activity-ledger');
 
@@ -69,7 +70,7 @@ function mapOpportunity(row) {
     account_id: row.organization_id,
     title: row.title || '',
     stage: row.stage,
-    value: row.value_amount == null ? 0 : Number(row.value_amount),
+    value: row.value_amount == null ? null : Number(row.value_amount),
     room: row.room || null,
     event_date: asDateOnly(row.event_date),
     attendees: row.attendees == null ? 0 : Number(row.attendees),
@@ -532,6 +533,12 @@ function createRepositories(input) {
           'SELECT * FROM opportunities WHERE id=$1 AND deleted_at IS NULL LIMIT 1',[id]
         );
         return mapOpportunity(result.rows[0]);
+      },
+      async create(input,meta){
+        return createOpportunityWrites(db,mapOpportunity).create(input,meta);
+      },
+      async changeStage(id,input){
+        return createOpportunityWrites(db,mapOpportunity).changeStage(id,input);
       }
     },
 

@@ -1,0 +1,26 @@
+/* Opportunity create and stage-change controls, scoped to authenticated CRM. */
+#opp-dialog{position:fixed;inset:0;z-index:145;overflow-y:auto;padding:32px 12px;
+  background:rgba(15,23,42,.58)}
+#opp-dialog .opportunity-dialog-inner{max-width:560px;margin:0 auto;padding:24px;
+  border-radius:14px;background:#fff;box-shadow:0 10px 50px #0f172a35}
+#opp-dialog .opportunity-dialog-head{display:flex;align-items:center;
+  justify-content:space-between;gap:16px;border-bottom:1px solid #e2e8f0;padding-bottom:12px}
+#opp-dialog h2{margin:0;font-size:20px;color:#0f172a}
+#opp-dialog p{font-size:13px;color:#475569;line-height:1.55}
+#opp-form{display:grid;gap:14px;margin-top:12px}
+#opp-form label{display:grid;gap:5px;font-size:13px;font-weight:600;color:#334155}
+#opp-form input,#opp-form select,#opp-form textarea{box-sizing:border-box;width:100%;
+  border:1px solid #cbd5e1;border-radius:8px;padding:9px;font:inherit;font-weight:400}
+#opp-form .opp-actions{display:flex;justify-content:flex-end;gap:10px}
+#opp-form #opp-error{color:#b91c1c;font-size:13px}
+#opp-form .opp-explainer{background:#f1f5f9;padding:9px;border-radius:8px}
+#opp-new{background:#184b33;color:white}
+#drawer-opportunity{display:block;margin:8px 0}
+.opp-card-wrap{background:white;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:8px}
+.opp-card-wrap .pipeline-card{border:0;margin-bottom:0;box-shadow:none}
+.opp-stage-label{display:flex;gap:8px;align-items:center;margin:0 12px 12px;
+  font-size:11px;color:#475569}
+.opp-stage-label select{min-width:0;max-width:100%;flex:1;border:1px solid #cbd5e1;
+  border-radius:7px;padding:7px 8px;background:white;color:#0f172a;font-size:12px}
+@media(max-width:680px){#opp-dialog{padding:0}
+  #opp-dialog .opportunity-dialog-inner{min-height:100dvh;border-radius:0}}
