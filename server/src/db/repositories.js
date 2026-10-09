@@ -2,6 +2,7 @@
 const {createOpportunityWrites}=require('./opportunity-writes');
 const {mapOrganization,createOrganizationWrites}=require('./organization-writes');
 const {createActivityRepository}=require('./activity-ledger');
+const {createTodayQueueRepository}=require('./today-queue');
 
 function requireDb(db) {
   if (!db || typeof db.query !== 'function') {
@@ -543,6 +544,7 @@ function createRepositories(input) {
     },
 
     activities:createActivityRepository(db),
+    today:createTodayQueueRepository(db),
 
     enrichmentJobs:{
       async create({id,accountId,requestedBy=null,availableAt=null}={}){
