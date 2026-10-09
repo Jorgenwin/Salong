@@ -148,6 +148,117 @@
     return ((deal.title||'')+' '+(company?.name||'')+' '+(deal.stage||''))
       .toLocaleLowerCase('nb').includes(q);
   }
+
+  let caseForm=null,caseFocus=null;
+  function makeCaseForm(){
+    if(caseForm)return caseForm;
+    const backdrop=document.createElement('div');
+    backdrop.id='pipeline-create-modal';backdrop.className='crm-case-backdrop';
+    backdrop.hidden=true;backdrop.setAttribute('role','dialog');
+    backdrop.setAttribute('aria-modal','true');backdrop.setAttribute('aria-labelledby','pipeline-create-title');
+    const panel=document.createElement('section');panel.className='crm-case-panel';
+    const title=text('h2','Ny salgsmulighet');title.id='pipeline-create-title';
+    const close=makeButton('Lukk',()=>closeCaseForm(),'crm-case-cancel');
+    const header=document.createElement('div');header.className='crm-case-head';header.append(title,close);
+    panel.append(header);
+    const form=document.createElement('form');form.id='pipeline-create-form';
+    const grid=document.createElement('div');grid.className='crm-case-grid';
+    function field(name,label,type='text',max=180){
+      const wrap=document.createElement('label');wrap.textContent=label;
+      const input=document.createElement(type==='select'?'select':'input');
+      if(type!=='select')input.type=type;
+      input.name=name;input.id='case-'+name;
+      if(max&&type!=='select')input.maxLength=max;
+      wrap.append(input);grid.append(wrap);
+      return input;
+    }
+    const account=field('accountId','Selskap *','select');
+    const caseTitle=field('title','Tittel *','text',180);caseTitle.required=true;
+    const date=field('eventDate','Mulig arrangementsdato','date');
+    const value=field('value','Antatt verdi i kroner (valgfritt)','number');value.min='0';value.max='10000000000';value.step='0.01';
+    const room=field('room','Rom (valgfritt)','text',180);
+    const notes=field('notes','Notater (valgfritt)','text',5000);
+    form.append(grid,text('p','Oppretter en CRM-sak, ikke en bekreftet rombooking.','crm-case-note'));
+    const error=text('p','','crm-case-error');error.id='pipeline-create-error';error.setAttribute('role','alert');form.append(error);
+    const actions=document.createElement('div');actions.className='crm-case-actions';
+    const save=makeButton('Lagre salgsmulighet',()=>{},'crm-case-save');save.type='submit';
+    actions.append(save,makeButton('Avbryt',()=>closeCaseForm(),'crm-case-cancel'));
+    form.append(actions);panel.append(form);backdrop.append(panel);
+    backdrop.addEventListener('click',event=>{if(event.target===backdrop)closeCaseForm();});
+    form.addEventListener('submit',async event=>{
+      event.preventDefault();if(!bridge.canWrite()||!available())return;
+      error.textContent='';save.disabled=true;
+      try{
+        const raw=value.value.trim();
+        await bridge.createOpportunity({
+          accountId:account.value,title:caseTitle.value.trim(),
+          eventDate:date.value||null,value:raw?Number(raw):null,
+          room:room.value.trim()||null,notes:notes.value.trim()||null
+        });
+        closeCaseForm();opportunities=null;await fetchPipeline();
+        bridge.message('Salgsmuligheten er lagret i Supabase. Ingen booking er opprettet.');
+      }catch(e){error.textContent=e.message||'Kunne ikke lagre salgsmuligheten.';}
+      finally{save.disabled=false;}
+    });
+    document.body.append(backdrop);
+    caseForm={backdrop,account,caseTitle,form,error};
+    return caseForm;
+  }
+  function openCaseForm(){
+    if(!available()||!bridge.canWrite())return;
+    const state=makeCaseForm();
+    state.form.reset();state.error.textContent='';
+    state.account.replaceChildren();
+    const accounts=bridge.getAccounts().slice().sort((a,b)=>a.name.localeCompare(b.name,'nb'));
+    for(const org of accounts){
+      const opt=document.createElement('option');opt.value=org.id;opt.textContent=org.name;
+      state.account.append(opt);
+    }
+    if(!accounts.length){bridge.message('Legg til et selskap før du lager en salgsmulighet.');return;}
+    caseFocus=document.activeElement;state.backdrop.hidden=false;state.caseTitle.focus();
+  }
+  function closeCaseForm(){
+    if(!caseForm)return;
+    caseForm.backdrop.hidden=true;
+    caseFocus?.focus?.();caseFocus=null;
+  }
+  function stagePicker(deal){
+    const wrap=document.createElement('label');wrap.className='pipeline-stage-picker';
+    wrap.append(text('span','Endre salgsfase'));
+    const select=document.createElement('select');select.className='pipeline-stage-select';
+    select.setAttribute('aria-label','Endre salgsfase for '+deal.title);
+    for(const [value,label] of stages){
+      const opt=document.createElement('option');opt.value=value;opt.textContent=label;select.append(opt);
+    }
+    select.value=deal.stage;
+    select.addEventListener('click',e=>e.stopPropagation());
+    select.addEventListener('keydown',e=>e.stopPropagation());
+    select.addEventListener('change',async()=>{
+      const next=select.value;
+      if(next===deal.stage)return;
+      let reason=null;
+      if(next==='tapt'){
+        const answer=window.prompt('Hvorfor ble salgsmuligheten tapt?');
+        if(answer==null||!answer.trim()){
+          select.value=deal.stage;bridge.message('Faseendringen ble avbrutt.');return;
+        }
+        reason=answer.trim();
+      }
+      select.disabled=true;
+      try{
+        await bridge.changeOpportunityStage(deal.id,next,deal.stage,reason);
+        opportunities=null;await fetchPipeline();
+        bridge.message('Salgsfasen er lagret i Supabase. Ingen rombooking er endret.');
+      }catch(error){
+        select.value=deal.stage;
+        bridge.message(error.message||'Kunne ikke lagre fasen.');
+        opportunities=null;await fetchPipeline();
+      }finally{select.disabled=false;}
+    });
+    wrap.append(select);
+    return wrap;
+  }
+
   function renderPipeline(){
     if(mode!=='pipeline'||!available()||!opportunities)return;
     const filtered=opportunities.filter(pipelineMatches);
@@ -174,11 +285,16 @@
       header.append(text('span',label),text('span',String(deals.length),'pipeline-stage-count'));
       section.append(header,text('p',money(deals.reduce((n,d)=>n+Number(d.value||0),0)),'pipeline-stage-subtotal'));
       if(!deals.length)section.append(text('p','Ingen saker','stage-empty'));
-      for(const deal of deals)section.append(cardFor(deal));
+      for(const deal of deals){
+        const item=document.createElement('div');item.className='pipeline-card-wrap';
+        item.append(cardFor(deal));
+        if(bridge.canWrite())item.append(stagePicker(deal));
+        section.append(item);
+      }
       board.append(section);
     }
     const table=document.createElement('table'),thead=document.createElement('thead'),tr=document.createElement('tr');
-    for(const heading of ['Selskap','Salgsmulighet','Fase','Verdi','Aktivitet']){
+    for(const heading of ['Selskap','Salgsmulighet','Fase','Verdi','Aktivitet',...(bridge.canWrite()?['Endre fase']:[])]){
       tr.append(text('th',heading));
     }
     thead.append(tr);table.append(thead);
@@ -191,8 +307,11 @@
         text('td',money(deal.value)),
         text('td',deal.last_activity_at?
           new Date(deal.last_activity_at).toLocaleDateString('nb-NO'):'Ikke registrert'));
+      if(bridge.canWrite()){
+        const td=document.createElement('td');td.append(stagePicker(deal));row.append(td);
+      }
       if(company){
-        row.addEventListener('click',()=>openAccount(company.id));
+        row.addEventListener('click',event=>{if(event.target.closest('select'))return;openAccount(company.id);});
         row.addEventListener('keydown',e=>{if(e.key==='Enter')openAccount(company.id);});
       }
       tbody.append(row);
@@ -282,13 +401,14 @@
     selectedId=rows[idx].dataset.orgId;rows[idx].focus();rows[idx].scrollIntoView({block:'nearest'});
   }
   function modalOpen(){
-    return !get('editor').hidden||!get('activity-dialog').hidden||!get('read-drawer').hidden;
+    return (caseForm&&!caseForm.backdrop.hidden)||!get('editor').hidden||!get('activity-dialog').hidden||!get('read-drawer').hidden;
   }
   function editingTarget(target){
     return target&&target.closest&&target.closest('input,textarea,select,[contenteditable="true"]');
   }
   function trapDrawerFocus(event){
-    const dialog=!get('activity-dialog').hidden?get('activity-dialog'):
+    const dialog=(caseForm&&!caseForm.backdrop.hidden)?caseForm.backdrop:
+      !get('activity-dialog').hidden?get('activity-dialog'):
       !get('editor').hidden?get('editor'):
       !get('read-drawer').hidden?get('read-drawer'):null;
     if(!dialog)return false;
@@ -313,6 +433,7 @@
       get('search').focus();get('search').select();return;
     }
     if(event.key==='Escape'){
+      if(caseForm&&!caseForm.backdrop.hidden){closeCaseForm();return;}
       if(!get('activity-dialog').hidden){get('activity-close').click();return;}
       if(!get('editor').hidden){get('editor-close').click();return;}
       if(!get('read-drawer').hidden){closeReadDrawer();return;}
@@ -332,6 +453,7 @@
   }
   function reset(){
     pipelineView='board';opportunities=null;mode='companies';pending=false;
+    closeCaseForm();if(get('pipeline-new'))get('pipeline-new').hidden=true;
     selectedId=null;readerId=null;get('read-drawer').hidden=true;
     get('pipeline-panel').hidden=true;get('table-wrap').hidden=false;get('org-empty').hidden=true;
     setActiveNav();
@@ -366,12 +488,15 @@
     document.addEventListener('keydown',onKeydown);
     get('crm-quick-add').addEventListener('click',()=>bridge.canWrite()?bridge.openEditor(null):null);
     get('crm-quick-add').hidden=!bridge.canWrite();
+    const newCase=makeButton('+ Ny salgsmulighet',openCaseForm,'pipeline-new');
+    newCase.id='pipeline-new';newCase.hidden=!bridge.canWrite();
+    get('crm-pipeline-tabs').parentNode.append(newCase);
     setActiveNav();
   }
   window.SalongCRMUX={
     init,renderCompanies,showView,openAccount,onEditorOpen,onEditorClose,reset,
     focusSearch(){if(available()){showView('companies');get('search').focus();get('search').select();}},
-    onAuth(){get('crm-quick-add').hidden=!bridge.canWrite();renderCounts();setActiveNav();},
+    onAuth(){get('crm-quick-add').hidden=!bridge.canWrite();get('pipeline-new').hidden=!bridge.canWrite();renderCounts();setActiveNav();},
     pipelineRefresh(){opportunities=null;if(mode==='pipeline')fetchPipeline();}
   };
   if(window.SalongCRMBridge)window.SalongCRMUX.init(window.SalongCRMBridge);
