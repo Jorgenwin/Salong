@@ -2,7 +2,7 @@
    Leser fra eksisterende moduler (Pipeline, Kunder, Forespørsler, Prospekter/sekvenser, Kalender, Mål og prognose).
    Eier ingen oppgaver, saker eller prospektdata. Det som endres (Ferdig, Utsett, Tildel, Logg kontakt) skjer på det egentlige objektet.
    Det eneste arbeidsstasjonen selv lagrer i innstillingene er (1) ukeplaner og (2) «skjul til» for rader som ikke er oppgaver. */
-const ID={offerDays:5,staleDays:7,replySla:24,topN:10,maxReady:3,maxLoose:3,minTierA:'A',
+const ID={offerDays:5,staleDays:7,replySla:24,topN:7,maxReady:3,maxLoose:3,minTierA:'A',
   stat:{ahead:1.05,on:.95,slight:.8}};
 UI.id=UI.id||{tab:'dag',scope:'mine',focus:null,pane:'',wkOff:0,edit:null,snoozed:false,nr:null};
 
@@ -75,7 +75,17 @@ function idItems(){
 }
 function idQueue(){
   const sn=idSnoozeMap(), all=idItems().filter(i=>idInScope(i.ownerId,i.crit)), vis=all.filter(i=>!sn[i.key]), hidden=all.filter(i=>sn[i.key]);
-  const shown=vis.slice(0,ID.topN); return {all,vis,shown,hidden,more:vis.length-shown.length};
+  // One next action per account in the visible work queue. Other actionable
+  // items remain in 'all' (and the source objects) rather than being deleted.
+  // The already sorted list puts replies and overdue obligations first.
+  const seen=new Set(), shown=[];
+  for(const item of vis){
+    const key=item.orgId||item.key;
+    if(seen.has(key))continue;
+    seen.add(key);
+    if(shown.length<ID.topN)shown.push(item);
+  }
+  return {all,vis,shown,hidden,more:Math.max(0,vis.length-shown.length)};
 }
 /* tall til toppstripen */
 function idReadyCount(){ if(typeof mtAll!=='function') return 0; return mtAll().filter(a=>a.kind==='ny'&&a.flags.qualified&&a.flags.enriched&&!a.flags.addressed&&!a.flags.disqualified&&!a.dncAcc&&idInScope(a.ownerId,false)).length; }
