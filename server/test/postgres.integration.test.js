@@ -405,6 +405,52 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     assert.equal(oppAudit.rows[0].action,'opportunity_created');
     assert.ok(oppAudit.rows.slice(1).every(row=>row.action==='opportunity_stage_changed'));
 
+    // Real I dag queue: tasks outrank prospecting, one next action per
+    // company, contacted companies never reappear as first-contact leads.
+    for(const [id,name,priority] of [
+      ['queue-A','Testforlag med oppfølging','A'],
+      ['queue-B','Testforening med første kontakt','B'],
+      ['queue-C','Teststiftelse med første kontakt','C']
+    ]){
+      const creation=await repositories.accounts.createOrganization({name,priority},{
+        id,actorId:'salong-owner',auditId:'audit-'+id
+      });
+      assert.equal(creation.organization.priority,priority);
+    }
+    await repositories.activities.create({
+      id:'queue-task-due',accountId:'queue-A',type:'task',
+      text:'Kontakt på telefon',dueAt:'2027-01-10T09:00:00Z',
+      completed:false,actorId:'salong-owner'
+    });
+    await repositories.activities.create({
+      id:'queue-task-second',accountId:'queue-A',type:'task',
+      text:'Send senere',dueAt:'2027-01-16T09:00:00Z',
+      completed:false,actorId:'salong-owner'
+    });
+    const day=await repositories.today.list({today:'2027-01-11',limit:40,offset:0});
+    assert.equal(day.total,3);
+    assert.equal(day.items.length,3);
+    assert.deepEqual(day.items.map(item=>item.account_id),
+      ['queue-A','queue-B','queue-C']);
+    assert.deepEqual(day.items.map(item=>item.kind),
+      ['task','first_contact','first_contact']);
+    assert.equal(day.items[0].action_id,'queue-task-due');
+    const nextPage=await repositories.today.list({
+      today:'2027-01-11',limit:1,offset:1
+    });
+    assert.equal(nextPage.total,3);
+    assert.equal(nextPage.items[0].account_id,'queue-B');
+    await repositories.activities.create({
+      id:'queue-B-actual',accountId:'queue-B',type:'email',
+      text:'Faktisk utsendt e-post',direction:'out',
+      completed:true,actorId:'salong-owner'
+    });
+    const updatedDay=await repositories.today.list({
+      today:'2027-01-11',limit:40,offset:0
+    });
+    assert.equal(updatedDay.total,2);
+    assert.equal(updatedDay.items.some(item=>item.account_id==='queue-B'),false);
+
 
   }finally{
     await db.close();
