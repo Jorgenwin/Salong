@@ -41,12 +41,12 @@ test('Prospekter retains every original view and provides clear tab guidance', {
       assert.ok(views.includes(key),'Missing original Salong view: '+key);
     }
     assert.ok(views.length>=12,'No original Salong navigation item should disappear');
-    assert.equal(await page.locator('#view [data-mttab]').count(),5,
+    assert.equal(await page.locator('.mt-top .mt-tabs [data-mttab]').count(),5,
       'All original Prospecting tabs remain present');
     assert.match(await page.locator('.mt-guide').textContent(),/Start her/);
-    await page.locator('#view [data-mttab="mal"]').click();
+    await page.locator('.mt-top .mt-tabs [data-mttab="mal"]').click();
     assert.match(await page.locator('.mt-guide').textContent(),/målmarkedet/i);
-    await page.locator('#view [data-mttab="arb"]').click();
+    await page.locator('.mt-top .mt-tabs [data-mttab="arb"]').click();
     assert.match(await page.locator('.mt-guide').textContent(),/Følg opp aktive prospekter/);
     assert.match(await page.locator('#mode').textContent(),/demo|lagres ikke/i);
     assert.equal(new URL(page.url()).pathname,'/','The familiar URL must not redirect to the reduced CRM');
