@@ -65,6 +65,7 @@ function createHttpBackend(opt){
   }
 
   return {
+    getOrganizations(){return request('/api/organizations');},
     async getAccount(id){
       try{ return await request('/api/accounts/'+encodeURIComponent(id)); }
       catch(error){ if(error.status===404&&error.code==='account_not_found') return null; throw error; }
