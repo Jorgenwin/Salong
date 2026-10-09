@@ -69,6 +69,7 @@ function createActivityRepository(db){
         WHERE a.deleted_at IS NULL
           AND a.type IN ('call','email','meeting','visning')
           AND a.direction='out'
+          AND a.done=true
           AND a.happened_at >= $1::date AT TIME ZONE 'Europe/Oslo'
           AND a.happened_at < ($2::date + interval '1 day') AT TIME ZONE 'Europe/Oslo'
         `,[start,deadline]
