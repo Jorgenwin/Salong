@@ -56,16 +56,34 @@ function tierScript(a){
     'Ingen stress: '+T.cancel,
     'Avslutt: avtal dato for visning eller når du ringer igjen, og logg samtalen i kontokortet.'];
   return '<ul class="tp-sc">'+L.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>'; }
+/* Prioritet er en liten markering ved navnet. Forklaring, endring og
+   samtalestøtte er atskilt og kan åpnes uten et stort kort i Oversikt. */
 function tierDrawerBlock(a){
   if(!a||a.kind===undefined) return '';
-  const D=tierD(), n=a.pt;
-  return '<section class="tp-d"><div class="tp-dh">'+(n?'<span class="tp-c t'+n+'">Tier '+n+'</span> <b>'+esc(D.tiers[n].t)+'</b>':'<span class="tp-c t0">Ikke prioritert</span>')+
-   '<label class="tp-dl">Prioritet <select class="in fsel tp-sel" data-tpset="'+esc(a.id)+'" aria-label="Endre prioritet for '+esc(a.name)+'"><option value="0"'+(a.ptAuto?' selected':'')+'>Følg anbefalingen</option><option value="1"'+(!a.ptAuto&&n===1?' selected':'')+'>Tier 1</option><option value="2"'+(!a.ptAuto&&n===2?' selected':'')+'>Tier 2</option><option value="3"'+(!a.ptAuto&&n===3?' selected':'')+'>Tier 3</option></select></label></div>'+
-   '<p class="tp-summary">'+esc(tierHumanWhy(a))+'</p>'+
-   '<details class="tp-dd tp-basis"><summary>Om prioriteringen</summary><p>'+
-   (a.ptAuto?'Salong foreslår prioriteten ut fra virksomhetens profil og tidligere kontakt. Du kan endre den.':'Denne prioriteten er valgt manuelt og beholdes ved ny vurdering.')+
-   '</p></details>'+(n&&n<=2?'<details class="tp-dd"><summary>Samtalestøtte</summary>'+tierScript(a)+'</details>':'')+'</section>'; }
-{ const _tDH=mtDrawerHTML; mtDrawerHTML=function(a){ const h=_tDH(a); return h.replace('<div class="ov">',tierDrawerBlock(a)+'<div class="ov">'); }; }
+  const D=tierD(), n=a.pt, label=n?'Tier '+n+' – '+D.tiers[n].t:'Ikke prioritert',
+        chip=n===1?'★':n?'T'+n:'–';
+  return '<div class="tp-d tp-inline"><details class="tp-inline-details">'+
+    '<summary class="tp-inline-trigger" aria-label="Vis prioritet: '+esc(label)+'" title="'+esc(label)+'">'+
+    '<span class="tp-c t'+(n||0)+'" aria-hidden="true">'+chip+'</span></summary>'+
+    '<div class="tp-inline-panel"><div class="tp-dh"><b>'+esc(label)+'</b></div>'+
+    '<p class="tp-summary">'+esc(tierHumanWhy(a))+'</p>'+
+    '<label class="tp-dl">Prioritet <select class="in fsel tp-sel" data-tpset="'+esc(a.id)+'" aria-label="Endre prioritet for '+esc(a.name)+'">'+
+      '<option value="0"'+(a.ptAuto?' selected':'')+'>Følg anbefalingen</option>'+
+      '<option value="1"'+(!a.ptAuto&&n===1?' selected':'')+'>Tier 1</option>'+
+      '<option value="2"'+(!a.ptAuto&&n===2?' selected':'')+'>Tier 2</option>'+
+      '<option value="3"'+(!a.ptAuto&&n===3?' selected':'')+'>Tier 3</option></select></label>'+
+    '<details class="tp-dd tp-basis"><summary>Om prioriteringen</summary><p>'+
+      (a.ptAuto?'Salong foreslår prioriteten ut fra virksomhetens profil og tidligere kontakt. Du kan endre den.':'Denne prioriteten er valgt manuelt og beholdes ved ny vurdering.')+
+    '</p></details>'+
+    (n&&n<=2?'<details class="tp-dd"><summary>Samtalestøtte</summary>'+tierScript(a)+'</details>':'')+
+    '</div></details></div>';
+}
+{ const _tDH=mtDrawerHTML; mtDrawerHTML=function(a){
+    const html=_tDH(a);
+    // Only wrap the company heading inside the original drawer header.
+    return html.replace(/(<h2>[\s\S]*?<\/h2>)/,
+      (_match,heading)=>'<div class="tp-heading">'+heading+tierDrawerBlock(a)+'</div>');
+  }; }
 
 /* hendelser: delegert, virker i både liste og kontokort */
 if(!window.__tpWired){ window.__tpWired=1;

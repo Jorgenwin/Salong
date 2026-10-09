@@ -1,0 +1,222 @@
+/* Prospektkort: roligere, tettere og lettere å skanne.
+   Prioritet er en markering, dokumentasjon vises ved behov. */
+
+/* Flytt prioritet helt opp til navnet i stedet for en egen boks. */
+.bk-dr>header{position:relative;z-index:7}
+.bk-dr .tp-heading{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:9px;
+  position:relative;
+  min-width:0;
+}
+.bk-dr .tp-heading h2{margin:0;min-width:0}
+.bk-dr .tp-inline{
+  margin:0;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  flex:0 0 auto;
+}
+.bk-dr .tp-inline-details>summary{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:27px;
+  height:27px;
+  padding:0;
+  border-radius:50%;
+  cursor:pointer;
+  list-style:none;
+}
+.bk-dr .tp-inline-details>summary::-webkit-details-marker{display:none}
+.bk-dr .tp-inline-details>summary .tp-c{
+  min-width:25px;
+  height:25px;
+  display:grid;
+  place-items:center;
+  padding:0 3px;
+  border-radius:50%;
+  font-size:11px;
+  line-height:1;
+}
+.bk-dr .tp-inline-details>summary .tp-c.t1{font-size:14px}
+.bk-dr .tp-inline-details>summary:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+}
+.bk-dr .tp-inline-panel{
+  position:absolute;
+  left:0;
+  top:calc(100% + 8px);
+  z-index:10;
+  box-sizing:border-box;
+  width:min(340px,calc(100vw - 50px));
+  padding:16px;
+  border:1px solid var(--rule);
+  border-radius:12px;
+  background:var(--surface);
+  box-shadow:0 10px 30px rgba(0,0,0,.16);
+  display:grid;
+  gap:8px;
+}
+.bk-dr .tp-inline-panel .tp-dh b{font-size:14px;font-weight:650}
+.bk-dr .tp-inline-panel .tp-summary{
+  margin:0 0 3px;
+  font-size:13px;
+  line-height:1.45;
+  color:var(--muted);
+}
+.bk-dr .tp-inline-panel .tp-dl{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:0;
+  color:var(--muted);
+}
+.bk-dr .tp-inline-panel .tp-sel{width:auto;min-width:160px;max-width:200px}
+.bk-dr .tp-inline-panel .tp-dd{margin:0}
+.bk-dr .tp-inline-panel .tp-dd>summary{
+  color:var(--accent);
+  font-size:12.5px;
+  padding:3px 0;
+  cursor:pointer;
+}
+.bk-dr .tp-inline-panel .tp-sc{max-height:220px;overflow-y:auto}
+.bk-dr .tp-inline-panel .tp-basis p{margin:5px 0;font-size:12.5px;line-height:1.45}
+
+/* «Hvorfor nå» er normal informasjonstekst, ikke en tittel. */
+.bk-dr .ov-why{
+  position:relative;
+  min-width:0;
+  padding-right:34px;
+}
+.bk-dr .ov-r .ov-why-summary{
+  font-size:13.5px;
+  font-weight:450;
+  line-height:1.5;
+  max-width:72ch;
+  color:var(--ink);
+  overflow-wrap:anywhere;
+}
+.bk-dr .ov-why-more{margin:0}
+.bk-dr .ov-why-more>summary{
+  position:absolute;
+  top:-1px;
+  right:0;
+  width:26px;
+  height:26px;
+  box-sizing:border-box;
+  display:grid;
+  place-items:center;
+  padding:0;
+  border:1px solid var(--rule);
+  border-radius:50%;
+  background:var(--surface);
+  color:var(--accent);
+  list-style:none;
+  cursor:pointer;
+}
+.bk-dr .ov-why-more>summary::before{content:none;display:none}
+.bk-dr .ov-why-more[open]>summary::before{content:none;transform:none}
+.bk-dr .ov-why-more>summary .ov-info-glyph{
+  display:block;
+  font-family:Georgia,serif;
+  font-size:14px;
+  font-style:italic;
+  font-weight:700;
+  line-height:1;
+}
+.bk-dr .ov-why-more>summary:hover,
+.bk-dr .ov-why-more[open]>summary{
+  color:var(--ink);
+  border-color:var(--accent);
+  background:var(--accent-soft);
+}
+.bk-dr .ov-why-more>summary:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+}
+.bk-dr .ov-why-body{
+  margin:12px 0 3px;
+  padding-left:12px;
+  border-left:2px solid var(--rule);
+  color:var(--muted);
+}
+
+/* Kontekst deles tydelig mellom virksomhet og historikk. */
+.bk-dr .ov-context{display:grid;gap:8px;min-width:0}
+.bk-dr .ov-context-line{
+  display:grid;
+  grid-template-columns:75px minmax(0,1fr);
+  align-items:baseline;
+  gap:10px;
+  min-width:0;
+}
+.bk-dr .ov-context-label{
+  font-size:12px;
+  line-height:1.5;
+  color:var(--muted);
+  font-weight:550;
+}
+.bk-dr .ov-context-line p{
+  font-size:13.25px;
+  line-height:1.5;
+  margin:0;
+  overflow-wrap:anywhere;
+}
+.bk-dr .ov-context-line p.ov-context-empty{color:var(--muted)}
+.bk-dr .ov-context-extra{margin-top:1px}
+.bk-dr .ov-context-extra>summary{
+  display:list-item;
+  font-size:12.25px;
+  line-height:1.4;
+  color:var(--accent);
+  cursor:pointer;
+  width:max-content;
+  max-width:100%;
+  margin-left:2px;
+}
+.bk-dr .ov-context-extra>summary:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+}
+.bk-dr .ov-context-details{
+  border-left:2px solid var(--rule);
+  margin:10px 0 0 4px;
+  padding-left:12px;
+  display:grid;
+  gap:10px;
+}
+.bk-dr .ov-context-source b{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  color:var(--muted);
+}
+.bk-dr .ov-context-source p{
+  margin:4px 0 0;
+  font-size:12.75px;
+  line-height:1.55;
+  overflow-wrap:anywhere;
+}
+
+/* Én berikingsstatus ved Kontakt, ikke enda en stor Beriking-rad. */
+.bk-dr .ov-contact-state{
+  color:var(--muted);
+  font-size:12.5px;
+  margin:7px 0 4px;
+}
+.bk-dr .ov-contact-actions{margin-top:7px}
+.bk-dr .ov-contact-actions .btn{font-size:12.5px;padding:6px 11px}
+
+@media(max-width:560px){
+  .bk-dr .tp-inline-panel{max-width:calc(100vw - 40px);padding:13px}
+  .bk-dr .ov-context-line{grid-template-columns:1fr;gap:0}
+  .bk-dr .ov-context-label{margin-bottom:1px}
+  .bk-dr .ov-r .ov-why-summary{font-size:13.5px}
+}

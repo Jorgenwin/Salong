@@ -11,6 +11,8 @@ Oppdatert 9. oktober 2026 etter tilbakemelding fra brukeren.
 - Kontroller originalens faner og sider i Playwright før frontend-release, inkludert `/#prosp`.
 - **Vis konklusjonen først:** korte, konkrete setninger på kontokort og prospektlister. La `<details>`/piler åpne original begrunnelse, kildehenvisninger og poengfordeling ved behov. Ingen kildedata slettes.
 - Interne felt som `score`, `market_status`, `cult/3`, automatisk tierberegning og API-koder skal ikke brukes som hovedtekst eller hjelpetekst rettet mot brukeren. Vis menneskelig språk uten å forandre beregningene.
+- Kontokortet i Prospekter skal prioritere **Hvorfor nå**, **Kontekst** (virksomhet + historikk hos oss) og **Kontakt**. En liten infoknapp åpner hvorfor-grunnlag, mens prioritet er en diskret markering ved navnet med valgfri forklaring/samtalestøtte. Ikke lag en stor Tier-boks eller egen dobbel Beriking-rad.
+
 
 
 ## Lagring og avgrensning
