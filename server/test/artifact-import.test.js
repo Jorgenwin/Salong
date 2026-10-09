@@ -89,6 +89,7 @@ test('import stages all raw documents before CRM inserts and commits',async()=>{
     async query(sql,params){
       calls.push({sql:String(sql),params});
       if(sql.startsWith('SELECT (SELECT count(*)')) return {rows:[{organizations:0,enrichment_jobs:0,documents:0}]};
+      if(sql.startsWith('SELECT id,role,active FROM public.members')) return {rows:[{id:'salong-owner',role:'owner',active:true}]};
       if(sql.startsWith('SELECT count(*)::integer')) return {rows:[{n:0}]};
       return {rows:[]};
     }
@@ -133,8 +134,20 @@ test('company-first mode stages all documents but normalizes only companies and 
   assert.equal(lite.rows.organizations[0].tier,'A');
 });
 
-test('company-first mode still blocks missing real company names',async()=>{
+test('company-first mode defers nameless prospect links without inventing company names',()=>{
   const lite=companyFirstPlan({collections:{mtacc:{'unknown-1':{status:'new'}}}});
-  assert.equal(lite.report.review_required_count,1);
-  await assert.rejects(()=>applyImport({query:()=>{throw Error('no DB write expected');}},lite),/needs review/);
+  assert.equal(lite.report.review_required_count,0);
+  assert.equal(lite.report.deferred_unnamed_accounts,1);
+  assert.equal(lite.rows.organizations.length,0);
+  assert.equal(lite.raw.length,1);
+});
+
+test('company-first import refuses unprovisioned or multiple owner accounts',async()=>{
+  const plan=companyFirstPlan(sample());
+  const db={async query(sql){
+    if(sql.startsWith('SELECT (SELECT count(*)')) return {rows:[{organizations:0,prospects:0,documents:0}]};
+    if(sql.startsWith('SELECT id,role,active FROM public.members'))return {rows:[]};
+    return {rows:[]};
+  }};
+  await assert.rejects(()=>applyImport(db,plan),/exactly one active provisioned owner/);
 });
