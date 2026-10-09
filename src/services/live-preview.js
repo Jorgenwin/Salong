@@ -55,12 +55,14 @@ if(window.SALONG_CRM_READONLY===true){
     if(!element)return;
     const create=element.closest('[data-salong-new]');
     const edit=element.closest('[data-salong-edit]');
-    if(create||edit){
+    const log=element.closest('[data-salong-log]');
+    if(create||edit||log){
       event.preventDefault();event.stopImmediatePropagation();
       if(window.SALONG_CRM_CAN_WRITE===true&&loaded){
-        window.parent.postMessage(edit?
-          {type:'salong:crm-edit',id:edit.dataset.salongEdit}:
-          {type:'salong:crm-new'},location.origin);
+        const command=edit?{type:'salong:crm-edit',id:edit.dataset.salongEdit}:
+          log?{type:'salong:crm-log',id:log.dataset.salongLog}:
+          {type:'salong:crm-new'};
+        window.parent.postMessage(command,location.origin);
       }
       return;
     }
