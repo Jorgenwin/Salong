@@ -66,7 +66,9 @@ function parseOrgPayload(body,{create=false}={}){
 async function handleOrganizationsWrite({req,url,repositories,makeId=()=>`org_${randomUUID()}`,makeAuditId=()=>`audit_${randomUUID()}`}={}){
   if(!req||!url||!['POST','PATCH'].includes(req.method))return null;
   const create=url.pathname==='/api/organizations'&&req.method==='POST';
-  const match=url.pathname.match(new RegExp('^/api/organizations/([^/]+)
+  const prefix='/api/organizations/';
+  const suffix=url.pathname.startsWith(prefix)?url.pathname.slice(prefix.length):null;
+  const match=suffix&&!suffix.includes('/')?[url.pathname,suffix]:null;
   const update=req.method==='PATCH'&&match;
   if(!create&&!update)return null;
   if(!repositories||!repositories.accounts||
