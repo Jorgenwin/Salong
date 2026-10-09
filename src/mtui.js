@@ -67,15 +67,20 @@ function mtListHTML(){
     '<td class="n"><button type="button" class="mt-fit" data-mtfit="'+esc(a.id)+'" aria-label="Fit '+a.fit.total+' av 100 for '+esc(a.name)+'. Vis komponenter">'+a.fit.total+'</button></td><td class="mt-cv">'+mtCovCell(a)+'</td><td>'+ownChip(a.ownerId)+'</td><td>'+mtStChip(a.status)+'</td><td class="mt-nc">'+mtNextCell(a)+'</td></tr>').join('')+'</tbody></table></div>'+
    (L.length>shown.length?'<div class="row" style="justify-content:center"><button type="button" class="btn sm" data-mtmore="1">Vis flere ('+(L.length-shown.length)+' igjen)</button></div>':'');
 }
-function mtMalHTML(){
-  const U=UI.mt,cfg=mtCfg(),all=mtAll(),st=mtStats(all),segs=mtSegStats().filter(s=>s.id&&s.prio);
+/* Felles inngang for Målmarked. Andre moduler kan utvide analysen, men
+   listen skal alltid være det første, uavhengig av hvilke moduler som lastes. */
+function mtMalListHTML(){
+  const U=UI.mt,cfg=mtCfg();
   const segmentChoices=cfg.segs.filter(s=>s.on).map(s=>
     '<option value="'+esc(s.id)+'"'+(U.seg===s.id?' selected':'')+'>'+esc(mtSegShort(s.name))+'</option>').join('');
   const quickFilter='<label class="ps-market-filter">Segment <select class="in fsel" data-mtquickseg aria-label="Filtrer selskaper på segment">'+
     '<option value="">Alle segmenter</option>'+segmentChoices+'</select></label>';
-  const list='<section class="mt-sec ps-market-list"><div class="mt-sh"><div>'+
+  return '<section class="mt-sec ps-market-list"><div class="mt-sh"><div>'+
     '<h2>Velg et selskap</h2><p>Åpne en rad for å vurdere selskapet, finne kontakter og velge neste handling.</p>'+
     '</div>'+quickFilter+'</div>'+mtListHTML()+'</section>';
+}
+function mtMalHTML(){
+  const U=UI.mt,cfg=mtCfg(),all=mtAll(),st=mtStats(all),segs=mtSegStats().filter(s=>s.id&&s.prio);
   const warning=(st.dialogNoTouch||st.warn)?
     '<p class="mt-note warn">'+(st.dialogNoTouch?st.dialogNoTouch+
       ' kvalifiserte selskaper har dialog, men ingen registrert utgående kontakt. ':'')+
@@ -87,7 +92,7 @@ function mtMalHTML(){
     '<section class="mt-sec"><div class="mt-sh"><h3>Dekning per segment</h3>'+
       '<span class="mt-hint">Velg et segment for å filtrere listen ovenfor.</span></div>'+mtBars(segs)+'</section>'+
     warning+'</div></details>';
-  return '<div class="ps-market">'+list+analysis+'</div>';
+  return '<div class="ps-market">'+mtMalListHTML()+analysis+'</div>';
 }
 
 /* ---------- Arbeidsliste ---------- */
