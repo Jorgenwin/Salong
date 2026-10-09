@@ -59,6 +59,21 @@ async function handleReadRequest({ req, url, repositories }) {
     return {status:200,body:{id,name,role}};
   }
 
+  if(url.pathname==='/api/today/queue'){
+    if(!repositories.today||typeof repositories.today.list!=='function')
+      return {status:503,body:{success:false,error_code:'backend_not_ready'}};
+    const rawLimit=url.searchParams.get('limit')||'40';
+    const rawOffset=url.searchParams.get('offset')||'0';
+    if(!/^\d{1,3}$/.test(rawLimit)||!Number(rawLimit)||Number(rawLimit)>100||
+       !/^\d{1,6}$/.test(rawOffset)||Number(rawOffset)>100000){
+      return {status:400,body:{success:false,error_code:'invalid_pagination',
+        error_message:'Bruk limit 1–100 og offset 0–100000.'}};
+    }
+    return {status:200,body:await repositories.today.list({
+      today:osloToday(),limit:Number(rawLimit),offset:Number(rawOffset)
+    })};
+  }
+
   if(url.pathname==='/api/outreach/summary'){
     if(!repositories.activities||typeof repositories.activities.outreachSummary!=='function')
       return {status:503,body:{success:false,error_code:'backend_not_ready'}};
