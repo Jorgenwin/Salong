@@ -14,6 +14,10 @@ Les i denne rekkefølgen:
 
 Ikke anta at planlagte backend-endepunkter faktisk finnes. Arkitekturdokumentet skiller mellom det som virker i dag og målarkitekturen.
 
+## Produktretning
+
+Den opprinnelige Salong-arbeidsflaten i `src/` er hovedproduktet, ikke den separate, forenklede `/crm`-klienten. Behold alle eksisterende faner, arbeidsflyter og funksjoner når du forbedrer design. Prioriter tydeligere navigasjon, hjelpetekster og status framfor nytt appskall. Se `docs/original-product-direction.md`. Den statiske Railway-demoen har ingen permanent lagring; ikke framstill den som live CRM.
+
 ## Arbeidsmåte
 
 - Jobb alltid på en egen branch fra oppdatert `main`.
