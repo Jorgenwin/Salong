@@ -92,6 +92,7 @@ test('signed-in Salong CRM offers drawer, keyboard search, A/B/C inline update a
     await tier.selectOption('B');
     await page.waitForFunction(()=>document.querySelector('#stat-b').textContent==='2');
     assert.deepEqual(writes,[{id:'book',patch:{priority:'B'}}]);
+    await page.locator('#search').fill('');
 
     await page.locator('[data-crm-view="pipeline"]').click();
     await page.locator('#pipeline-board .pipeline-card').first().waitFor();
