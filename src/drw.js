@@ -17,9 +17,51 @@ function drwEnrLine(a){
   if(s==='vurdering') return {t:'Beriket '+when+(n?' · '+n+' kontakt'+(n===1?'':'er')+' funnet':'')+'. Trenger kontroll',k:'warn'};
   if(s==='ingen_kontakt') return {t:'Beriket '+when+'. Fant ingen relevant kontakt',k:'bad'};
   return {t:'Beriket '+when+'. Grunnlaget var for tynt',k:'bad'}; }
+/* Vis et kort salgsargument først. Kilder og begrunnelse skal kunne åpnes,
+   ikke dominere kontokortet. Dette endrer aldri lagrede research-funn. */
+function drwWhySentence(text){
+  const raw=String(text||'').replace(/\s+/g,' ').trim();
+  if(!raw) return 'Ingen konkret anledning vurdert ennå.';
+  const first=raw.split(/(?<=[.!?])\s+(?=[A-ZÆØÅ])/u)[0];
+  let short=first.replace(/\s*\([^)]{1,120}\)/g,'').replace(/\s+/g,' ').trim();
+  const extra=short.search(/,\s+(?:og|men|samt|mens)\s+/i);
+  if(extra>=38) short=short.slice(0,extra).trim();
+  if(short.length>140){
+    const comma=short.slice(0,140).lastIndexOf(',');
+    if(comma>=45) short=short.slice(0,comma).trim();
+  }
+  if(short.length>140) return short.slice(0,137).replace(/\s+\S*$/,'').trim()+'…';
+  return /[.!?]$/.test(short)?short:short+'.';
+}
+function drwWhyHTML(a,signals){
+  const why=String(a.why||'').trim();
+  const first=signals&&((signals.up||[])[0]||(signals.und||[])[0]||(signals.past||[])[0]);
+  const ev=a.ev||{};
+  const summary='<p class="ov-why-summary">'+esc(drwWhySentence(why))+'</p>';
+  let details='';
+  if(why) details+='<div class="ov-why-context"><b>Salongs vurdering</b><p>'+esc(why)+'</p></div>';
+  if(first){
+    const facts=[first.date?bkDate(first.date):'',first.venue,first.capacity?first.capacity+' deltakere':''].filter(Boolean);
+    details+='<div class="ov-why-context"><b>Arrangementsgrunnlag</b><p>'+esc(first.title)+
+      ' <em class="bk-lv '+(first.level==='Dokumentert'?'dokumentert':'indikasjon')+'">'+esc(first.level)+'</em></p>'+
+      (facts.length?'<p class="mt-hint">'+esc(facts.join(' · '))+'</p>':'')+
+      (first.url?'<p><a href="'+esc(bkLink(first.url))+'" target="_blank" rel="noopener noreferrer">Åpne kilde</a></p>':'')+
+      '</div>';
+  }else if(ev.level&&ev.level!=='Unknown'){
+    details+='<div class="ov-why-context"><b>Arrangementsgrunnlag</b><p>'+esc(ev.note||'Arrangementsaktivitet registrert')+
+      ' <em class="bk-lv '+(bkLvlL(ev.level)==='Dokumentert'?'dokumentert':'indikasjon')+'">'+esc(bkLvlL(ev.level))+'</em></p>'+
+      (ev.sources&&ev.sources.length?'<p class="mt-hint">'+ev.sources.slice(0,2).map(x=>x.url?
+      '<a href="'+esc(bkLink(x.url))+'" target="_blank" rel="noopener noreferrer">'+esc(x.label||mtHost(x.url))+'</a>':esc(x.label||'Kilde')).join(' · ')+'</p>':'')+'</div>';
+  }
+  if(!details) return '<div class="ov-why">'+summary+'</div>';
+  return '<div class="ov-why">'+summary+
+    '<details class="ov-why-more"><summary>Se begrunnelse og kilder</summary>'+
+    '<div class="ov-why-body">'+details+
+    '<button type="button" class="lnk" data-bkt="kil">Alle kilder og detaljer</button></div></details></div>';
+}
 function bkOversikt(a){
   const sg=drwSignals(a), best=sg.up[0]||sg.und[0]||sg.past[0], rm=a.room, pr=mtPrimary(a), enr=drwEnrLine(a), usec=MT_USECASE[a.segId]||'';
-  const why=(a.why?'<p>'+esc(a.why)+'</p>':'<p class="bk-e">Ingen vurdering registrert.</p>')+(sg.up[0]?'<p class="mt-hint">Neste dokumenterte arrangement: '+esc(bkDateS(sg.up[0].date))+'.</p>':'');
+  const why=drwWhyHTML(a,sg);
   const evh=best?'<p><b>'+esc(best.title.length>90?best.title.slice(0,89)+'…':best.title)+'</b> <em class="bk-lv '+best.level.toLowerCase()+'">'+best.level+'</em></p><p class="mt-hint">'+[best.date?bkDate(best.date):'dato ikke oppgitt',best.venue,best.capacity?best.capacity+' deltakere':''].filter(Boolean).map(esc).join(' · ')+
     (best.url?' · <a href="'+esc(bkLink(best.url))+'" target="_blank" rel="noopener">'+esc(mtHost(best.url))+'</a>':'')+(sg.all.length>1?' · <button type="button" class="lnk" data-bkt="kil">+'+(sg.all.length-1)+' til</button>':'')+'</p>':(a.ev.level!=='Unknown'?'<p>'+esc(a.ev.note||'Arrangementsaktivitet registrert')+' <em class="bk-lv '+bkLvlL(a.ev.level).toLowerCase()+'">'+bkLvlL(a.ev.level)+'</em></p><p class="mt-hint">'+a.ev.sources.slice(0,2).map(x=>x.url?'<a href="'+esc(bkLink(x.url))+'" target="_blank" rel="noopener">'+esc(x.label||mtHost(x.url))+'</a>':esc(x.label)).join(' · ')+'</p>':'<p class="bk-e">Ingen eventsignal registrert.</p>');
   const rmh=rm.value==='Ukjent'?'<p class="bk-e">Romfit er ikke vurdert.'+(usec?' Typisk bruk: '+esc(usec.toLowerCase())+'.':'')+'</p>':'<p><b>'+esc(rm.label||rm.value)+'</b>'+(usec?' · '+esc(usec.toLowerCase()):'')+'</p><p class="mt-hint">'+esc(String(rm.basis||'').replace(/\s*Solstad har 320 plasser i stolrader\.?/,'').slice(0,160))+'</p>';

@@ -9,6 +9,9 @@ Oppdatert 9. oktober 2026 etter tilbakemelding fra brukeren.
 - **Ikke erstatt originalen med den forenklede `/crm`-visningen.** Integrer nye CRM-funksjoner i originalen, ikke ved å fjerne moduler.
 - Gemini-forslag er designinspirasjon. Prioriter lesbarhet, tydelighet, mobil og statusforklaringer framfor å bytte hele layouten.
 - Kontroller originalens faner og sider i Playwright før frontend-release, inkludert `/#prosp`.
+- **Vis konklusjonen først:** korte, konkrete setninger på kontokort og prospektlister. La `<details>`/piler åpne original begrunnelse, kildehenvisninger og poengfordeling ved behov. Ingen kildedata slettes.
+- Interne felt som `score`, `market_status`, `cult/3`, automatisk tierberegning og API-koder skal ikke brukes som hovedtekst eller hjelpetekst rettet mot brukeren. Vis menneskelig språk uten å forandre beregningene.
+
 
 ## Lagring og avgrensning
 
