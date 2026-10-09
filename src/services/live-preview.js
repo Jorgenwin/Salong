@@ -67,7 +67,13 @@ if(window.SALONG_CRM_READONLY===true){
       return;
     }
     const nav=element.closest('#nav button[data-view]');
-    if(nav&&['prosp','kontakter'].includes(nav.dataset.view))return;
+    if(nav&&nav.dataset.view==='prosp')return;
+    if(nav&&nav.dataset.view==='kontakter'){
+      event.preventDefault();event.stopImmediatePropagation();
+      if(typeof toast==='function')
+        toast('Kontaktpersoner administreres foreløpig via «Rediger» på selskapet.');
+      return;
+    }
     if(element.matches('[data-mttab],[data-mtstat],[data-mtsegf],[data-mtclr],[data-mtkind],[data-mtsort],[data-mtmore],[data-mtfit],[data-kst],[data-ktier],[data-ksort],[data-idtab],#syncBtn,[aria-label="Lukk"]'))return;
     if(element.matches('[data-open]')&&String(element.dataset.open||'').startsWith('org:'))return;
     // Sorting, list pagination and org drill-down are safe in the preview;
