@@ -1,6 +1,7 @@
 'use strict';
 
 const { randomUUID } = require('node:crypto');
+const {HTML:CRM_HTML,JS:CRM_JS}=require('./ui/crm-page');
 const { handleReadRequest } = require('./api/read');
 const { handleEnrichmentRequest } = require('./api/enrichment');
 const { handleContactWriteRequest } = require('./api/contacts-write');
@@ -27,6 +28,35 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
 
     try {
       const url = new URL(req.url || '/', 'http://salong.local');
+
+      // A separate private CRM interface; not the public static demo.
+      // Public auth configuration contains only a Supabase publishable key.
+      if(req.method==='GET' && ['/crm','/crm/','/crm/client.js','/crm/config.js'].includes(url.pathname)){
+        if(!config.supabaseUrl||!config.supabasePublishableKey){
+          writeJson(res,503,{success:false,error_code:'crm_auth_not_configured'},requestId);
+          return;
+        }
+        const origin=new URL(config.supabaseUrl).origin;
+        let data,contentType;
+        if(url.pathname==='/crm/client.js'){
+          data=CRM_JS;contentType='application/javascript; charset=utf-8';
+        }else if(url.pathname==='/crm/config.js'){
+          data='window.SALONG_PUBLIC_CONFIG='+JSON.stringify({
+            supabaseUrl:config.supabaseUrl,publishableKey:config.supabasePublishableKey
+          }).replace(/</g,'\\u003c')+';';
+          contentType='application/javascript; charset=utf-8';
+        }else{
+          data=CRM_HTML;contentType='text/html; charset=utf-8';
+        }
+        res.statusCode=200;
+        res.setHeader('content-type',contentType);
+        res.setHeader('cache-control','no-store');
+        res.setHeader('x-content-type-options','nosniff');
+        res.setHeader('referrer-policy','no-referrer');
+        res.setHeader('content-security-policy',"default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'self' "+origin+"; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+        res.end(data);
+        return;
+      }
 
       if (req.method === 'GET' && url.pathname === '/health') {
         writeJson(res, 200, {

@@ -27,6 +27,10 @@ function fakeRepositories(){
     calls,
     value:{
       accounts:{
+        async listOrganizations(){
+          calls.push(['accounts.listOrganizations']);
+          return [{id:'o-1',name:'Eksempel AS',segment:'forlag',priority:'A'}];
+        },
         async get(id){
           calls.push(['accounts.get',id]);
           return id==='o-1'?{id:'o-1',name:'Eksempel AS'}:null;
@@ -209,4 +213,17 @@ test('calendar uses from as to when one day is requested',async()=>{
     'calendar.list',
     {from:'2027-04-08',to:'2027-04-08'}
   ]]);
+});
+
+test('GET /api/organizations returns stored company priorities from repository',async()=>{
+  const repos=fakeRepositories();
+  const app=createApp({config:loadConfig({NODE_ENV:'test',PORT:'3000'}),repositories:repos.value});
+  await withServer(app,async base=>{
+    const response=await fetch(base+'/api/organizations');
+    assert.equal(response.status,200);
+    const companies=await response.json();
+    assert.equal(companies[0].priority,'A');
+    assert.equal(companies[0].segment,'forlag');
+  });
+  assert.deepEqual(repos.calls,[['accounts.listOrganizations']]);
 });

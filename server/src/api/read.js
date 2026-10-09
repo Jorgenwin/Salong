@@ -25,6 +25,11 @@ function validIsoDate(value) {
 async function handleReadRequest({ req, url, repositories }) {
   if (req.method !== 'GET' || !repositories) return null;
 
+  if(url.pathname==='/api/organizations'){
+    const organizations=await repositories.accounts.listOrganizations();
+    return {status:200,body:organizations};
+  }
+
   let match=url.pathname.match(/^\/api\/accounts\/([^/]+)\/contacts$/);
   if(match){
     const accountId=decodePathPart(match[1]);
