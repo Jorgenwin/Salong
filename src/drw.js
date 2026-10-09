@@ -55,13 +55,51 @@ function drwWhyHTML(a,signals){
   }
   if(!details) return '<div class="ov-why">'+summary+'</div>';
   return '<div class="ov-why">'+summary+
-    '<details class="ov-why-more"><summary>Se begrunnelse og kilder</summary>'+
+    '<details class="ov-why-more"><summary aria-label="Se begrunnelse og kilder" title="Se begrunnelse og kilder"><span class="ov-info-glyph" aria-hidden="true">i</span></summary>'+
     '<div class="ov-why-body">'+details+
     '<button type="button" class="lnk" data-bkt="kil">Alle kilder og detaljer</button></div></details></div>';
 }
+/* Kontekst handler om virksomheten og relasjonen til huset, ikke scores eller
+   anbefalt rom som hovedoverskrift. Kildegrunnlag og muligheter er valgfritt. */
+function drwContextPreview(raw,max=160){
+  const text=String(raw||'').replace(/\s+/g,' ').trim();
+  if(text.length<=max) return text;
+  const sentence=text.search(/[.!?]\s+[A-ZÆØÅ]/u);
+  if(sentence>45&&sentence<max) return text.slice(0,sentence+1);
+  const cut=text.slice(0,max-1), i=cut.lastIndexOf(' ');
+  return (i>=Math.floor(max*.55)?cut.slice(0,i):cut).replace(/[,:;.\s]+$/,'')+'…';
+}
+function drwContextHTML(a){
+  const about=String(a.about||'').trim();
+  const profile=a.profile||{}, doc=a.doc||{};
+  const history=String(doc.lhHistory||profile.lhHistory||'').trim();
+  const bookings=Array.isArray(a.bookings)?a.bookings.length:0;
+  const historyFallback=bookings?bookings+' registrerte booking'+(bookings===1?'':'er')+' hos oss.':
+    a.hasDialog?'Tidligere kontakt er registrert.':
+    (a.rel==='kunde'||a.rel==='fast')?'Tidligere kunde, men ingen nærmere historikk er registrert.':
+    'Ingen historikk registrert hos oss.';
+  const org=about||('Registrert i segmentet '+(a.seg&&a.seg.name?a.seg.name.toLowerCase():'uten beskrivelse')+'.');
+  const hist=history||historyFallback;
+  const line=(label,content,empty)=>'<div class="ov-context-line"><span class="ov-context-label">'+label+'</span><p class="'+(empty?'ov-context-empty':'')+'">'+esc(content)+'</p></div>';
+  let extra='';
+  if(about&&drwContextPreview(about)!==about) extra+='<div class="ov-context-source"><b>Om virksomheten</b><p>'+esc(about)+'</p></div>';
+  if(history&&drwContextPreview(history)!==history) extra+='<div class="ov-context-source"><b>Historikk hos oss</b><p>'+esc(history)+'</p></div>';
+  const use=MT_USECASE[a.segId]||'', room=a.room||{};
+  if(use||room.value&&room.value!=='Ukjent'){
+    extra+='<div class="ov-context-source"><b>Mulig bruk av Litteraturhuset</b><p>'+
+      (use?esc(use):'Kan være relevant for arrangementer')+
+      (room.value&&room.value!=='Ukjent'?' · '+esc(room.label||room.value):'')+'</p>'+
+      (room.basis&&room.value!=='Ukjent'?'<p class="mt-hint">'+esc(String(room.basis).replace(/\s*Solstad har 320 plasser i stolrader\.?/,'').trim())+'</p>':'')+'</div>';
+  }
+  return '<div class="ov-context">'+
+    line('Virksomhet',drwContextPreview(org),!about)+
+    line('Historikk',drwContextPreview(hist),!history&&!bookings&&!a.hasDialog&&a.rel!=='kunde'&&a.rel!=='fast')+
+    (extra?'<details class="ov-context-extra"><summary>Flere detaljer</summary><div class="ov-context-details">'+extra+'</div></details>':'')+
+    '</div>';
+}
 function bkOversikt(a){
   const sg=drwSignals(a), best=sg.up[0]||sg.und[0]||sg.past[0], rm=a.room, pr=mtPrimary(a), enr=drwEnrLine(a), usec=MT_USECASE[a.segId]||'';
-  const why=drwWhyHTML(a,sg);
+  const why=drwWhyHTML(a,sg), context=drwContextHTML(a);
   const evh=best?'<p><b>'+esc(best.title.length>90?best.title.slice(0,89)+'…':best.title)+'</b> <em class="bk-lv '+best.level.toLowerCase()+'">'+best.level+'</em></p><p class="mt-hint">'+[best.date?bkDate(best.date):'dato ikke oppgitt',best.venue,best.capacity?best.capacity+' deltakere':''].filter(Boolean).map(esc).join(' · ')+
     (best.url?' · <a href="'+esc(bkLink(best.url))+'" target="_blank" rel="noopener">'+esc(mtHost(best.url))+'</a>':'')+(sg.all.length>1?' · <button type="button" class="lnk" data-bkt="kil">+'+(sg.all.length-1)+' til</button>':'')+'</p>':(a.ev.level!=='Unknown'?'<p>'+esc(a.ev.note||'Arrangementsaktivitet registrert')+' <em class="bk-lv '+bkLvlL(a.ev.level).toLowerCase()+'">'+bkLvlL(a.ev.level)+'</em></p><p class="mt-hint">'+a.ev.sources.slice(0,2).map(x=>x.url?'<a href="'+esc(bkLink(x.url))+'" target="_blank" rel="noopener">'+esc(x.label||mtHost(x.url))+'</a>':esc(x.label)).join(' · ')+'</p>':'<p class="bk-e">Ingen eventsignal registrert.</p>');
   const rmh=rm.value==='Ukjent'?'<p class="bk-e">Romfit er ikke vurdert.'+(usec?' Typisk bruk: '+esc(usec.toLowerCase())+'.':'')+'</p>':'<p><b>'+esc(rm.label||rm.value)+'</b>'+(usec?' · '+esc(usec.toLowerCase()):'')+'</p><p class="mt-hint">'+esc(String(rm.basis||'').replace(/\s*Solstad har 320 plasser i stolrader\.?/,'').slice(0,160))+'</p>';
@@ -69,7 +107,7 @@ function bkOversikt(a){
   const best_=a.active[0], ct=best_?'<p><b>'+esc(best_.name)+'</b> · '+esc(best_.title||'stilling ikke oppgitt')+'</p><p class="mt-hint">'+(best_.email?'E-post oppgitt':'Mangler e-post')+' · <button type="button" class="lnk" data-bkt="kon">Se kontakter ('+a.persons.length+')</button></p>':
     '<p><b>'+esc((a.roles||[]).slice(0,3).join(', ')||'Ingen rolle valgt')+'</b></p>'+(a.persons.length?'<p class="mt-hint">'+a.persons.length+' kandidat'+(a.persons.length>1?'er':'')+' må vurderes. <button type="button" class="lnk" data-bkt="kon">Åpne</button></p>':'');
   const R=(h,b)=>'<section class="ov-r"><h3>'+h+'</h3><div>'+b+'</div></section>';
-  return '<div class="ov">'+R('Hvorfor nå',why)+R('Eventsignal',evh)+R('Anbefalt use-case og rom',rmh)+R('Neste handling',nxh)+R('Kontaktmål',ct)+
+  return '<div class="ov">'+R('Hvorfor nå',why)+R('Eventsignal',evh)+R('Kontekst',context)+R('Neste handling',nxh)+R('Kontaktmål',ct)+
     R('Enrichment','<p class="ov-s '+enr.k+'">'+esc(enr.t)+'</p>'+(!bkActive(a.job)&&!a.flags.disqualified&&!a.dncAcc&&a.nx.k!=='deal'?'<p><button type="button" class="btn sm" data-bk="berik">'+(a.job?'Berik på nytt':'Berik')+'</button></p>':''))+'</div>'; }
 /* poengfordeling og kildefakta under Kilder */
 const _drwK=bkKilder;
