@@ -133,21 +133,33 @@ function bkKontakter(a){
 
 /* ---------- Oversikt: hvorfor nå, bruk, kontakt. Alt teknisk ligger under Kilder ---------- */
 function bkOversikt(a){
-  const es=a.es, sg=drwSignals(a), rm=a.room, usec=MT_USECASE[a.segId]||'', R=es.rank;
-  const whyH=drwWhyHTML(a,sg);
-  const rmh=rm.value==='Ukjent'?'<p class="bk-e">Passende rom er ikke vurdert ennå.'+(usec?' Mulig bruk: '+esc(usec.toLowerCase())+'.':'')+'</p>':'<p><b>'+esc(rm.label||rm.value)+'</b>'+(usec?' · '+esc(usec.toLowerCase()):'')+'</p><details class="ov-extra"><summary>Hvorfor dette rommet?</summary><p>'+esc(String(rm.basis||'').replace(/\s*Solstad har 320 plasser i stolrader\.?/,'').trim()||'Ingen nærmere begrunnelse registrert.')+'</p></details>';
+  const es=a.es||{}, sg=drwSignals(a), R=es.rank||{rec:null,list:[]};
+  const why=drwWhyHTML(a,sg), context=drwContextHTML(a);
   const act=a.active.filter(p=>!p.general), g=a.active.find(p=>p.general), P=act[0]||g;
   const line=p=>'<p><b>'+esc(p.name)+'</b> · '+esc(p.general?'generell adresse':(p.title||'stilling ikke oppgitt'))+'</p><p class="mt-hint">'+(p.general?'Ikke en person':[p.email?'e-post':'',p.phone?'telefon':'',p.linkedin?'LinkedIn':''].filter(Boolean).join(', ')||'ingen kanal ennå')+'</p>';
-  let ct;
-  if(P) ct=line(P)+(act[1]?'<p class="ov-2">+ '+esc(act[1].name)+' · '+esc(act[1].title||'')+'</p>':'');
-  else if(R.rec) ct='<p><b>'+esc(R.rec.p.name)+'</b> · '+esc(R.rec.p.title||'stilling ikke oppgitt')+'</p><p class="mt-hint">Mulig kontakt · '+cdSrcLabel(R.rec.p)+'</p><div class="row"><button type="button" class="btn sm" data-cdpick="'+esc(R.rec.p.id)+'">Bruk kontakt</button><button type="button" class="btn ghost sm" data-cdno="'+esc(R.rec.p.id)+'">Ikke riktig</button><button type="button" class="lnk" data-bkt="kon">Se alle</button></div>';
-  else if(R.list.length) ct='<p><b>'+R.list.length+' mulig'+(R.list.length===1?' person':'e personer')+'</b></p><p class="mt-hint">Ingen er trygge nok til å anbefales. <button type="button" class="lnk" data-bkt="kon">Vurder</button></p>';
-  else ct='<p class="bk-e">'+(es.researched?'Ingen kontaktperson funnet.':'Ingen kontakt ennå.')+'</p><p class="mt-hint">Søker: '+esc((a.roles||[]).slice(0,3).join(', ')||'ingen rolle valgt')+(g?' · bare generell adresse funnet':'')+'</p>';
+  let contact;
+  if(P) contact=line(P)+(act[1]?'<p class="ov-2">+ '+esc(act[1].name)+' · '+esc(act[1].title||'')+'</p>':'');
+  else if(R.rec) contact='<p><b>'+esc(R.rec.p.name)+'</b> · '+esc(R.rec.p.title||'stilling ikke oppgitt')+'</p><p class="mt-hint">Mulig kontakt · '+cdSrcLabel(R.rec.p)+'</p><div class="row"><button type="button" class="btn sm" data-cdpick="'+esc(R.rec.p.id)+'">Bruk kontakt</button><button type="button" class="btn ghost sm" data-cdno="'+esc(R.rec.p.id)+'">Ikke riktig</button><button type="button" class="lnk" data-bkt="kon">Se alle</button></div>';
+  else if(R.list.length) contact='<p><b>'+R.list.length+' mulig'+(R.list.length===1?' person':'e personer')+'</b></p><p class="mt-hint">Ingen anbefalt kontakt ennå. <button type="button" class="lnk" data-bkt="kon">Vurder forslagene</button></p>';
+  else contact='<p class="bk-e">'+(es.researched?'Ingen kontaktperson funnet.':'Ingen kontakt ennå.')+'</p><p class="mt-hint">Aktuelle roller: '+esc((a.roles||[]).slice(0,3).join(', ')||'ikke angitt')+'</p>';
+
+  // Both buttons (header Berik nå and contextual Berik kontakt) use the
+  // existing data-bk action and identical validation; never claim a separate
+  // contact-only provider or fake successful enrichment.
   const canRun=!es.running&&!a.flags.disqualified&&!a.dncAcc&&a.nx.k!=='deal';
-  const needRun=es.state==='not_started'||es.state==='provider_blocked'||es.state==='provider_error'||es.running;
-  const enh=needRun?'<p class="ov-s '+awTone(es.tone)+'"><b>'+esc(es.label)+'</b>'+(es.detail&&es.detail!==es.label?' · '+esc(es.detail):'')+'</p>'+(canRun?'<div class="row"><button type="button" class="btn sm" data-bk="berik">'+(es.state==='not_started'?'Berik':'Prøv igjen')+'</button></div>':''):'';
-  const Rw=(h,b)=>'<section class="ov-r"><h3>'+h+'</h3><div>'+b+'</div></section>';
-  return '<div class="ov">'+Rw('Hvorfor nå',whyH)+Rw('Anbefalt bruk',rmh)+Rw('Kontakt',ct)+(enh?Rw('Beriking',enh):'')+'</div>'; }
+  const needsContact=!P||P.general||(!P.email&&!P.phone);
+  let state='';
+  if(es.running) state='Beriking pågår …';
+  else if(es.state==='not_started') state='Kontakt er ikke beriket ennå.';
+  else if(es.state==='provider_blocked') state='Beriking krever en tilgjengelig tilkobling.';
+  else if(es.state==='provider_error') state='Siste beriking mislyktes.';
+  else if(es.label) state=String(es.label);
+  if(state&&needsContact) contact+='<p class="ov-contact-state">'+esc(state)+'</p>';
+  if(needsContact&&canRun) contact+='<div class="ov-contact-actions"><button type="button" class="btn sm ghost" data-bk="berik" title="Starter den vanlige berikingsflyten">Berik kontakt</button></div>';
+
+  const row=(heading,content)=>'<section class="ov-r"><h3>'+heading+'</h3><div>'+content+'</div></section>';
+  return '<div class="ov">'+row('Hvorfor nå',why)+row('Kontekst',context)+row('Kontakt',contact)+'</div>';
+}
 
 /* ---------- Kilder: berik-jobben viser tilstand, trinn og hva som kom fra hvilken kilde ---------- */
 const CDU_STEPIC={done:'✓',skipped:'–',unavailable:'○',error:'!',running:'…',pending:'·'};
