@@ -4,6 +4,8 @@ const { randomUUID,createHash } = require('node:crypto');
 const fs=require('node:fs');
 const path=require('node:path');
 const {HTML:CRM_HTML,JS:CRM_JS}=require('./ui/crm-page');
+const CRM_UX_JS=fs.readFileSync(path.join(__dirname,'ui/crm-ux.js'),'utf8');
+const CRM_UX_CSS=fs.readFileSync(path.join(__dirname,'ui/crm-ux.css'),'utf8');
 const { handleReadRequest } = require('./api/read');
 const { handleEnrichmentRequest } = require('./api/enrichment');
 const { handleContactWriteRequest } = require('./api/contacts-write');
@@ -78,7 +80,7 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
 
       // A separate private CRM interface; not the public static demo.
       // Public auth configuration contains only a Supabase publishable key.
-      if(req.method==='GET' && ['/crm','/crm/','/crm/client.js','/crm/config.js'].includes(url.pathname)){
+      if(req.method==='GET' && ['/crm','/crm/','/crm/client.js','/crm/config.js','/crm/ux.js','/crm/ux.css'].includes(url.pathname)){
         if(!config.supabaseUrl||!config.supabasePublishableKey){
           writeJson(res,503,{success:false,error_code:'crm_auth_not_configured'},requestId);
           return;
@@ -87,6 +89,10 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
         let data,contentType;
         if(url.pathname==='/crm/client.js'){
           data=CRM_JS;contentType='application/javascript; charset=utf-8';
+        }else if(url.pathname==='/crm/ux.js'){
+          data=CRM_UX_JS;contentType='application/javascript; charset=utf-8';
+        }else if(url.pathname==='/crm/ux.css'){
+          data=CRM_UX_CSS;contentType='text/css; charset=utf-8';
         }else if(url.pathname==='/crm/config.js'){
           data='window.SALONG_PUBLIC_CONFIG='+JSON.stringify({
             supabaseUrl:config.supabaseUrl,publishableKey:config.supabasePublishableKey
@@ -100,7 +106,7 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
         res.setHeader('cache-control','no-store');
         res.setHeader('x-content-type-options','nosniff');
         res.setHeader('referrer-policy','no-referrer');
-        res.setHeader('content-security-policy',"default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'self' "+origin+"; frame-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+        res.setHeader('content-security-policy',"default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' "+origin+"; frame-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
         res.end(data);
         return;
       }
