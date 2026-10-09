@@ -7,6 +7,7 @@ const {HTML:CRM_HTML,JS:CRM_JS}=require('./ui/crm-page');
 const { handleReadRequest } = require('./api/read');
 const { handleEnrichmentRequest } = require('./api/enrichment');
 const { handleContactWriteRequest } = require('./api/contacts-write');
+const { handleOrganizationsWrite } = require('./api/organizations-write');
 
 function prepareCrmWorkspace(source){
   const marker='<script>\n';
@@ -132,6 +133,14 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
           return;
         }
         req.salongUser = auth.user;
+      }
+
+      const orgWriteResult=await handleOrganizationsWrite({req,url,repositories});
+      if(orgWriteResult){
+        const body=orgWriteResult.body&&orgWriteResult.body.success===false
+          ? {...orgWriteResult.body,requestId}:orgWriteResult.body;
+        writeJson(res,orgWriteResult.status,body,requestId);
+        return;
       }
 
       const contactWriteResult = await handleContactWriteRequest({ req, url, repositories });
