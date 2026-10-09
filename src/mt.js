@@ -408,6 +408,28 @@ async function mtLogTouch(id,f){
   const signal=bounce?'bounce':dir==='in'?'reply':null, next=signal?mtSignalSeq(a.seq,signal):null;
   await mtPatch(id,next?{seq:next}:{},(bounce?'E-post i retur':(dir==='in'?'Innkommende ':'Utgående ')+MT_CH[ch].toLowerCase())+(p?' · '+p.name:' · uten person')+(next?' · sekvens stoppet':''));
   return {ok:1,noPerson:!p&&dir==='out',sequence_stopped:!!next}; }
+/* Hurtiglogging: én lagret aktivitet og, ved telefonsteg, én fremdriftsmarkering.
+   Ingen e-post sendes. Kun en faktisk valgt kontakt med telefon kan brukes. */
+async function mtLogCallOutcome(id,outcome){
+  const names={reached:'Nådd',not_reached:'Ikke nådd',call_later:'Svarer senere'};
+  if(!Object.hasOwn(names,outcome)) return {err:'Velg et gyldig samtaleutfall.'};
+  const a=mtGet(id); if(!a) return {err:'Ukjent account.'};
+  if(a.flags.disqualified||a.dncAcc||['opt_out','bounced','replied','paused','completed'].includes(a.seq&&a.seq.status)){
+    return {err:'Accounten er stoppet eller kan ikke kontaktes fra denne flyten.'};
+  }
+  const p=(a.active||[]).find(x=>x.phone&&!x.dnc);
+  if(!p) return {err:'Ingen aktiv kontakt med telefonnummer.'};
+  const res=await mtLogTouch(id,{ch:'telefon',dir:'out',pid:p.id,res:outcome,
+    text:'Telefon: '+names[outcome]+' · '+p.name});
+  if(!res.ok) return res;
+  const next=a.prog&&a.prog.next;
+  if(next&&next.ch==='telefon'&&next.due<=mtToday()&&!(a.seq.stepsDone||[]).includes(next.i)){
+    const stepsDone=[...(a.seq.stepsDone||[]),next.i];
+    await mtPatch(id,{seq:{...a.seq,status:'active',stepsDone,lastTouch:mtToday()}},
+      'Telefonsteg fullført: '+names[outcome]);
+  }
+  return {...res,outcome};
+}
 async function mtSetStage(id,stage){
   const a=mtGet(id); if(!a) return {err:'Ukjent account.'};
   if(['enrolled','active'].includes(stage)){ const c=mtCanEnroll(a); if(!c.ok) return {err:'Kan ikke enrolles: '+c.why.join('. ')+'.'}; }
@@ -538,5 +560,5 @@ async function mtScoutApprove(qid){
 async function mtScoutReject(qid,reason){ const q=S.mtq[qid]; if(!q) return; await scoutRepository.saveRaw(qid,{...q,status:'avvist',reason:reason||''},{noAudit:true}); }
 const mtScoutRows=()=>Object.entries(S.mtq).map(([id,q])=>({id,...q})).sort((a,b)=>(b.importedAt||'').localeCompare(a.importedAt||''));
 const MT={all:mtAll,get:mtGet,stats:mtStats,segStats:mtSegStats,cfg:mtCfg,pick:mtPick,learn:mtLearn,snapNow:mtSnapNow,snapDiff:mtSnapDiff,canEnroll:mtCanEnroll,apolloPrep:mtApolloPrep,cognismPlan:mtCognismPlan,apolloPlan:mtApolloPlan,
-  addAccount:mtAddAccount,addPerson:mtAddPerson,dnc:mtDnc,disqualify:mtDisqualify,qualify:mtQualify,logTouch:mtLogTouch,setStage:mtSetStage,createBatch:mtCreateBatch,snapSave:mtSnapSave,setOwner:mtSetOwner,scoutParse:mtScoutParse,scoutSave:mtScoutSave,scoutApprove:mtScoutApprove,
+  addAccount:mtAddAccount,addPerson:mtAddPerson,dnc:mtDnc,disqualify:mtDisqualify,qualify:mtQualify,logTouch:mtLogTouch,logCall:mtLogCallOutcome,setStage:mtSetStage,createBatch:mtCreateBatch,snapSave:mtSnapSave,setOwner:mtSetOwner,scoutParse:mtScoutParse,scoutSave:mtScoutSave,scoutApprove:mtScoutApprove,
   cognismRun:mtCognismRun,apolloRun:mtApolloRun,autoMap:mtAutoMap,SYN:MT_SYN,SYNA:MT_SYN_APOLLO,SYNS:MT_SYN_SCOUT,setEvent:mtSetEvent,setRoom:mtSetRoom,enrichCsv:mtEnrichCsv,apolloMark:mtApolloMark,build:mtBuild,parse:parseCSV,fit:mtFit,patch:mtPatch,cadence:mtCadence,step:mtStep};
