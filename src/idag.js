@@ -73,19 +73,22 @@ function idItems(){
   items.sort((a,b)=>a.rank-b.rank||b.score-a.score||a.org.localeCompare(b.org,'nb'));
   return items;
 }
+/* One visible next action per account; never delete or mark other tasks done.
+   'more' counts accounts, not duplicate tasks. Keep incoming replies first
+   because idItems has already sorted by urgency. */
+function idSelectAccounts(ordered,limit){
+  const seen=new Set(), unique=[];
+  for(const item of ordered){
+    const id=item.orgId||item.key;
+    if(seen.has(id))continue;
+    seen.add(id); unique.push(item);
+  }
+  return {shown:unique.slice(0,limit),more:Math.max(0,unique.length-limit)};
+}
 function idQueue(){
   const sn=idSnoozeMap(), all=idItems().filter(i=>idInScope(i.ownerId,i.crit)), vis=all.filter(i=>!sn[i.key]), hidden=all.filter(i=>sn[i.key]);
-  // One next action per account in the visible work queue. Other actionable
-  // items remain in 'all' (and the source objects) rather than being deleted.
-  // The already sorted list puts replies and overdue obligations first.
-  const seen=new Set(), shown=[];
-  for(const item of vis){
-    const key=item.orgId||item.key;
-    if(seen.has(key))continue;
-    seen.add(key);
-    if(shown.length<ID.topN)shown.push(item);
-  }
-  return {all,vis,shown,hidden,more:Math.max(0,vis.length-shown.length)};
+  const ranked=idSelectAccounts(vis,ID.topN);
+  return {all,vis,shown:ranked.shown,hidden,more:ranked.more};
 }
 /* tall til toppstripen */
 function idReadyCount(){ if(typeof mtAll!=='function') return 0; return mtAll().filter(a=>a.kind==='ny'&&a.flags.qualified&&a.flags.enriched&&!a.flags.addressed&&!a.flags.disqualified&&!a.dncAcc&&idInScope(a.ownerId,false)).length; }
