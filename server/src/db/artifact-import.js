@@ -242,8 +242,13 @@ function companyFirstPlan(exported){
   const kept=new Set(['organizations','prospects']);
   const rows=Object.fromEntries(TABLES.map(table=>[table,kept.has(table)?plan.rows[table]:[]]));
   const companyIssues=plan.report.not_mapped.filter(item=>
-    item.reason!=='example'&&
-    (item.collection==='orgs'||item.collection==='mtacc')
+    (item.collection==='orgs'||item.collection==='mtacc')&&
+    !['example','embedded_contacts_retained_in_staging','missing_organization_name'].includes(item.reason)
+  );
+  // Nameless mtacc records (including links to excluded sample organizations)
+  // are deliberately preserved in staging but not invented as CRM companies.
+  const deferredUnnamed=plan.report.not_mapped.filter(item=>
+    item.collection==='mtacc'&&item.reason==='missing_organization_name'
   );
   const reasons={};
   for(const issue of companyIssues){
@@ -258,6 +263,7 @@ function companyFirstPlan(exported){
       planned:Object.fromEntries(TABLES.map(t=>[t,rows[t].length])),
       review_required_count:companyIssues.length,
       review_reason_counts:reasons,
+      deferred_unnamed_accounts:deferredUnnamed.length,
       deferred_collections:['mtper','deals','acts','mtbat','mtjob','audit'],
       note:'All original documents are preserved in private staging; only organizations and prospects are normalized.'
     }
@@ -309,6 +315,11 @@ async function applyImport(db,plan,{allowUnmapped=false}={}){
     const count=current.rows[0];
     if(Object.values(count).some(value=>Number(value)>0)){
       throw new Error('Import target is not empty; refusing to overwrite or mix customer data');
+    }
+    // A previously provisioned owner is expected; never overwrite or import members.
+    const memberResult=await db.query('SELECT id,role,active FROM public.members');
+    if(memberResult.rows.length!==1||memberResult.rows[0].role!=='owner'||memberResult.rows[0].active!==true){
+      throw new Error('Import requires exactly one active provisioned owner');
     }
     for(const r of plan.raw){
       await db.query(

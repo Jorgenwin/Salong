@@ -198,6 +198,9 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     await db.query('CREATE SCHEMA public');
     const rerun=await db.withClient(client=>runMigrations(client));
     assert.ok(rerun.applied.includes('002_artifact_export'));
+    // The production company-first import runs after the owner has been provisioned.
+    await db.query("INSERT INTO members(id,auth_subject,name,role,active) VALUES ($1,$2,$3,'owner',true)",
+      ['salong-owner','00000000-0000-4000-8000-000000000001','Eier']);
     const {buildImportPlan,applyImport}=require('../src/db/artifact-import');
     const plan=buildImportPlan({collections:{
       orgs:{
