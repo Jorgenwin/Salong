@@ -28,8 +28,8 @@ test('Prospekter gives one next action while preserving original advanced tools'
     const names=await page.locator('.mt-top .mt-tabs [data-mttab]').allTextContents();
     assert.deepEqual(names.map(s=>s.trim().replace(/\s+\d+$/,'')).slice(0,4),
       ['Start','Arbeidsliste','Målmarked','Kontaktløp']);
-    assert.equal(await page.locator('.mt-top [data-mtmodal="batch"]').count(),0,
-      'Batch must not compete with the first action');
+    assert.equal(await page.locator('.mt-top [data-mtmodal="batch"]').isVisible(),false,
+      'Batch remains available under Mer but must not compete with the first action');
     assert.equal(await page.locator('.tp-b,[data-tphours]').count(),0,
       'No budgeting or tier settings on the initial screen');
     assert.equal(await page.locator('.ps-flow li').count(),4);
