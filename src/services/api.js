@@ -6,6 +6,7 @@
    Server senere:  SalongServices.use(httpBackend)  – ingen UI-endring. Se docs/architecture.md.
    Ingen hemmeligheter her: Apollo m.m. nås via adapter (services/providers/apollo.js) og transport som byttes serverside. */
 const localBackend={
+  async getOrganizations(){return accountRepository.list({scope:'all'});},
   async getAccount(id){ const a=mtGet(id); return a?toAccount(a):null; },
   async getProspects(f){ return accountRepository.list(f||{}); },
   async getContacts(accountId){ return contactRepository.listByAccount(accountId); },
@@ -21,7 +22,9 @@ const SalongServices={
   use(impl){ salongBackend=Object.assign({},localBackend,impl||{}); return SalongServices; },
   reset(){ salongBackend=localBackend; },
   createHttpBackend,
-  accounts:{ getAccount:id=>salongBackend.getAccount(id), getProspects:f=>salongBackend.getProspects(f) },
+  accounts:{ getAccount:id=>salongBackend.getAccount(id), getProspects:f=>salongBackend.getProspects(f),
+    getOrganizations:()=>salongBackend.getOrganizations(),
+    mapImportedOrganizations:rows=>salongMapImportedOrganizations(rows) },
   contacts:{ getContacts:accountId=>salongBackend.getContacts(accountId) },
   enrichment:{ enrichAccount:(id,o)=>salongBackend.enrichAccount(id,o), enrichAccounts:(ids,o)=>salongBackend.enrichAccounts(ids,o),
     getJob:id=>salongBackend.getEnrichmentJob(id), getLatestJob:accountId=>salongBackend.getLatestEnrichmentJob(accountId) },
