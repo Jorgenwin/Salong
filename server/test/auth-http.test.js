@@ -133,3 +133,22 @@ test('a configured real database is protected even in development mode',async()=
     assert.equal((await response.json()).error_code,'auth_not_ready');
   });
 });
+
+test('imported organization list is private and available to authorized readers',async()=>{
+  const config=loadConfig({NODE_ENV:'production',PORT:'3000'});
+  const repositories={accounts:{async listOrganizations(){return [{id:'org-1',name:'Kulturinstitusjon',priority:'A'}];}}};
+  const authBoundary={async authorizeRequest(req,{minimumRole}){
+    assert.equal(minimumRole,'reader');
+    if(req.headers.authorization!=='Bearer valid')return {
+      status:401,body:{success:false,error_code:'unauthorized',error_message:'Logg inn'}
+    };
+    return {ok:true,user:{id:'owner-1',role:'owner',active:true}};
+  }};
+  await withServer(createApp({config,repositories,authBoundary}),async base=>{
+    const denied=await fetch(base+'/api/organizations');
+    assert.equal(denied.status,401);
+    const allowed=await fetch(base+'/api/organizations',{headers:{authorization:'Bearer valid'}});
+    assert.equal(allowed.status,200);
+    assert.equal((await allowed.json())[0].priority,'A');
+  });
+});
