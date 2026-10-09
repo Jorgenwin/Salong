@@ -10,7 +10,7 @@ function tsCand(aud){
   return {all:L,ready,missing:L.filter(a=>!mtCanEnroll(a).ok)}; }
 async function tierEnrollMany(ids,cad,note){
   let n=0; const bad=[];
-  for(const id of ids){ const a=mtGet(id); if(!a){ continue; } const c=mtCanEnroll(a); if(!c.ok){ bad.push(a.name); continue; }
+  for(const id of ids){ const a=mtGet(id); if(!a){ continue; } const c=mtCanEnroll(a); if(!c.ok||['opt_out','bounced'].includes(a.seq&&a.seq.status)){ bad.push(a.name); continue; }
     const seq={...(a.seq||{}),enrolledAt:mtToday(),status:'active',stepsDone:[],cad,drafted:{}};
     await mtPatch(id,{seq,bStage:'active'},'Lagt i sekvens: '+tierCad(cad).name+(note?' ('+note+')':'')); n++; }
   return {n,bad}; }
@@ -37,11 +37,11 @@ async function tsImport(rows,cad,segId){
 /* utkast som er forfalt i dag */
 function tsDue(){
   const today=mtToday(); const out=[];
-  for(const a of mtAll()){ const p=a.prog; if(!p||!p.next||a.dncAcc||a.flags.disqualified||a.stage==='paused'||a.seq.status==='replied'||a.seq.status==='completed'||a.flags.opportunity) continue;
+  for(const a of mtAll()){ const p=a.prog; if(!p||!p.next||a.dncAcc||a.flags.disqualified||a.stage==='paused'||['replied','bounced','opt_out','paused','completed'].includes(a.seq.status)||a.flags.opportunity) continue;
     const n=p.next; if(n.ch!=='epost'||!n.m||n.due>today) continue; const d=tierDraft(a,n); if(!d||!d.to) continue;
     out.push({a,n,d,drafted:!!(a.seq.drafted&&a.seq.drafted[n.i])}); }
   return out.sort((x,y)=>x.n.due.localeCompare(y.n.due)||x.a.pt-y.a.pt); }
-function tsUpcoming(){ const today=mtToday(), to=mtAddD(today,7); let e=0,c=0,o=0; for(const a of mtAll()){ const n=a.prog&&a.prog.next; if(!n||a.dncAcc||a.flags.disqualified||a.stage==='paused') continue; if(n.due>to) continue; if(n.ch==='epost') e++; else if(n.ch==='telefon') c++; else o++; } return {e,c,o}; }
+function tsUpcoming(){ const today=mtToday(), to=mtAddD(today,7); let e=0,c=0,o=0; for(const a of mtAll()){ const n=a.prog&&a.prog.next; if(!n||a.dncAcc||a.flags.disqualified||a.flags.opportunity||a.stage==='paused'||['replied','bounced','opt_out','paused','completed'].includes(a.seq.status)) continue; if(n.due>to) continue; if(n.ch==='epost') e++; else if(n.ch==='telefon') c++; else o++; } return {e,c,o}; }
 async function tsMakeDrafts(kind){
   const U=UI.ts; if(U.busy||!mcp) return; const L=tsDue().filter(x=>!x.drafted); if(!L.length) return;
   U.busy=true; let done=0, fail=0, last=''; const msg=()=>{ const el=document.getElementById('tsMsg'); if(el) el.textContent='Lager utkast '+done+' av '+L.length+(fail?' · '+fail+' feilet':'')+' …'; }; msg();

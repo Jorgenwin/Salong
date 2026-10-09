@@ -183,6 +183,19 @@ function idClick(e){
   if(d.idreport){ makeReport(); return; }
   if(d.idsh){ UI.id.snoozed=!UI.id.snoozed; idRR(); return; }
   if(d.idopen){ const it=item(d.idopen); if(!it) return; if(it.open.k==='mt') mtOpen(it.open.id); else openDrawer(it.open.k,it.open.id); return; }
+  if(d.idquick){
+    const cut=d.idquick.lastIndexOf('|'), it=item(d.idquick.slice(0,cut));
+    if(cut<0||!it||!it.accId||UI.id.quickBusy) return;
+    UI.id.quickBusy=true; t.disabled=true;
+    Promise.resolve(mtLogCallOutcome(it.accId,d.idquick.slice(cut+1))).then(r=>{
+      if(r&&r.err) toast(r.err);
+      else toast(d.idquick.endsWith('|call_later')?
+        'Samtalen er logget. Sett avtalt tidspunkt på accountkortet.':'Samtalen er logget.');
+    }).catch(e=>toast('Kunne ikke logge samtalen: '+(e&&e.message||e))).finally(()=>{
+      UI.id.quickBusy=false; idRR();
+    });
+    return;
+  }
   if(d.idlog){ const it=item(d.idlog); if(it&&it.accId) mtOpen(it.accId,'do'); else if(it) openDrawer(it.open.k,it.open.id); return; }
   if(d.idone){ const it=item(d.idone); if(!it) return; t.disabled=true; idDone(it).then(ok=>{ if(ok) toast('Ferdig. Oppdatert i '+it.src+'.'); idRR(); }); return; }
   if(d.idsn){ const [k,mode]=d.idsn.split('|'); if(mode==='clear'){ idSetSnooze(k,null).then(idRR); return; } const it=item(k); if(!it) return; idSnoozeIt(it,mode).then(r=>{ if(r) toast(r.moved?'Fristen er flyttet til '+fd(idIso(r.to),{weekday:'long',day:'numeric',month:'short'})+' i oppgaven.':'Skjult i din I dag til '+fd(idIso(r.to),{weekday:'long',day:'numeric',month:'short'})+'. Saken er ikke endret.'); idRR(); }); return; }

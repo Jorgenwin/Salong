@@ -262,7 +262,11 @@ function mtNext(a,cfg,today){
   if(F.disqualified) return {k:'dq',t:'Diskvalifisert'+(a.qual.reason?': '+a.qual.reason:''),due:''};
   if(a.dncAcc) return {k:'dnc',t:'Ikke kontakt (opt-out)',due:''};
   if(F.opportunity) return {k:'deal',t:'Følg opp saken',due:''};
-  if(a.seq&&a.seq.status==='replied'||a.seq&&a.seq.repliedAt&&!F.opportunity) return {k:'reply',t:'Følg opp svar',due:''};
+  if(a.seq&&a.seq.status==='opt_out') return {k:'dnc',t:'Sekvens stoppet: opt-out, vurder kontakt før ny henvendelse',due:''};
+  if(a.seq&&a.seq.status==='bounced') return {k:'enrich',t:'E-post i retur – finn riktig kontaktadresse',due:''};
+  if(a.seq&&a.seq.status==='replied'||a.seq&&a.seq.repliedAt&&!F.opportunity) return {k:'reply',t:'Følg opp svar innen 24 timer',due:''};
+  if(a.seq&&a.seq.status==='paused') return {k:'paused',t:'Sekvens pauset',due:''};
+  if(a.seq&&a.seq.status==='completed') return {k:'seqdone',t:'Sekvens ferdig – vurder neste steg',due:''};
   if(!F.qualified){ const f=a.qual.fails[0]; return {k:'research',t:f?(f.k==='id'?'Finn domene eller org.nr.':f.k==='ev'?'Avklar eventsignal':'Aktiver segment'):'Kvalifiser',due:''}; }
   if(a.prog){ const n=a.prog.next; if(a.stage==='paused') return {k:'paused',t:'Pauset',due:''}; if(!n) return {k:'seqdone',t:'Kadens fullført. Vurder utfall',due:''}; return {k:'step',t:'Dag '+n.d+' · '+MT_CH[n.ch]+' · '+n.t,due:n.due,late:n.due<today}; }
   if(!F.enriched) return {k:'enrich',t:bkNextText(a),due:''};
@@ -371,7 +375,9 @@ async function mtAddPerson(accId,f){
   await mtPatch(accId,{},'Kontaktperson lagt til: '+name+' ('+(f.source||'manuelt')+')'); return {id}; }
 async function mtSetPerson(pid,patch){ const p=S.mtper[pid]; if(!p) return; await contactRepository.saveRaw(pid,{...p,...patch},{noAudit:true}); }
 async function mtDnc(pid,reason){ const p=S.mtper[pid]; if(!p) return {err:'Kontakten er skrivebeskyttet (fra kundekortet). Marker opt-out der, eller legg til personen her.'}; reason=String(reason||'').trim(); if(!reason) return {err:'Opt-out krever en årsak.'};
-  await contactRepository.saveRaw(pid,{...p,dnc:{reason,at:iso(new Date()),byName:me.name||''},active:false},{noAudit:true}); await mtPatch(p.accId,{},'Opt-out: '+p.name+' ('+reason+')'); return {ok:1}; }
+  const a=mtGet(p.accId), seq=a&&a.seq&&a.seq.enrolledAt?mtSignalSeq(a.seq,'opt_out'):null;
+  await contactRepository.saveRaw(pid,{...p,dnc:{reason,at:iso(new Date()),byName:me.name||''},active:false},{noAudit:true});
+  await mtPatch(p.accId,seq?{seq}:{},'Opt-out: '+p.name+' ('+reason+')'+(seq?' · sekvens stoppet':'')); return {ok:1}; }
 async function mtClearDnc(pid){ const p=S.mtper[pid]; if(!p) return; await contactRepository.saveRaw(pid,{...p,dnc:null},{noAudit:true}); await mtPatch(p.accId,{},'Opt-out opphevet for '+p.name); }
 async function mtDelPerson(pid){ const p=S.mtper[pid]; if(!p) return; await contactRepository.remove(pid); }
 /* ett kontrollpunkt: ingen kan enrolles eller eksporteres med opt-out, uten kvalifisering eller uten kontaktdata */
@@ -380,29 +386,63 @@ function mtCanEnroll(a){
   const ok=a.active.filter(p=>!p.dnc&&p.rel!=='nei'&&p.email); if(!ok.length) why.push(a.persons.some(p=>p.dnc)?'Alle aktuelle kontakter har opt-out eller mangler e-post':'Ingen aktiv kontaktperson med e-post');
   return {ok:!why.length,why,persons:ok};
 }
+/* Kun en registrert hendelse (ikke antatt e-poståpning) kan stoppe en sekvens.
+   Reaktivering krever nytt, eksplisitt enrollment. Manuell tier endres aldri. */
+function mtSignalSeq(seq,signal,at){
+  if(!seq||!seq.enrolledAt||!['reply','bounce','opt_out'].includes(signal)) return null;
+  if(['replied','bounced','opt_out'].includes(seq.status)) return null;
+  const day=String(at||mtToday()).slice(0,10);
+  const status=({reply:'replied',bounce:'bounced',opt_out:'opt_out'})[signal];
+  return {...seq,status,unenrolledAt:day,unenrollReason:signal,
+    ...(signal==='reply'?{repliedAt:day}:{})};
+}
 async function mtLogTouch(id,f){
   const a=mtGet(id); if(!a) return {err:'Ukjent account.'}; const p=f.pid?a.persons.find(x=>x.id===f.pid):null;
+  if(!['epost','telefon','linkedin','mote'].includes(f.ch||'epost')) return {err:'Ukjent kontaktkanal.'};
   if(p&&p.dnc) return {err:p.name+' har opt-out og kan ikke kontaktes.'};
   if(a.dncAcc&&f.dir!=='in') return {err:'Accounten er merket ikke kontakt.'};
-  await mtEnsureOrg(a); const ch=f.ch||'epost', type=ch==='telefon'?'call':ch==='epost'?'email':ch==='mote'?'meeting':'note', dir=f.dir==='in'?'in':'out';
-  const text=(f.text||'').trim()||({epost:'E-post',telefon:'Telefon',linkedin:'LinkedIn',mote:'Møte'})[ch]+(dir==='in'?' fra ':' til ')+(p?p.name:'organisasjonen');
+  await mtEnsureOrg(a); const ch=f.ch||'epost', type=f.res==='bounce'?'note':ch==='telefon'?'call':ch==='epost'?'email':ch==='mote'?'meeting':'note', dir=f.dir==='in'?'in':'out';
+  const bounce=f.res==='bounce', text=(f.text||'').trim()||(bounce?'E-post kom i retur':({epost:'E-post',telefon:'Telefon',linkedin:'LinkedIn',mote:'Møte'})[ch]+(dir==='in'?' fra ':' til ')+(p?p.name:'organisasjonen'));
   await activityRepository.saveRaw(uid('a'),{orgId:id,dealId:null,type,text,at:iso(f.at?new Date(f.at):new Date()),due:null,done:true,byId:me.id||null,byName:me.name||'',...(typeof actorStamp==='function'?actorStamp():{}),
-    mt:1,dir,ch,pid:p?p.id:null,pname:p?p.name:'',res:f.res||'',need:f.need||'',obj:f.obj||''});
-  await mtPatch(id,{},(dir==='in'?'Innkommende ':'Utgående ')+MT_CH[ch].toLowerCase()+(p?' · '+p.name:' · uten person'));
-  return {ok:1,noPerson:!p&&dir==='out'}; }
+    mt:bounce?0:1,dir,ch,pid:p?p.id:null,pname:p?p.name:'',res:f.res||'',need:f.need||'',obj:f.obj||''});
+  const signal=bounce?'bounce':dir==='in'?'reply':null, next=signal?mtSignalSeq(a.seq,signal):null;
+  await mtPatch(id,next?{seq:next}:{},(bounce?'E-post i retur':(dir==='in'?'Innkommende ':'Utgående ')+MT_CH[ch].toLowerCase())+(p?' · '+p.name:' · uten person')+(next?' · sekvens stoppet':''));
+  return {ok:1,noPerson:!p&&dir==='out',sequence_stopped:!!next}; }
+/* Hurtiglogging: én lagret aktivitet og, ved telefonsteg, én fremdriftsmarkering.
+   Ingen e-post sendes. Kun en faktisk valgt kontakt med telefon kan brukes. */
+async function mtLogCallOutcome(id,outcome){
+  const names={reached:'Nådd',not_reached:'Ikke nådd',call_later:'Svarer senere'};
+  if(!Object.hasOwn(names,outcome)) return {err:'Velg et gyldig samtaleutfall.'};
+  const a=mtGet(id); if(!a) return {err:'Ukjent account.'};
+  if(a.flags.disqualified||a.dncAcc||['opt_out','bounced','replied','paused','completed'].includes(a.seq&&a.seq.status)){
+    return {err:'Accounten er stoppet eller kan ikke kontaktes fra denne flyten.'};
+  }
+  const p=(a.active||[]).find(x=>x.phone&&!x.dnc);
+  if(!p) return {err:'Ingen aktiv kontakt med telefonnummer.'};
+  const res=await mtLogTouch(id,{ch:'telefon',dir:'out',pid:p.id,res:outcome,
+    text:'Telefon: '+names[outcome]+' · '+p.name});
+  if(!res.ok) return res;
+  const next=a.prog&&a.prog.next;
+  if(next&&next.ch==='telefon'&&next.due<=mtToday()&&!(a.seq.stepsDone||[]).includes(next.i)){
+    const stepsDone=[...(a.seq.stepsDone||[]),next.i];
+    await mtPatch(id,{seq:{...a.seq,status:'active',stepsDone,lastTouch:mtToday()}},
+      'Telefonsteg fullført: '+names[outcome]);
+  }
+  return {...res,outcome};
+}
 async function mtSetStage(id,stage){
   const a=mtGet(id); if(!a) return {err:'Ukjent account.'};
   if(['enrolled','active'].includes(stage)){ const c=mtCanEnroll(a); if(!c.ok) return {err:'Kan ikke enrolles: '+c.why.join('. ')+'.'}; }
   const seq={...(a.seq||{})}; if(stage==='enrolled'&&!seq.enrolledAt){ seq.enrolledAt=mtToday(); seq.status='not_started'; seq.stepsDone=[]; { const cs=mtCfg().seq[a.segId]; if(a.kind==='ny'&&a.pt&&!seq.cad&&!(cs&&cs.length)) seq.cad='T'+a.pt; } }
   if(stage==='active') seq.status='active'; if(stage==='paused') seq.status='paused'; if(stage==='completed') seq.status='completed';
-  if(stage==='replied'){ seq.status='replied'; seq.repliedAt=seq.repliedAt||mtToday(); }
+  if(stage==='replied'){ const stopped=mtSignalSeq(seq,'reply'); Object.assign(seq,stopped||{status:'replied',repliedAt:seq.repliedAt||mtToday()}); }
   const keepAuto=['needs_research','needs_enrichment','ready'].includes(stage);
   const d0=S.mtacc[id]||{}; const doc={...d0,seq}; if(keepAuto) delete doc.bStage; else doc.bStage=stage;
   doc.hist=[...(d0.hist||[]),{at:iso(new Date()),by:me.name||'',t:'Batch-steg: '+MT_STAGEN[stage]}].slice(-60); if(!S.mtacc[id]) doc.createdFrom=PROFILES[id]?'profil':S.orgs[id]?'crm':'ny';
   await accountRepository.saveRaw(id,doc,{noAudit:true});
   return {ok:1}; }
 async function mtStep(id,i){
-  const a=mtGet(id); if(!a||!a.prog) return; const s=a.prog.steps[i]; if(!s) return; const cur=(a.seq.stepsDone||[]).slice(); const on=!cur.includes(i);
+  const a=mtGet(id); if(!a||!a.prog||['replied','bounced','opt_out','completed','paused'].includes(a.seq.status)) return; const s=a.prog.steps[i]; if(!s) return; const cur=(a.seq.stepsDone||[]).slice(); const on=!cur.includes(i);
   if(on){ cur.push(i); const pe=a.active[0]; if(s.ch!=='research'&&pe&&!pe.dnc) await mtLogTouch(id,{ch:s.ch,dir:'out',pid:pe.id,text:'Dag '+s.d+': '+s.t}); } else cur.splice(cur.indexOf(i),1);
   await mtPatch(id,{seq:{...a.seq,stepsDone:cur,status:a.seq.status==='not_started'?'active':a.seq.status,lastTouch:on?mtToday():a.seq.lastTouch}},null);
   if(on&&(a.stage==='enrolled')) await mtPatch(id,{bStage:'active'},null); }
@@ -520,5 +560,5 @@ async function mtScoutApprove(qid){
 async function mtScoutReject(qid,reason){ const q=S.mtq[qid]; if(!q) return; await scoutRepository.saveRaw(qid,{...q,status:'avvist',reason:reason||''},{noAudit:true}); }
 const mtScoutRows=()=>Object.entries(S.mtq).map(([id,q])=>({id,...q})).sort((a,b)=>(b.importedAt||'').localeCompare(a.importedAt||''));
 const MT={all:mtAll,get:mtGet,stats:mtStats,segStats:mtSegStats,cfg:mtCfg,pick:mtPick,learn:mtLearn,snapNow:mtSnapNow,snapDiff:mtSnapDiff,canEnroll:mtCanEnroll,apolloPrep:mtApolloPrep,cognismPlan:mtCognismPlan,apolloPlan:mtApolloPlan,
-  addAccount:mtAddAccount,addPerson:mtAddPerson,dnc:mtDnc,disqualify:mtDisqualify,qualify:mtQualify,logTouch:mtLogTouch,setStage:mtSetStage,createBatch:mtCreateBatch,snapSave:mtSnapSave,setOwner:mtSetOwner,scoutParse:mtScoutParse,scoutSave:mtScoutSave,scoutApprove:mtScoutApprove,
+  addAccount:mtAddAccount,addPerson:mtAddPerson,dnc:mtDnc,disqualify:mtDisqualify,qualify:mtQualify,logTouch:mtLogTouch,logCall:mtLogCallOutcome,setStage:mtSetStage,createBatch:mtCreateBatch,snapSave:mtSnapSave,setOwner:mtSetOwner,scoutParse:mtScoutParse,scoutSave:mtScoutSave,scoutApprove:mtScoutApprove,
   cognismRun:mtCognismRun,apolloRun:mtApolloRun,autoMap:mtAutoMap,SYN:MT_SYN,SYNA:MT_SYN_APOLLO,SYNS:MT_SYN_SCOUT,setEvent:mtSetEvent,setRoom:mtSetRoom,enrichCsv:mtEnrichCsv,apolloMark:mtApolloMark,build:mtBuild,parse:parseCSV,fit:mtFit,patch:mtPatch,cadence:mtCadence,step:mtStep};
