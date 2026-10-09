@@ -75,6 +75,7 @@ function mapOpportunity(row) {
     attendees: row.attendees == null ? 0 : Number(row.attendees),
     owner_id: row.owner_id || null,
     stage_changed_at: asTimestamp(row.stage_at),
+    last_activity_at: asTimestamp(row.last_activity_at),
     lost_reason: row.lost_reason || null
   };
 }
@@ -513,7 +514,13 @@ function createRepositories(input) {
           where+=' AND organization_id = $1';
         }
         const result=await db.query(`
-          SELECT *
+          SELECT opportunities.*,
+            (SELECT max(a.happened_at)
+             FROM activities a
+             WHERE a.organization_id=opportunities.organization_id
+               AND a.deleted_at IS NULL AND a.done=true
+               AND a.type IN ('call','email','meeting','visning')
+            ) AS last_activity_at
           FROM opportunities
           WHERE ${where}
           ORDER BY event_date ASC NULLS LAST, created_at DESC
