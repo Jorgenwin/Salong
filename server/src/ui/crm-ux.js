@@ -290,7 +290,7 @@
     selectedId=rows[idx].dataset.orgId;rows[idx].focus();rows[idx].scrollIntoView({block:'nearest'});
   }
   function modalOpen(){
-    return !!window.SalongOpportunityUI?.isOpen()||!get('editor').hidden||!get('activity-dialog').hidden||!get('read-drawer').hidden;
+    return !!window.SalongOpportunityUI?.isOpen()||!get('editor').hidden||!get('activity-dialog').hidden||!get('read-drawer').hidden||!get('bulk-dialog').hidden;
   }
   function editingTarget(target){
     return target&&target.closest&&target.closest('input,textarea,select,[contenteditable="true"]');
