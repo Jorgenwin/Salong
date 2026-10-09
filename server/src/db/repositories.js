@@ -1,5 +1,6 @@
 'use strict';
 const {mapOrganization,createOrganizationWrites}=require('./organization-writes');
+const {createActivityRepository}=require('./activity-ledger');
 
 function requireDb(db) {
   if (!db || typeof db.query !== 'function') {
@@ -310,6 +311,16 @@ function createRepositories(input) {
 
   return {
     members:{
+      async get(id){
+        const result=await db.query(
+          'SELECT id,auth_subject,name,email,role,active FROM members WHERE id=$1 LIMIT 1',[id]
+        );
+        const row=result.rows[0];
+        return row?{
+          id:row.id,authSubject:row.auth_subject,name:row.name,email:row.email||null,
+          role:row.role,active:row.active!==false
+        }:null;
+      },
       async getByAuthSubject(authSubject){
         const subject=String(authSubject||'').trim();
         if(!subject) return null;
@@ -508,8 +519,16 @@ function createRepositories(input) {
           ORDER BY event_date ASC NULLS LAST, created_at DESC
         `,params);
         return result.rows.map(mapOpportunity);
+      },
+      async get(id){
+        const result=await db.query(
+          'SELECT * FROM opportunities WHERE id=$1 AND deleted_at IS NULL LIMIT 1',[id]
+        );
+        return mapOpportunity(result.rows[0]);
       }
     },
+
+    activities:createActivityRepository(db),
 
     enrichmentJobs:{
       async create({id,accountId,requestedBy=null,availableAt=null}={}){
