@@ -13,7 +13,7 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
     check('P01 Prospekter starter med én anbefaling og fire tydelige arbeidsfaner',await ev(()=>({tabs:[...document.querySelectorAll('.mt-top .mt-tabs [data-mttab]')].map(x=>x.textContent.trim()),focus:!!document.querySelector('.ps-focus [data-mtstart]'),steps:document.querySelectorAll('.ps-flow li').length,noBudget:!document.querySelector('.tp-b')})),v=>v.tabs.length===4&&v.tabs[0]==='Start'&&/^Arbeidsliste/.test(v.tabs[1])&&v.tabs[2]==='Målmarked'&&v.tabs[3]==='Kontaktløp'&&v.focus&&v.steps===4&&v.noBudget);
     await p.click('[data-mttab="mal"]'); await wait(250);
     check('P02 gamle «Finn nye» og «Claude foreslår» er borte',await ev(()=>!/Claude foreslår|Finn nye/.test(document.body.innerText)),true);
-    check('P03 Målmarked er standard med tittel, funnel og dekning per segment (15 segmenter)',[await txt(p,'.mt h2'),(await p.$$('.cv-fr')).length,(await p.$$('[data-mtsegf]')).length],v=>/Målmarked mot 31\. mai 2027/.test(v[0])&&v[1]===7&&v[2]===15);
+    check('P03 Målmarked starter med selskapslisten og skjuler avansert analyse',[await txt(p,'.ps-market-list h2'),await ev(()=>({filters:document.querySelectorAll('[data-mtsegf]').length,select:!!document.querySelector('[data-mtquickseg]'),hidden:!document.querySelector('.ps-market-analysis').open,rows:document.querySelectorAll('tr[data-mtacc]').length}))],v=>/Velg et selskap/.test(v[0])&&v[1].filters===15&&v[1].select&&v[1].hidden&&v[1].rows>0);
     // ----- tallgrunnlag -----
     const base=await ev(()=>{ const M=window.__salong.MT; const s=M.stats(); return {s,n:M.all().filter(a=>a.kind==='ny').length,orgs:Object.keys(window.__salong.S.orgs).length}; });
     check('P04 identifisert = antall nye accounts, ingen dubletter',await ev(()=>{ const L=window.__salong.MT.all().filter(a=>a.kind==='ny'); const ids=new Set(L.map(a=>a.id)); const key=new Set(L.map(a=>a.orgnr||a.domain||a.name.toLowerCase())); return [L.length===ids.size,L.length===key.size]; }),[true,true]);
@@ -32,10 +32,10 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
     check('P09 fit = sum av seks komponenter med maks 100',fit,v=>v.n===6&&v.t===v.sum&&v.max===100);
     // ----- UI: segmentklikk -----
     await tab('mal'); await wait(150);
-    await p.click('[data-mtsegf="forlag"]'); await wait(250);
+    await p.selectOption('[data-mtquickseg]','forlag'); await wait(250);
     const rows1=await all(p,'tr[data-mtacc] .mt-o b');
     check('P10 klikk på segment filtrerer listen til segmentet',rows1.length>=1&&rows1.every(n=>/Forlag|Testforlaget|Res Publica|Alfa|Beta/i.test(n)||true)&&await ev(()=>[...document.querySelectorAll('tr[data-mtacc]')].every(tr=>/Forlag/.test(tr.children[0].textContent))),true);
-    await p.click('[data-mtsegf="forlag"]').catch(()=>{}); await wait(100); await ev(()=>{ const b=document.querySelector('[data-mtclr]'); if(b) b.click(); }); await wait(150);
+    await p.selectOption('[data-mtquickseg]',''); await wait(150);
     // fit-popover
     await p.click('[data-mtfit]'); await wait(200);
     check('P11 klikk på fit viser seks komponenter med poeng og forklaring',await ev(()=>{ const e=document.querySelector('#mt-pop'); return e?e.querySelectorAll('li, tr, .mt-pr').length:0; }),v=>v>=6);
