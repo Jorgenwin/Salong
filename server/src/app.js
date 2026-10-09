@@ -1,10 +1,24 @@
 'use strict';
 
-const { randomUUID } = require('node:crypto');
+const { randomUUID,createHash } = require('node:crypto');
+const fs=require('node:fs');
+const path=require('node:path');
 const {HTML:CRM_HTML,JS:CRM_JS}=require('./ui/crm-page');
 const { handleReadRequest } = require('./api/read');
 const { handleEnrichmentRequest } = require('./api/enrichment');
 const { handleContactWriteRequest } = require('./api/contacts-write');
+
+function prepareCrmWorkspace(source){
+  const marker='<script>\n';
+  if(typeof source!=='string'||!source.includes(marker))return null;
+  const html=source.replace(marker,marker+'window.SALONG_CRM_READONLY=true;\n');
+  const scriptHashes=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)]
+    .map(match=>"'sha256-"+createHash('sha256').update(match[1]).digest('base64')+"'");
+  if(!scriptHashes.length)return null;
+  const csp="default-src 'none'; script-src "+scriptHashes.join(' ')+
+    "; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'";
+  return {html,csp};
+}
 
 function writeJson(res, statusCode, body, requestId) {
   const payload = JSON.stringify(body);
@@ -28,6 +42,37 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
 
     try {
       const url = new URL(req.url || '/', 'http://salong.local');
+
+      // Served only by Salong API. A public static document contains no CRM
+      // records or credentials. The authenticated parent sends data in memory.
+      if(req.method==='GET'&&url.pathname==='/crm/workspace'){
+        if(!config.supabaseUrl||!config.supabasePublishableKey){
+          writeJson(res,503,{success:false,error_code:'crm_auth_not_configured'},requestId);
+          return;
+        }
+        let page;
+        try{page=fs.readFileSync(path.join(__dirname,'../public/salong.html'),'utf8');}
+        catch(error){
+          if(error.code==='ENOENT'){
+            writeJson(res,503,{success:false,error_code:'workspace_not_built'},requestId);
+            return;
+          }
+          throw error;
+        }
+        const prepared=prepareCrmWorkspace(page);
+        if(!prepared){
+          writeJson(res,503,{success:false,error_code:'workspace_build_invalid'},requestId);
+          return;
+        }
+        res.statusCode=200;
+        res.setHeader('content-type','text/html; charset=utf-8');
+        res.setHeader('cache-control','no-store');
+        res.setHeader('x-content-type-options','nosniff');
+        res.setHeader('referrer-policy','no-referrer');
+        res.setHeader('content-security-policy',prepared.csp);
+        res.end(prepared.html);
+        return;
+      }
 
       // A separate private CRM interface; not the public static demo.
       // Public auth configuration contains only a Supabase publishable key.
@@ -53,7 +98,7 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
         res.setHeader('cache-control','no-store');
         res.setHeader('x-content-type-options','nosniff');
         res.setHeader('referrer-policy','no-referrer');
-        res.setHeader('content-security-policy',"default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'self' "+origin+"; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
+        res.setHeader('content-security-policy',"default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'self' "+origin+"; frame-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'");
         res.end(data);
         return;
       }
@@ -133,4 +178,4 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
   };
 }
 
-module.exports = { createApp };
+module.exports = { createApp,prepareCrmWorkspace };

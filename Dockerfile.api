@@ -1,9 +1,16 @@
+FROM python:3.12-alpine AS salong-ui
+WORKDIR /build
+COPY src/ ./src/
+COPY data/example/seed.json ./data/example/seed.json
+RUN python3 src/build.py
+
 FROM node:22-alpine
 ENV NODE_ENV=production
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 COPY server/ ./server/
+COPY --from=salong-ui /build/dist/index.html ./server/public/salong.html
 USER node
 EXPOSE 3000
 CMD ["node","server/src/index.js"]
