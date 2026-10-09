@@ -20,6 +20,8 @@
   };
   let bridge=null,mode='companies',pipelineView='board',opportunities=null,pending=false;
   let selectedId=null,readerId=null,drawerTimer=0,focusBeforeDrawer=null;
+  const startHash={idag:'today',kontakter:'companies',prosp:'workspace',pipeline:'pipeline'};
+  const startView=()=>startHash[location.hash.slice(1)]||new URLSearchParams(location.search).get('view')||'companies';
   const available=()=>!!bridge&&bridge.isAuthenticated();
   const searchText=()=>get('search').value.trim().toLocaleLowerCase('nb');
   function setActiveNav(){
@@ -35,6 +37,8 @@
   function showView(next){
     if(!available()||!['today','companies','pipeline','workspace'].includes(next))return;
     mode=next;
+    const hash={today:'idag',companies:'kontakter',pipeline:'pipeline',workspace:'prosp'}[next];
+    if(hash&&location.hash.slice(1)!==hash)history.replaceState(null,'','#'+hash);
     setActiveNav();
     const workspace=get('workspace-area'),table=get('table-wrap'),pipe=get('pipeline-panel');
     if(next==='workspace'){
@@ -377,6 +381,7 @@
     get('open-workspace').addEventListener('click',()=>showView('workspace'));
     get('back-list').addEventListener('click',()=>showView('companies'));
     document.addEventListener('keydown',onKeydown);
+    window.addEventListener('hashchange',()=>{if(available()){const requested=startView();if(['today','companies','pipeline','workspace'].includes(requested))showView(requested);}});
     get('crm-quick-add').addEventListener('click',()=>bridge.canWrite()?bridge.openEditor(null):null);
     get('crm-quick-add').hidden=!bridge.canWrite();
     setActiveNav();
@@ -384,7 +389,7 @@
   window.SalongCRMUX={
     init,renderCompanies,showView,openAccount,onEditorOpen,onEditorClose,reset,
     focusSearch(){if(available()){showView('companies');get('search').focus();get('search').select();}},
-    onAuth(){get('crm-quick-add').hidden=!bridge.canWrite();renderCounts();setActiveNav();window.SalongOpportunityUI?.onAuth();},
+    onAuth(){get('crm-quick-add').hidden=!bridge.canWrite();renderCounts();window.SalongOpportunityUI?.onAuth();const requested=startView();showView(['today','companies','pipeline','workspace'].includes(requested)?requested:'companies');},
     pipelineRefresh(){opportunities=null;if(mode==='pipeline')fetchPipeline();}
   };
   if(window.SalongCRMBridge)window.SalongCRMUX.init(window.SalongCRMBridge);
