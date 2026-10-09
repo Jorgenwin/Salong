@@ -225,6 +225,49 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
       /not empty/
     );
 
+    // New company-only mode persists A/B/C suggestions and reasons without
+    // importing contacts/jobs or modifying the artifact staging payload.
+    await db.query('DROP SCHEMA IF EXISTS artifact_export CASCADE');
+    await db.query('DROP SCHEMA IF EXISTS public CASCADE');
+    await db.query('CREATE SCHEMA public');
+    await db.withClient(client=>runMigrations(client));
+    await db.query(
+      "INSERT INTO members(id,auth_subject,name,role,active) VALUES ($1,$2,$3,'owner',true)",
+      ['salong-owner','00000000-0000-4000-8000-000000000002','Eier']
+    );
+    const {companyFirstPlan}=require('../src/db/artifact-import');
+    const sampleCompany={
+      collections:{
+        orgs:{'previous':{name:'Prior user choice',tier:'B'}},
+        mtacc:{
+          'cultural':{name:'Synthetic Literary Forum',segId:'forlag',geo:'oslo',
+            about:'Bokslipp og litteratur',enr:{event_signals:[
+              {level:'Dokumentert',source_url:'https://example.test/event',sourceDate:'2026-10-06'}
+            ]}},
+          'legacy-link':{createdFrom:'profil'}
+        },
+        audit:{'private-note':{action:'saved privately'}}
+      }
+    };
+    const lite=companyFirstPlan(sampleCompany);
+    assert.equal(lite.report.priorities.counts.A,1);
+    assert.equal(lite.report.priorities.counts.B,1);
+    const liteResult=await db.withClient(client=>applyImport(client,lite));
+    assert.equal(liteResult.actual.organizations,2);
+    assert.equal(liteResult.actual.prospects,1);
+    assert.equal(liteResult.actual.contacts,0);
+    const tiered=await db.query('SELECT tier FROM organizations WHERE id=$1',['cultural']);
+    assert.equal(tiered.rows[0].tier,'A');
+    const unchanged=await db.query('SELECT tier FROM organizations WHERE id=$1',['previous']);
+    assert.equal(unchanged.rows[0].tier,'B');
+    const meta=await db.query('SELECT metadata FROM prospects WHERE organization_id=$1',['cultural']);
+    assert.equal(meta.rows[0].metadata.import_priority.tier,'A');
+    const rawStored=await db.query(
+      'SELECT data FROM artifact_export.documents WHERE collection=$1 AND doc_id=$2',
+      ['mtacc','cultural']
+    );
+    assert.deepEqual(rawStored.rows[0].data,sampleCompany.collections.mtacc.cultural);
+
   }finally{
     await db.close();
   }
