@@ -17,6 +17,7 @@ function salongPreviewApplyOrganizations(rows){
 }
 if(window.SALONG_CRM_READONLY===true){
   readOnly=true;
+  window.SALONG_CRM_CAN_WRITE=false;
   // Remove ALL embedded demo accounts (including virtual research profiles).
   // This happens before init() runs or any Salong view is rendered.
   for(const id of Object.keys(PROFILES))delete PROFILES[id];
@@ -34,9 +35,13 @@ if(window.SALONG_CRM_READONLY===true){
   let loaded=false;
   window.addEventListener('message',event=>{
     if(event.source!==window.parent||event.origin!==location.origin||window.parent===window)return;
-    if(!event.data||event.data.type!=='salong:crm-organizations'||loaded)return;
+    const message=event.data||{};
+    const initial=message.type==='salong:crm-organizations'&&!loaded;
+    const refresh=message.type==='salong:crm-organizations-refresh'&&loaded;
+    if(!initial&&!refresh)return;
     try{
-      const n=salongPreviewApplyOrganizations(event.data.organizations);
+      window.SALONG_CRM_CAN_WRITE=message.canWrite===true;
+      const n=salongPreviewApplyOrganizations(message.organizations);
       loaded=true;
       window.parent.postMessage({type:'salong:crm-loaded',count:n},location.origin);
     }catch(_error){
@@ -48,6 +53,17 @@ if(window.SALONG_CRM_READONLY===true){
   document.addEventListener('click',event=>{
     const element=event.target.closest('button,a,summary');
     if(!element)return;
+    const create=element.closest('[data-salong-new]');
+    const edit=element.closest('[data-salong-edit]');
+    if(create||edit){
+      event.preventDefault();event.stopImmediatePropagation();
+      if(window.SALONG_CRM_CAN_WRITE===true&&loaded){
+        window.parent.postMessage(edit?
+          {type:'salong:crm-edit',id:edit.dataset.salongEdit}:
+          {type:'salong:crm-new'},location.origin);
+      }
+      return;
+    }
     const nav=element.closest('#nav button[data-view]');
     if(nav&&['prosp','kontakter'].includes(nav.dataset.view))return;
     if(element.matches('[data-mttab],[data-mtstat],[data-mtsegf],[data-mtclr],[data-mtkind],[data-mtsort],[data-mtmore],[data-mtfit],[data-kst],[data-ktier],[data-ksort],[data-idtab],#syncBtn,[aria-label="Lukk"]'))return;
@@ -55,7 +71,7 @@ if(window.SALONG_CRM_READONLY===true){
     // Sorting, list pagination and org drill-down are safe in the preview;
     // business writes, enrollment, outreach, import and email are not.
     event.preventDefault();event.stopImmediatePropagation();
-    if(typeof toast==='function')toast('Forhåndsvisning med ekte data. Redigering kommer senere.');
+    if(typeof toast==='function')toast('Denne handlingen er ikke koblet til Supabase ennå.');
   },true);
   document.addEventListener('submit',event=>{event.preventDefault();event.stopImmediatePropagation();},true);
 }

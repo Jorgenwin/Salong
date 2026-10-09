@@ -23,9 +23,9 @@ test('familiar Salong browser shows only authenticated imported organizations',{
     {id:'db-literary',name:'Bokfestival virkelige selskap',segment:'forlag',priority:'A'},
     {id:'db-research',name:'Forskningsforening virkelige selskap',segment:'forskning',priority:'B'}
   ];
-  const transfer=JSON.stringify({type:'salong:crm-organizations',organizations:companies});
+  const transfer=JSON.stringify({type:'salong:crm-organizations',organizations:companies,canWrite:true});
   const harness='<!doctype html><html><body><iframe id="preview" src="/workspace#prosp"></iframe>'+
-    '<script>window.reports=[];window.addEventListener("message",e=>{if(e.origin===location.origin&&e.data&&e.data.type==="salong:crm-loaded")reports.push(e.data)});'+
+    '<script>window.reports=[];window.actions=[];window.addEventListener("message",e=>{if(e.origin===location.origin&&e.data){if(e.data.type==="salong:crm-loaded")reports.push(e.data);if(e.data.type==="salong:crm-edit")actions.push(e.data)}});'+
     'document.getElementById("preview").addEventListener("load",function(){this.contentWindow.postMessage('+transfer+',location.origin)})</script></body></html>';
   const server=http.createServer((req,res)=>{
     if(req.url.startsWith('/workspace')){
@@ -55,6 +55,20 @@ test('familiar Salong browser shows only authenticated imported organizations',{
     assert.deepEqual(state.ids.sort(),['db-literary','db-research']);
     assert.equal(state.priority,'A');
     assert.equal(state.view,'prosp');
+    const diagnostic=await frame.evaluate(()=>({
+      tab:window.__salong.UI.mt.tab,
+      kind:window.__salong.UI.mt.kind,
+      newButtons:document.querySelectorAll('[data-salong-new]').length,
+      editButtons:document.querySelectorAll('[data-salong-edit]').length,
+      accountRows:document.querySelectorAll('tr[data-mtacc]').length,
+      canWrite:window.SALONG_CRM_CAN_WRITE,
+      firstRow:document.querySelector('tr[data-mtacc]')?.outerHTML.slice(0,1900),
+      text:document.querySelector('.mt')?.innerText.slice(-280)
+    }));
+    assert.ok(diagnostic.editButtons>0,JSON.stringify(diagnostic));
+    await frame.locator('[data-salong-edit]').first().click();
+    await page.waitForFunction(()=>window.actions.length===1);
+    assert.ok(['db-literary','db-research'].includes(await page.evaluate(()=>window.actions[0].id)));
     assert.match(await frame.locator('#mode').textContent(),/Ekte Supabase-data/);
     assert.ok(!state.names.includes('Recovery Norge'),'public fixture profiles cannot reappear');
     assert.deepEqual(pageErrors,[],'no uncaught browser errors');
