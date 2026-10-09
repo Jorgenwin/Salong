@@ -2,7 +2,7 @@
    Leser fra eksisterende moduler (Pipeline, Kunder, Forespørsler, Prospekter/sekvenser, Kalender, Mål og prognose).
    Eier ingen oppgaver, saker eller prospektdata. Det som endres (Ferdig, Utsett, Tildel, Logg kontakt) skjer på det egentlige objektet.
    Det eneste arbeidsstasjonen selv lagrer i innstillingene er (1) ukeplaner og (2) «skjul til» for rader som ikke er oppgaver. */
-const ID={offerDays:5,staleDays:7,replySla:24,topN:10,maxReady:3,maxLoose:3,minTierA:'A',
+const ID={offerDays:5,staleDays:7,replySla:24,topN:7,maxReady:3,maxLoose:3,minTierA:'A',
   stat:{ahead:1.05,on:.95,slight:.8}};
 UI.id=UI.id||{tab:'dag',scope:'mine',focus:null,pane:'',wkOff:0,edit:null,snoozed:false,nr:null};
 
@@ -73,9 +73,22 @@ function idItems(){
   items.sort((a,b)=>a.rank-b.rank||b.score-a.score||a.org.localeCompare(b.org,'nb'));
   return items;
 }
+/* One visible next action per account; never delete or mark other tasks done.
+   'more' counts accounts, not duplicate tasks. Keep incoming replies first
+   because idItems has already sorted by urgency. */
+function idSelectAccounts(ordered,limit){
+  const seen=new Set(), unique=[];
+  for(const item of ordered){
+    const id=item.orgId||item.key;
+    if(seen.has(id))continue;
+    seen.add(id); unique.push(item);
+  }
+  return {shown:unique.slice(0,limit),more:Math.max(0,unique.length-limit)};
+}
 function idQueue(){
   const sn=idSnoozeMap(), all=idItems().filter(i=>idInScope(i.ownerId,i.crit)), vis=all.filter(i=>!sn[i.key]), hidden=all.filter(i=>sn[i.key]);
-  const shown=vis.slice(0,ID.topN); return {all,vis,shown,hidden,more:vis.length-shown.length};
+  const ranked=idSelectAccounts(vis,ID.topN);
+  return {all,vis,shown:ranked.shown,hidden,more:ranked.more};
 }
 /* tall til toppstripen */
 function idReadyCount(){ if(typeof mtAll!=='function') return 0; return mtAll().filter(a=>a.kind==='ny'&&a.flags.qualified&&a.flags.enriched&&!a.flags.addressed&&!a.flags.disqualified&&!a.dncAcc&&idInScope(a.ownerId,false)).length; }
