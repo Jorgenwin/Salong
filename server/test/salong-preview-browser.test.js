@@ -55,7 +55,7 @@ test('familiar Salong browser shows only authenticated imported organizations',{
     assert.deepEqual(state.ids.sort(),['db-literary','db-research']);
     assert.equal(state.priority,'A');
     assert.equal(state.view,'prosp');
-    assert.ok(state.pageText.includes('Ekte Supabase-data'));
+    assert.match(await frame.locator('#mode').textContent(),/Ekte Supabase-data/);
     assert.ok(!state.names.includes('Recovery Norge'),'public fixture profiles cannot reappear');
     assert.deepEqual(pageErrors,[],'no uncaught browser errors');
     await page.close();
