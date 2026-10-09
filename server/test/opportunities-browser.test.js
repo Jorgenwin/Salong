@@ -87,10 +87,22 @@ test('pipeline form stores real opportunities; stage writes are optimistic and r
     assert.equal(writes[1].body.expectedStage,'ny');
     assert.equal(writes[1].body.stage,'dialog');
     assert.equal(deals[0].stage,'dialog');
+
+    await page.locator('[data-pipeline-view="table"]').click();
+    const tableStage=page.locator('#pipeline-table .opp-stage-label select');
+    await tableStage.selectOption('visning');
+    await page.waitForFunction(()=>{const node=document.querySelector('#pipeline-table .opp-stage-label select');
+      return node?.value==='visning'&&!node.disabled &&
+        document.getElementById('status').textContent.includes('Fasen er lagret');});
+    assert.equal(writes[2].body.expectedStage,'dialog');
+    assert.equal(writes[2].body.stage,'visning');
+    await page.locator('[data-pipeline-view="board"]').click();
+
     page.once('dialog',dialog=>dialog.accept('Annen dato'));
     await page.locator('.opp-card-wrap select').selectOption('tapt');
     await page.waitForFunction(()=>{const node=document.querySelector('.opp-card-wrap select');return node?.value==='tapt'&&!node.disabled;});
-    assert.equal(writes[2].body.lostReason,'Annen dato');
+    assert.equal(writes[3].body.expectedStage,'visning');
+    assert.equal(writes[3].body.lostReason,'Annen dato');
     assert.equal(deals[0].lost_reason,'Annen dato');
     await page.locator('#logout').click();
     role='reader';
