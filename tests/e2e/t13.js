@@ -15,7 +15,7 @@ const {navTo,setup,testSeed}=require('./h.js');
     await p.click('.mt-top .mt-tabs [data-mttab="start"]'); await wait(150);
     check('S03 Prospekter: ett anbefalt selskap er primærhandlingen; batch er skjult under Mer',[
       (await p.$('.ps-focus .btn.primary')).length,
-      await ev(()=>{ const b=document.querySelector('.mt-top [data-mtmodal="batch"]'); return !!b&&!!b.getClientRects().length; }),
+      await ev(()=>document.querySelector('.mt-top .mt-menu')?.open||false),
       await ev(()=>document.querySelector('#newDeal').classList.contains('primary'))],[1,false,false]);
     await view('data',300); await p.click('[data-dsec="status"]').catch(()=>{}); await wait(250);
     check('S04 Datastatus finnes under Data og oppsett og lister poster som kan beholdes som ekte',await p.evaluate(()=>/Behold som ekte/.test(document.querySelector('#view').textContent)),true);
