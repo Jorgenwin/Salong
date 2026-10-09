@@ -1,0 +1,119 @@
+/* Roligere prospektkort. Les konklusjonen først, åpne grunnlaget ved behov.
+   Endrer ikke prioriteringer, kilder, kontakter eller berikingsmotoren. */
+.tp-d{
+  padding:14px 16px 12px;
+  border-color:var(--rule);
+  background:var(--surface);
+}
+.tp-dh{gap:9px}
+.tp-dh>b{font-size:17px;line-height:1.3;font-weight:650}
+.tp-d .tp-summary{
+  margin:10px 0 5px;
+  font-size:13.5px;
+  line-height:1.45;
+  font-weight:450;
+  color:var(--muted);
+  max-width:70ch;
+}
+.tp-d .tp-dl{font-size:12.5px}
+.tp-d .tp-sel{min-width:130px;max-width:190px}
+.tp-d .tp-basis p{
+  margin:6px 0 2px;
+  font-size:13px;
+  line-height:1.5;
+  color:var(--muted);
+}
+
+/* Hvorfor nå: én redaksjonell setning, resten skjult til man åpner. */
+.ov-why{min-width:0}
+.ov-r .ov-why-summary{
+  margin:0;
+  max-width:68ch;
+  font-size:16px;
+  font-weight:550;
+  line-height:1.45;
+  color:var(--ink);
+  overflow-wrap:anywhere;
+}
+.ov-why-more{margin-top:9px}
+.ov-why-more>summary,
+.ov-extra>summary{
+  list-style:none;
+  width:max-content;
+  max-width:100%;
+  display:inline-flex;
+  gap:7px;
+  align-items:center;
+  padding:4px 2px;
+  border-radius:5px;
+  cursor:pointer;
+  font-size:13px;
+  line-height:1.35;
+  color:var(--accent);
+  font-weight:600;
+}
+.ov-why-more>summary::-webkit-details-marker,
+.ov-extra>summary::-webkit-details-marker{display:none}
+.ov-why-more>summary::before,
+.ov-extra>summary::before{
+  content:"▸";
+  display:inline-block;
+  width:12px;
+  flex:none;
+  transition:transform .15s ease;
+}
+.ov-why-more[open]>summary::before,
+.ov-extra[open]>summary::before{transform:rotate(90deg)}
+.ov-why-more>summary:hover,
+.ov-extra>summary:hover{color:var(--ink)}
+.ov-why-more>summary:focus-visible,
+.ov-extra>summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.ov-why-body{
+  border-left:2px solid var(--rule);
+  margin:11px 0 4px 5px;
+  padding:1px 0 2px 15px;
+  display:grid;
+  gap:12px;
+  max-width:75ch;
+  color:var(--muted);
+}
+.ov-why-context>b{
+  display:block;
+  font-size:11px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin:0 0 5px;
+}
+.ov-why-body .ov-why-context p{
+  font-size:13.5px;
+  line-height:1.55;
+  font-weight:400;
+  color:var(--ink);
+  margin:0 0 6px;
+  overflow-wrap:anywhere;
+}
+.ov-why-body .ov-why-context p.mt-hint{
+  color:var(--muted);
+  font-size:12.5px;
+}
+.ov-why-body .ov-why-context .bk-lv{white-space:nowrap}
+.ov-why-body>.lnk{justify-self:start;font-size:12.5px}
+.ov-extra{margin-top:4px}
+.ov-extra>p{
+  color:var(--muted);
+  font-size:12.5px;
+  line-height:1.5;
+  max-width:70ch;
+  padding:4px 0 0 19px;
+}
+@media(max-width:640px){
+  .tp-d{padding:12px}
+  .tp-d .tp-dl{width:100%;justify-content:space-between}
+  .tp-d .tp-sel{flex:0 1 auto}
+  .ov-r .ov-why-summary{font-size:15px}
+  .ov-why-body{padding-left:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  .ov-why-more>summary::before,.ov-extra>summary::before{transition:none}
+}
