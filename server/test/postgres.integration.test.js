@@ -343,6 +343,17 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     const history=await repositories.activities.listForAccount('previous');
     assert.equal(history.length,2);
     assert.equal(history[0].id,'touch-out-2');
+    // Pipeline recency comes from actual completed communication on the organization.
+    await db.query(
+      "INSERT INTO opportunities(id,organization_id,title,stage,value_amount) VALUES ($1,$2,$3,$4,$5)",
+      ['opp-for-test','previous','Seminar med bokbransjen','tilbud',45000]
+    );
+    const op=await repositories.opportunities.list('previous');
+    assert.equal(op.length,1);
+    assert.equal(op[0].value,45000);
+    assert.equal(op[0].stage,'tilbud');
+    assert.equal(op[0].last_activity_at,'2027-01-12T09:00:00.000Z');
+
 
     const task=await repositories.activities.create({
       id:'task-followup',accountId:'previous',type:'task',

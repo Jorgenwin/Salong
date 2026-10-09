@@ -52,7 +52,14 @@ if(window.SALONG_CRM_READONLY===true){
   // must not appear to work while there are no server-side write endpoints.
   document.addEventListener('click',event=>{
     const element=event.target.closest('button,a,summary');
-    if(!element)return;
+    if(!element){
+      const row=event.target.closest('tr[data-mtacc]');
+      if(row&&!event.target.closest('button,a,select,input,textarea')){
+        event.preventDefault();event.stopImmediatePropagation();
+        window.parent.postMessage({type:'salong:crm-open',id:row.dataset.mtacc},location.origin);
+      }
+      return;
+    }
     const create=element.closest('[data-salong-new]');
     const edit=element.closest('[data-salong-edit]');
     const log=element.closest('[data-salong-log]');
@@ -80,6 +87,17 @@ if(window.SALONG_CRM_READONLY===true){
     // business writes, enrollment, outreach, import and email are not.
     event.preventDefault();event.stopImmediatePropagation();
     if(typeof toast==='function')toast('Denne handlingen er ikke koblet til Supabase ennå.');
+  },true);
+  document.addEventListener('keydown',event=>{
+    if((event.ctrlKey||event.metaKey)&&String(event.key).toLowerCase()==='k'){
+      event.preventDefault();event.stopImmediatePropagation();
+      window.parent.postMessage({type:'salong:crm-search'},location.origin);
+    }
+    const row=event.target.closest?.('tr[data-mtacc]');
+    if(row&&event.key==='Enter'&&!event.target.closest('button,a,select,input,textarea')){
+      event.preventDefault();event.stopImmediatePropagation();
+      window.parent.postMessage({type:'salong:crm-open',id:row.dataset.mtacc},location.origin);
+    }
   },true);
   document.addEventListener('submit',event=>{event.preventDefault();event.stopImmediatePropagation();},true);
 }

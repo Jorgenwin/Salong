@@ -29,6 +29,15 @@ test('separate CRM page serves no secrets and never bypasses /api auth',async()=
   const client=await fetch(base+'/crm/client.js');
   assert.equal(client.status,200);
   assert.match(await client.text(),/\/api\/organizations/);
+  const uxScript=await fetch(base+'/crm/ux.js');
+  assert.equal(uxScript.status,200);
+  assert.match(await uxScript.text(),/SalongCRMUX/);
+  assert.match(uxScript.headers.get('content-type'),/application\/javascript/);
+  const uxStyles=await fetch(base+'/crm/ux.css');
+  assert.equal(uxStyles.status,200);
+  assert.match(await uxStyles.text(),/crm-sidebar/);
+  assert.match(uxStyles.headers.get('content-type'),/text\/css/);
+  assert.match(page.headers.get('content-security-policy'),/style-src 'self'/);
   const blocked=await fetch(base+'/api/organizations');
   assert.equal(blocked.status,503);
   assert.equal((await blocked.json()).error_code,'auth_not_ready');

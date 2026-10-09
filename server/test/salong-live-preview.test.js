@@ -138,6 +138,30 @@ test('preview blocks mutation buttons before browser UI handlers run',()=>{
   assert.equal(stopped,true);
 });
 
+test('authenticated preview company rows open parent drawer instead of navigating',()=>{
+  const h=runPreview(true);
+  h.ctx.globalTest.load();
+  let prevented=false,stopped=false;
+  const row={dataset:{mtacc:'real-company'}};
+  const target={closest(selector){
+    if(selector==='button,a,summary')return null;
+    if(selector==='tr[data-mtacc]')return row;
+    return null;
+  }};
+  h.documentListeners.click({target,
+    preventDefault:()=>{prevented=true;},
+    stopImmediatePropagation:()=>{stopped=true;}
+  });
+  assert.equal(prevented,true);
+  assert.equal(stopped,true);
+  assert.equal(h.notify()[0].type,'salong:crm-open');
+  assert.equal(h.notify()[0].id,'real-company');
+  let keyStopped=false;
+  h.documentListeners.keydown({target:{closest:()=>null},ctrlKey:true,metaKey:false,key:'k',
+    preventDefault:()=>{},stopImmediatePropagation:()=>{keyStopped=true;}});
+  assert.equal(keyStopped,true);
+  assert.equal(h.notify()[1].type,'salong:crm-search');
+});
 test('ordinary demo does not activate read-only or clear demo data',()=>{
   const h=runPreview(false);
   assert.equal(h.ctx.globalTest.isReadOnly(),false);
