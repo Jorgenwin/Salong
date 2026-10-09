@@ -24,7 +24,7 @@ test('login page requires authenticated organization fetch before showing famili
   assert.match(JS,/if\(!token\|\|!accounts\.length\)/);
   assert.match(JS,/salong:crm-organizations/);
   assert.match(JS,/event\.origin!==location\.origin/);
-  assert.match(JS,/closeWorkspace\(\);token=null/);
+  assert.ok(JS.includes("closeEditor();closeWorkspace();canWrite=false;token=null"));
 });
 
 function runPreview(enabled){
