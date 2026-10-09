@@ -132,7 +132,7 @@
     const btn=document.createElement('button');btn.type='button';btn.className='pipeline-card';
     btn.append(text('strong',company?.name||'Ukjent organisasjon'));
     const name=text('small',deal.title||'Salgsmulighet');btn.append(name);
-    btn.append(text('span',money(deal.value),'card-value'));
+    btn.append(text('span',deal.value==null?'Verdi ikke oppgitt':money(deal.value),'card-value'));
     if(deal.event_date)btn.append(text('small','Dato: '+deal.event_date));
     if(deal.last_activity_at){
       const age=Math.floor((Date.now()-new Date(deal.last_activity_at).getTime())/86400000);
@@ -189,7 +189,7 @@
       const row=document.createElement('tr');row.tabIndex=0;
       row.append(text('td',company?.name||'Ukjent selskap'),
         text('td',deal.title||'–'),text('td',stages.find(x=>x[0]===deal.stage)?.[1]||deal.stage),
-        text('td',money(deal.value)),
+        text('td',deal.value==null?'Ikke oppgitt':money(deal.value)),
         text('td',deal.last_activity_at?
           new Date(deal.last_activity_at).toLocaleDateString('nb-NO'):'Ikke registrert'));
       if(company){
