@@ -10,7 +10,7 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
   const SRC=[{url:'https://example.test/arr',label:'example.test',checkedAt:'2026-10-01'}];
   try{
     await view('prosp');
-    check('P01 fem faner: Prioritet, Arbeidsliste, Målmarked, Sekvenser, Strategi',await all(p,'[data-mttab]'),v=>v.length===5&&v[0]==='Prioritet'&&/^Arbeidsliste/.test(v[1])&&v[2]==='Målmarked'&&v[3]==='Sekvenser'&&v[4]==='Strategi');
+    check('P01 Prospekter starter med én anbefaling og fire tydelige arbeidsfaner',await ev(()=>({tabs:[...document.querySelectorAll('.mt-top .mt-tabs [data-mttab]')].map(x=>x.textContent.trim()),focus:!!document.querySelector('.ps-focus [data-mtstart]'),steps:document.querySelectorAll('.ps-flow li').length,noBudget:!document.querySelector('.tp-b')})),v=>v.tabs.length===4&&v.tabs[0]==='Start'&&/^Arbeidsliste/.test(v.tabs[1])&&v.tabs[2]==='Målmarked'&&v.tabs[3]==='Kontaktløp'&&v.focus&&v.steps===4&&v.noBudget);
     await p.click('[data-mttab="mal"]'); await wait(250);
     check('P02 gamle «Finn nye» og «Claude foreslår» er borte',await ev(()=>!/Claude foreslår|Finn nye/.test(document.body.innerText)),true);
     check('P03 Målmarked er standard med tittel, funnel og dekning per segment (15 segmenter)',[await txt(p,'.mt h2'),(await p.$$('.cv-fr')).length,(await p.$$('[data-mtsegf]')).length],v=>/Målmarked mot 31\. mai 2027/.test(v[0])&&v[1]===7&&v[2]===15);
@@ -69,7 +69,7 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
     // ----- batch -----
     const bs=await ev(async()=>{ const M=window.__salong.MT; const before=Object.keys(window.__salong.S.mtbat).length; const pk=M.pick({segIds:['forlag','forskning'],n:3}); return {n:pk.rows.length,sorted:pk.rows.every((r,i,a)=>!i||a[i-1].fit.total>=r.fit.total),noAddr:pk.rows.every(r=>!r.flags.addressed&&r.flags.qualified),before}; });
     check('P21 plukk velger høyest fit, kvalifiserte, ikke adresserte',bs,v=>v.n>=1&&v.n<=3&&v.sorted&&v.noAddr);
-    await p.click('[data-mtmodal="batch"]'); await wait(300);
+    await p.click('.mt-top .mt-menu > summary'); await p.click('.mt-top [data-mtmodal="batch"]'); await wait(300);
     const bm=await ev(()=>{ const m=document.querySelector('#mt-root .modal, #mt-root [role=dialog]'); return {open:!!m,rows:m?m.querySelectorAll('tr, li.mt-bi, .mt-brow, .mt-blr').length:0,t:m?m.textContent.replace(/\s+/g,' ').slice(0,300):''}; });
     const nBefore=await ev(()=>({b:Object.keys(window.__salong.S.mtbat).length}));
     check('P22 «Start neste batch» viser alle kandidater før bekreftelse og oppretter ingenting ved åpning',[bm.open,bm.rows>=1,nBefore.b],v=>v[0]&&v[1]&&v[2]===0);
