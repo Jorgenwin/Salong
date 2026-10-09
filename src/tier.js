@@ -7,7 +7,7 @@ var TIER_D=null;
 function tierD(){ if(TIER_D) return TIER_D;
   /* kulturprofil per segment: 3 = kjerne (litteratur, kunnskap, kultur), 2 = nær, 1 = rand, 0 = bedrift/annet */
   const cult={forlag:3,ambassade:2,forskning:2,fag:2,ngo:2,ovrige:1,utdanning:1,offentlig:1,byra:1,tech:1,pharma:0,saas:0,finans:0,konsulent:0,bedrift:0};
-  const kw=/litterat|\bbok\b|bøker|bokslipp|forfatter|forlag|lesning|lesing|poesi|dikt|kultur|festival|konsert|musikk|\bkunst|teater|film\b|debatt|ytringsfrihet|bibliotek|museum|oversett|kritiker/gi;
+  const kw=/litterat|\bbok\b|bøker|bokslipp|forfatter|forlag|lesning|lesing|poesi|dikt|kultur(?!hus|enhet)|festival|konsert|musikk|\bkunst(?!ig)|teater|film\b|debatt|ytringsfrihet|bibliotek|museum|oversett|kritiker/gi;
   const lbl={3:'Kjerne: litteratur og kultur',2:'Nær: formidling og kunnskap',1:'Rand',0:'Bedrift og annet'};
   const tiers={1:{n:'Tier 1',t:'Toppmål',d:'Der du bruker mest energi: personlig kontakt, visning og møte.',min:40},2:{n:'Tier 2',t:'Ring',d:'Rundt 30 % av tiden: telefon først, så e-post.',min:12},3:{n:'Tier 3',t:'E-post',d:'Nice to have: automatiserte e-poster. Svar følger du opp selv.',min:1.5}};
   /* kadenser per tier. m = e-postmal. bulk = kan lages som utkast i bulk uten personlig tilpasning */
@@ -37,7 +37,8 @@ async function tierSave(patch){ const cur=(S.settings&&S.settings.tier)||{}; con
 /* kulturprofil og tier for hver account. Kalles fra mtBuild etter dedupe. */
 function tierCult(a){
   const D=tierD(); let c=D.cult[a.segId]; if(c==null) c=1;
-  const txt=(a.name||'')+' '+(a.about||'')+' '+(a.why||''); const hits=new Set((txt.match(D.kw)||[]).map(x=>x.toLowerCase().slice(0,5)));
+  // Do not use analysis/venue notes ('why') to manufacture a cultural mission.
+  const txt=(a.name||'')+' '+(a.about||''); const hits=new Set((txt.match(D.kw)||[]).map(x=>x.toLowerCase().slice(0,5)));
   const bump=c>=1?(hits.size>=2?2:hits.size?1:0):0;
   return {base:c,eff:Math.min(3,c+bump),hit:hits.size>0,core:hits.size>=2||(a.segId==='forlag'&&hits.size>=1)};
 }

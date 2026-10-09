@@ -8,6 +8,7 @@ const TABLES=['organizations','prospects','contacts','opportunities','activities
 const STAGES=new Set(['ny','dialog','visning','tilbud','holdt','bekreftet','tapt']);
 const TYPES=new Set(['call','email','meeting','visning','note','task']);
 const TERMINAL=new Set(['needs_review','partial','failed','cancelled']);
+const {suggestForCompanyPlan}=require('./import-priority');
 
 function str(v){ return typeof v==='string'&&v.trim()?v.trim():null; }
 function text(v){ return v===null||v===undefined?null:String(v); }
@@ -241,6 +242,7 @@ function companyFirstPlan(exported){
   const plan=buildImportPlan(exported);
   const kept=new Set(['organizations','prospects']);
   const rows=Object.fromEntries(TABLES.map(table=>[table,kept.has(table)?plan.rows[table]:[]]));
+  const priorities=suggestForCompanyPlan(rows,plan.raw);
   const companyIssues=plan.report.not_mapped.filter(item=>
     (item.collection==='orgs'||item.collection==='mtacc')&&
     !['example','embedded_contacts_retained_in_staging','missing_organization_name'].includes(item.reason)
@@ -260,6 +262,7 @@ function companyFirstPlan(exported){
     report:{
       ...plan.report,
       mode:'companies_only',
+      priorities,
       planned:Object.fromEntries(TABLES.map(t=>[t,rows[t].length])),
       review_required_count:companyIssues.length,
       review_reason_counts:reasons,
