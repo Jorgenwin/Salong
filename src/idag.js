@@ -2,7 +2,7 @@
    Leser fra eksisterende moduler (Pipeline, Kunder, Forespørsler, Prospekter/sekvenser, Kalender, Mål og prognose).
    Eier ingen oppgaver, saker eller prospektdata. Det som endres (Ferdig, Utsett, Tildel, Logg kontakt) skjer på det egentlige objektet.
    Det eneste arbeidsstasjonen selv lagrer i innstillingene er (1) ukeplaner og (2) «skjul til» for rader som ikke er oppgaver. */
-const ID={offerDays:5,staleDays:7,replySla:24,topN:10,maxReady:3,maxLoose:3,minTierA:'A',
+const ID={offerDays:5,staleDays:7,replySla:24,topN:7,maxReady:3,maxLoose:3,minTierA:'A',
   stat:{ahead:1.05,on:.95,slight:.8}};
 UI.id=UI.id||{tab:'dag',scope:'mine',focus:null,pane:'',wkOff:0,edit:null,snoozed:false,nr:null};
 
@@ -63,9 +63,18 @@ function idItems(){
     const ready=[];
     for(const a of mtAll()){ if(a.flags.disqualified||a.dncAcc||!idOperative(a)) continue; const n=a.nx, F=a.flags;
       const base={orgId:a.id,org:a.name,ownerId:a.ownerId||null,open:{k:'mt',id:a.id},obj:'acc',accId:a.id};
-      if(n.k==='reply') push({...base,key:'acc:'+a.id+':svar',rank:1,score:50,action:'Følg opp svar',why:['Kunden har svart','Venter på oss'],src:'Sekvenser',crit:true});
+      if(n.k==='reply') push({...base,key:'acc:'+a.id+':svar',rank:1,score:50,action:'Følg opp svar innen 24 timer',why:['Innkommende svar registrert','Sekvens er stoppet – følg opp personlig'],src:'Sekvenser',crit:true});
+      else if(n.k==='enrich'&&F.qualified&&!F.enriched&&!(typeof bkActive==='function'&&bkActive(a.job))){
+        const time=a.pt===1?'Tier 1 først':a.pt===2?'Tier 2 – neste berikbølge':'Tier 3 – ved kapasitet';
+        push({...base,key:'acc:'+a.id+':berik',rank:5,score:(a.pt===1?100:a.pt===2?40:0)+a.fit.total/10,
+          action:'Berik – finn relevant kontaktperson',why:[time,n.t||'Kontaktdata mangler'],src:'Berik'});
+      }
       else if(n.k==='step'&&n.due&&n.due<=today) push({...base,key:'acc:'+a.id+':steg',rank:5,score:(n.late?20:0)+a.fit.total/10,action:n.t,why:[n.late?mtDays(n.due,today)+' '+idPlural(mtDays(n.due,today),'dag','dager')+' forfalt':'Frist i dag',(a.prog?a.prog.name+' · dag '+a.prog.day:'Sekvens')],due:n.due,late:!!n.late,src:'Sekvenser',done:{k:'step',id:a.id,i:a.prog&&a.prog.next?a.prog.next.i:null}});
-      else if(n.k==='followup'&&n.due&&n.due<=today&&a.kind==='ny') push({...base,key:'acc:'+a.id+':oppf',rank:5,score:a.fit.total/10,action:'Følg opp touch',why:[n.t],due:n.due,late:n.due<today,src:'Prospekter'});
+      else if(n.k==='followup'&&n.due&&n.due<=today&&a.kind==='ny'){
+        const since=a.touch.lastOut?Math.max(0,mtDays(String(a.touch.lastOut).slice(0,10),today)):0;
+        push({...base,key:'acc:'+a.id+':oppf',rank:5,score:(since>=14?30:0)+a.fit.total/10,
+          action:'Følg opp kontakt',why:[n.t,since>=14?'Over 14 dager siden siste utgående kontakt':''],due:n.due,late:n.due<today,src:'Prospekter'});
+      }
       else if(a.kind==='ny'&&F.qualified&&F.enriched&&!F.addressed&&!a.prog&&String(a.tier||'')===ID.minTierA&&(a.batch||(a.doc&&a.doc.ownerId))) ready.push({...base,key:'acc:'+a.id+':forste',rank:6,score:a.fit.total,action:'Første kontakt'+(a.active[0]?' · '+a.active[0].name+(a.active[0].title?' ('+a.active[0].title+')':''):''),
         why:['Klar for første kontakt','Tier A · fit '+a.fit.total],src:'Prospekter',acc:a}); }
     ready.sort((x,y)=>y.score-x.score).slice(0,ID.maxReady).forEach(push);
@@ -75,7 +84,11 @@ function idItems(){
 }
 function idQueue(){
   const sn=idSnoozeMap(), all=idItems().filter(i=>idInScope(i.ownerId,i.crit)), vis=all.filter(i=>!sn[i.key]), hidden=all.filter(i=>sn[i.key]);
-  const shown=vis.slice(0,ID.topN); return {all,vis,shown,hidden,more:vis.length-shown.length};
+  // Én tydelig neste handling per konto. Andre oppgaver ligger fortsatt i CRM.
+  const seen=new Set(), unique=[];
+  for(const it of vis){ const id=it.orgId||it.accId||it.key; if(seen.has(id)) continue; seen.add(id); unique.push(it); }
+  const shown=unique.slice(0,ID.topN);
+  return {all,vis,shown,hidden,more:unique.length-shown.length};
 }
 /* tall til toppstripen */
 function idReadyCount(){ if(typeof mtAll!=='function') return 0; return mtAll().filter(a=>a.kind==='ny'&&a.flags.qualified&&a.flags.enriched&&!a.flags.addressed&&!a.flags.disqualified&&!a.dncAcc&&idInScope(a.ownerId,false)).length; }
