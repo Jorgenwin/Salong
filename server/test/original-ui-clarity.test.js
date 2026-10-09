@@ -50,7 +50,7 @@ test('Prospekter retains every original view and provides clear tab guidance', {
     await page.locator('.mt-top .mt-tabs [data-mttab="mal"]').click();
     assert.match(await page.locator('.mt-guide').textContent(),/velg selskaper/i);
     await page.locator('.mt-top .mt-tabs [data-mttab="arb"]').click();
-    assert.match(await page.locator('.mt-guide').textContent(),/Følg opp aktive prospekter/);
+    assert.match(await page.locator('.mt-guide').textContent(),/Følg opp det du har begynt på/);
     assert.match(await page.locator('#mode').textContent(),/demo|lagres ikke/i);
     assert.equal(new URL(page.url()).pathname,'/','The familiar URL must not redirect to the reduced CRM');
     assert.deepEqual(errors,[]);
