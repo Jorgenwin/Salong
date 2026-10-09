@@ -66,7 +66,50 @@ function parseOrgPayload(body,{create=false}={}){
 async function handleOrganizationsWrite({req,url,repositories,makeId=()=>`org_${randomUUID()}`,makeAuditId=()=>`audit_${randomUUID()}`}={}){
   if(!req||!url||!['POST','PATCH'].includes(req.method))return null;
   const create=url.pathname==='/api/organizations'&&req.method==='POST';
-  const match=url.pathname.match(/^/api/organizations/([^/]+)$/);
+  const match=url.pathname.match(new RegExp('^/api/organizations/([^/]+)
+  const update=req.method==='PATCH'&&match;
+  if(!create&&!update)return null;
+  if(!repositories||!repositories.accounts||
+      typeof repositories.accounts.createOrganization!=='function'||
+      typeof repositories.accounts.updateOrganization!=='function')
+    return fail(503,'backend_not_ready','Selskapsredigering er ikke klar.');
+  if(!req.salongUser||!req.salongUser.id)
+    return fail(401,'unauthorized','Innlogging kreves for å lagre selskaper.');
+  if(String(req.headers['content-type']||'').split(';')[0].trim().toLowerCase()!=='application/json')
+    return fail(415,'unsupported_media_type','Bruk JSON.');
+  let body;
+  try{body=await readJson(req,{maxBytes:16384});}
+  catch(error){
+    return error.code==='request_too_large'?
+      fail(413,'request_too_large','Forespørselen er for stor.'):
+      fail(400,'invalid_json','Ugyldig JSON.');
+  }
+  let input;
+  try{input=parseOrgPayload(body,{create});}
+  catch(error){return fail(400,'invalid_organization',error.message);}
+  if(create){
+    const result=await repositories.accounts.createOrganization(input,{
+      actorId:req.salongUser.id,id:makeId(),auditId:makeAuditId()
+    });
+    if(result.duplicate)return fail(409,'duplicate_organization',
+      'Organisasjonen finnes allerede: '+result.existing.name);
+    return {status:201,body:{success:true,data:result.organization}};
+  }
+  let id;
+  try{id=decodeURIComponent(match[1]);}
+  catch(_error){return fail(400,'invalid_id','Ugyldig selskaps-ID.');}
+  if(!id||id.length>160)return fail(400,'invalid_id','Ugyldig selskaps-ID.');
+  const result=await repositories.accounts.updateOrganization(id,input,{
+    actorId:req.salongUser.id,auditId:makeAuditId()
+  });
+  if(result.missing)return fail(404,'organization_not_found','Organisasjonen finnes ikke.');
+  if(result.duplicate)return fail(409,'duplicate_organization',
+    'Organisasjonen finnes allerede: '+result.existing.name);
+  return {status:200,body:{success:true,data:result.organization}};
+}
+
+module.exports={handleOrganizationsWrite,parseOrgPayload};
+));
   const update=req.method==='PATCH'&&match;
   if(!create&&!update)return null;
   if(!repositories||!repositories.accounts||
