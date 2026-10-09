@@ -1,5 +1,5 @@
 /* ---------- Prospekter: Arbeidsliste, Målmarked, Sekvenser ---------- */
-UI.mt={tab:'start',seg:'',stat:'',kind:'ny',page:1,sort:{k:'fit',dir:-1},acc:null,dr:{},modal:null,imp:null,bt:null,menu:false,wk:'all'};
+UI.mt={tab:'start',seg:'',stat:'',kind:'ny',page:1,sort:{k:'fit',dir:-1},acc:null,dr:{},modal:null,imp:null,bt:null,menu:false,wk:'all',marketAnalysisOpen:false};
 const mtPct=x=>x==null?'–':Math.round(x*100)+' %';
 const mtSegLabel=a=>a.seg?mtSegShort(a.seg.name):'Uten segment';
 const mtEvTitle=a=>a.ev.level==='Confirmed'?'Dokumentert: '+a.ev.sources.map(s=>s.label||mtHost(s.url)).join(', '):a.ev.level==='Likely'?'Sannsynlig, men ikke dokumentert med kilde':'Ukjent: ingen eventsignal registrert';
@@ -68,11 +68,26 @@ function mtListHTML(){
    (L.length>shown.length?'<div class="row" style="justify-content:center"><button type="button" class="btn sm" data-mtmore="1">Vis flere ('+(L.length-shown.length)+' igjen)</button></div>':'');
 }
 function mtMalHTML(){
-  const cfg=mtCfg(), all=mtAll(), st=mtStats(all), segs=mtSegStats().filter(s=>s.id&&s.prio);
-  return '<div class="mt-head"><div><h2>Målmarked mot '+fd(cfg.target,{day:'numeric',month:'long',year:'numeric'})+'</h2>'+mtSnapLine(cfg)+'</div></div>'+mtKpis(st,cfg)+
-   '<section class="mt-sec"><div class="mt-sh"><h3>Dekning per segment</h3><span class="mt-hint">Klikk et segment for å filtrere listen. Prosent = adresserte av kvalifiserte.</span></div>'+mtBars(segs)+'</section>'+
-   (st.dialogNoTouch||st.warn?'<p class="mt-note warn">'+(st.dialogNoTouch?st.dialogNoTouch+' kvalifisert'+(st.dialogNoTouch>1?'e':'')+' account'+(st.dialogNoTouch>1?'s':'')+' har dialog, men ingen logget outbound-touch, og teller derfor ikke som adressert. ':'')+(st.warn?st.warn+' har kontakt, men oppfyller ikke målmarkedsreglene.':'')+'</p>':'')+
-   '<section class="mt-sec"><div class="mt-sh"><h3>Accounts</h3><button type="button" class="lnk" data-mtmodal="defs">Hva betyr statusene?</button></div>'+mtListHTML()+'</section>';
+  const U=UI.mt,cfg=mtCfg(),all=mtAll(),st=mtStats(all),segs=mtSegStats().filter(s=>s.id&&s.prio);
+  const segmentChoices=cfg.segs.filter(s=>s.on).map(s=>
+    '<option value="'+esc(s.id)+'"'+(U.seg===s.id?' selected':'')+'>'+esc(mtSegShort(s.name))+'</option>').join('');
+  const quickFilter='<label class="ps-market-filter">Segment <select class="in fsel" data-mtquickseg aria-label="Filtrer selskaper på segment">'+
+    '<option value="">Alle segmenter</option>'+segmentChoices+'</select></label>';
+  const list='<section class="mt-sec ps-market-list"><div class="mt-sh"><div>'+
+    '<h2>Velg et selskap</h2><p>Åpne en rad for å vurdere selskapet, finne kontakter og velge neste handling.</p>'+
+    '</div>'+quickFilter+'</div>'+mtListHTML()+'</section>';
+  const warning=(st.dialogNoTouch||st.warn)?
+    '<p class="mt-note warn">'+(st.dialogNoTouch?st.dialogNoTouch+
+      ' kvalifiserte selskaper har dialog, men ingen registrert utgående kontakt. ':'')+
+      (st.warn?st.warn+' har kontakt, men oppfyller ikke målmarkedsreglene.':'')+'</p>':'';
+  const analysis='<details class="mt-dt ps-market-analysis"'+(U.marketAnalysisOpen?' open':'')+'>'+
+    '<summary>Vis markedsanalyse og dekning</summary><div class="ps-market-analysis-body">'+
+    '<div class="mt-head"><div><h2>Målmarked mot '+fd(cfg.target,{day:'numeric',month:'long',year:'numeric'})+
+      '</h2>'+mtSnapLine(cfg)+'</div></div>'+mtKpis(st,cfg)+
+    '<section class="mt-sec"><div class="mt-sh"><h3>Dekning per segment</h3>'+
+      '<span class="mt-hint">Velg et segment for å filtrere listen ovenfor.</span></div>'+mtBars(segs)+'</section>'+
+    warning+'</div></details>';
+  return '<div class="ps-market">'+list+analysis+'</div>';
 }
 
 /* ---------- Arbeidsliste ---------- */
@@ -190,7 +205,7 @@ V.prosp={html(){
   const U=UI.mt, nw=mtWorking().length;
   const help={
     arb:'Følg opp det du har begynt på. Åpne et selskap for neste handling.',
-    mal:'Finn nye selskaper og velg hvem du vil jobbe videre med.',
+    mal:'Velg selskaper fra listen, eller filtrer på segment.',
     seq:'Planlegg og følg kontaktløp. Salong sender ikke e-post automatisk.',
     pri:'Prioritering og tidsfordeling er planlegging, ikke en forutsetning for å komme i gang.',
     str:'Se strategi, segmentvalg og langsiktige mål.'
@@ -225,6 +240,8 @@ V.prosp={html(){
   v.querySelectorAll('[data-mtmodal]').forEach(b=>b.addEventListener('click',()=>{ U.menu=false; mtModalOpen(b.dataset.mtmodal); }));
   v.querySelectorAll('[data-mtstat]').forEach(b=>b.addEventListener('click',()=>{ U.stat=U.stat===b.dataset.mtstat?'':b.dataset.mtstat; U.page=1; rr(); }));
   v.querySelectorAll('[data-mtsegf]').forEach(b=>b.addEventListener('click',()=>{ U.seg=U.seg===b.dataset.mtsegf?'':b.dataset.mtsegf; U.page=1; rr(); }));
+  v.querySelector('[data-mtquickseg]')?.addEventListener('change',e=>{ U.seg=e.target.value; U.page=1; rr(); });
+  v.querySelector('.ps-market-analysis')?.addEventListener('toggle',e=>{ U.marketAnalysisOpen=e.currentTarget.open; });
   v.querySelectorAll('[data-mtclr]').forEach(b=>b.addEventListener('click',()=>{ U[b.dataset.mtclr]=''; U.page=1; rr(); }));
   v.querySelectorAll('[data-mtkind]').forEach(b=>b.addEventListener('click',()=>{ U.kind=b.dataset.mtkind; U.page=1; rr(); }));
   v.querySelectorAll('[data-mtsort]').forEach(b=>b.addEventListener('click',()=>{ const k=b.dataset.mtsort; U.sort=U.sort.k===k?{k,dir:-U.sort.dir}:{k,dir:k==='fit'||k==='last'||k==='ev'?-1:1}; rr(); }));
