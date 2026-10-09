@@ -61,7 +61,9 @@ test('familiar Salong browser shows only authenticated imported organizations',{
       newButtons:document.querySelectorAll('[data-salong-new]').length,
       editButtons:document.querySelectorAll('[data-salong-edit]').length,
       accountRows:document.querySelectorAll('tr[data-mtacc]').length,
-      text:document.querySelector('.mt')?.innerText.slice(0,500)
+      canWrite:window.SALONG_CRM_CAN_WRITE,
+      firstRow:document.querySelector('tr[data-mtacc]')?.outerHTML.slice(0,1900),
+      text:document.querySelector('.mt')?.innerText.slice(-280)
     }));
     assert.ok(diagnostic.editButtons>0,JSON.stringify(diagnostic));
     await frame.locator('[data-salong-edit]').first().click();
