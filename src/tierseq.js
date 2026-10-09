@@ -34,6 +34,13 @@ async function tsImport(rows,cad,segId){
   const E=await tierEnrollMany([...new Set(ids)],cad,'innlimt liste');
   return {made,reuse,pers,bad,enrolled:E.n,notEnrolled:E.bad}; }
 
+/* Open a prefilled Gmail composer in the user's browser; never send or
+   record a message as sent. User checks sender, content and recipient first. */
+function tsGmailCompose(d){
+  if(!d||!d.to||!d.subject)return '';
+  const params=new URLSearchParams({view:'cm',fs:'1',to:d.to,su:d.subject,body:d.body||''});
+  return 'https://mail.google.com/mail/u/0/?'+params.toString();
+}
 /* utkast som er forfalt i dag */
 function tsDue(){
   const today=mtToday(); const out=[];
@@ -77,9 +84,9 @@ function tierSeqHTML(){
   }
   const steps='<ol class="mt-stp">'+cad.steps.map(s=>'<li class="later"><i></i><b>Dag '+s.d+'</b><span>'+esc(MT_CH[s.ch])+'</span><small>'+esc(s.t)+'</small></li>').join('')+'</ol>';
   const dueRows=due.length?'<div class="tbl mt-tw"><table class="mt-t ts-t"><thead><tr><th>Organisasjon</th><th>Til</th><th>Steg</th><th>Forfall</th><th></th></tr></thead><tbody>'+due.slice(0,60).map(x=>'<tr><td class="mt-o"><b>'+esc(x.a.name)+'</b><small>'+tierShort(x.a.pt)+' · '+esc(x.a.seq&&x.a.seq.cad?tierCad(x.a.seq.cad)?tierCad(x.a.seq.cad).name:'':'')+'</small></td><td>'+esc(x.d.to)+'</td><td>Dag '+x.n.d+'<small>'+esc(x.n.t)+'</small></td><td><span class="mt-nx'+(x.n.due<mtToday()?' late':'')+'">'+esc(mtFd(x.n.due))+'</span></td><td>'+
-     '<details class="ts-pv"><summary>Forhåndsvis</summary><p><b>'+esc(x.d.subject)+'</b></p><pre>'+esc(x.d.body)+'</pre></details>'+(x.drafted?'<span class="chip a">Utkast laget</span> ':'')+'<button type="button" class="btn ghost sm" data-tssent="'+esc(x.a.id)+'|'+x.n.i+'">Merk sendt</button></td></tr>').join('')+'</tbody></table></div>':'<p class="mt-hint">Ingen e-poster er forfalt akkurat nå. Når du har lagt folk i en sekvens, dukker dagens e-poster opp her.</p>';
+     '<details class="ts-pv"><summary>Forhåndsvis</summary><p><b>'+esc(x.d.subject)+'</b></p><pre>'+esc(x.d.body)+'</pre></details>'+(x.drafted?'<span class="chip a">Utkast laget</span> ':'')+'<a class="btn sm" target="_blank" rel="noopener noreferrer" href="'+esc(tsGmailCompose(x.d))+'">Åpne i Gmail</a> <button type="button" class="btn ghost sm" data-tssent="'+esc(x.a.id)+'|'+x.n.i+'">Merk sendt</button></td></tr>').join('')+'</tbody></table></div>':'<p class="mt-hint">Ingen e-poster er forfalt akkurat nå. Når du har lagt folk i en sekvens, dukker dagens e-poster opp her.</p>';
   const nNew=due.filter(x=>!x.drafted).length, nDr=due.filter(x=>x.drafted).length;
-  const act=due.length?'<div class="row ts-act">'+(mcp?'<button type="button" class="btn primary" data-tsdraft="gm"'+(nNew&&!U.busy?'':' disabled')+'>Utkast i Gmail ('+nNew+')</button><button type="button" class="btn" data-tsdraft="ol"'+(nNew&&!U.busy?'':' disabled')+'>Utkast i Outlook ('+nNew+')</button>':'')+'<button type="button" class="btn ghost" data-tscopy="1">Kopier alle ('+due.length+')</button>'+(nDr?'<button type="button" class="btn ghost" data-tssentall="1">Merk '+nDr+' med utkast som sendt</button>':'')+'<span class="mt-hint" id="tsMsg" role="status">'+esc(U.msg||'')+'</span></div><p class="mt-hint">Velg postkassen du sender fra som Litteraturhuset. Utkastene sendes aldri av Salong.</p>':'';
+  const act=due.length?'<div class="row ts-act">'+(mcp?'<button type="button" class="btn primary" data-tsdraft="gm"'+(nNew&&!U.busy?'':' disabled')+'>Utkast i Gmail ('+nNew+')</button><button type="button" class="btn" data-tsdraft="ol"'+(nNew&&!U.busy?'':' disabled')+'>Utkast i Outlook ('+nNew+')</button>':'')+'<button type="button" class="btn ghost" data-tscopy="1">Kopier alle ('+due.length+')</button>'+(nDr?'<button type="button" class="btn ghost" data-tssentall="1">Merk '+nDr+' med utkast som sendt</button>':'')+'<span class="mt-hint" id="tsMsg" role="status">'+esc(U.msg||'')+'</span></div><p class="mt-hint">Åpne Gmail for å kontrollere og sende manuelt. Først etter sending velger du «Merk sendt» i Salong. Ingen åpninger eller svar spores automatisk ennå.</p>':'';
   return '<section class="mt-sec ts"><div class="mt-sh"><h3>Masseutsendelse</h3><span class="mt-hint">Legg en hel liste i en e-postsekvens. Dagens e-poster blir utkast du sender selv.</span></div>'+
    '<div class="ts-g"><label class="f"><span>1. Målgruppe</span><select class="in" id="tsAud">'+opt(TS_AUD.map(x=>[x[0],x[1]]),U.aud)+'</select></label><label class="f"><span>2. Sekvens</span><select class="in" id="tsCad">'+opt([['T3','E-post, 4 steg (Tier 3)'],['PB','Byråer og partnere, 4 steg'],['T2','Ring, 4 steg (Tier 2)'],['T1','Personlig, 6 steg (Tier 1)']],cadK)+'</select></label></div>'+
    '<h4 class="ts-h">'+esc(cad.name)+'</h4>'+steps+'<div class="ts-b">'+body+'</div>'+(U.msg&&!due.length?'<p class="mt-note">'+esc(U.msg)+'</p>':'')+
