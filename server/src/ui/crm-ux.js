@@ -350,7 +350,8 @@
     setActiveNav();
   }
   window.SalongCRMUX={
-    init,renderCompanies,showView,onEditorOpen,onEditorClose,reset,
+    init,renderCompanies,showView,openAccount,onEditorOpen,onEditorClose,reset,
+    focusSearch(){if(available()){showView('companies');get('search').focus();get('search').select();}},
     onAuth(){get('crm-quick-add').hidden=!bridge.canWrite();renderCounts();setActiveNav();},
     pipelineRefresh(){opportunities=null;if(mode==='pipeline')fetchPipeline();}
   };
