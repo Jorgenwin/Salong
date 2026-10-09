@@ -268,6 +268,45 @@ test('real PostgreSQL runs migrations and core repository/enrichment flow',{
     );
     assert.deepEqual(rawStored.rows[0].data,sampleCompany.collections.mtacc.cultural);
 
+    // Editing must not corrupt the imported rows or lose manual A/B/C changes.
+    const created=await repositories.accounts.createOrganization({
+      name:'Synthetic New Institution',org_number:'123456789',priority:'A',
+      website:'https://new.example.test/',domain:'new.example.test',
+      segment:'forlag',previous_customer:false
+    },{id:'new-org',actorId:'salong-owner',auditId:'audit-new'});
+    assert.equal(created.organization.priority,'A');
+    assert.equal(created.organization.quality_manual_override,true);
+    const duplicate=await repositories.accounts.createOrganization({
+      name:'Synthetic New Institution',org_number:'123456789'
+    },{id:'new-org-2',actorId:'salong-owner',auditId:'audit-nope'});
+    assert.equal(duplicate.duplicate,true);
+    const changed=await repositories.accounts.updateOrganization('previous',{
+      priority:'C',segment:'fag'
+    },{actorId:'salong-owner',auditId:'audit-edit'});
+    assert.equal(changed.organization.priority,'C');
+    assert.equal(changed.organization.quality_manual_override,true);
+    const manual=await db.query(
+      'SELECT tier,quality_manual_override FROM organizations WHERE id=$1',['previous']
+    );
+    assert.equal(manual.rows[0].tier,'C');
+    assert.equal(manual.rows[0].quality_manual_override,true);
+    const events=await db.query(
+      "SELECT action,before_data,after_data FROM crm_audit_events WHERE organization_id IN ('previous','new-org') ORDER BY created_at"
+    );
+    assert.equal(events.rows.length,2);
+    assert.ok(events.rows.some(row=>row.action==='organization_created'));
+    assert.ok(events.rows.some(row=>row.action==='organization_updated'));
+    assert.equal(events.rows.find(row=>row.action==='organization_updated').after_data.priority,'C');
+    const rls=await db.query(
+      "SELECT relname,relrowsecurity FROM pg_class WHERE relnamespace='public'::regnamespace "+
+      "AND relname IN ('organizations','contacts','members','activities','crm_audit_events')"
+    );
+    assert.equal(rls.rows.length,5);
+    assert.ok(rls.rows.every(row=>row.relrowsecurity===true));
+    const companies=await repositories.accounts.listOrganizations();
+    assert.equal(companies.find(row=>row.id==='previous').priority,'C');
+    assert.equal(companies.find(row=>row.id==='new-org').org_number,'123456789');
+
   }finally{
     await db.close();
   }
