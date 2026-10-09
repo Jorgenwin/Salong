@@ -57,7 +57,8 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
     const af=await ev(()=>{ const L=window.__salong.MT.all().filter(a=>a.src==='liste'); return {done:L.map(a=>a.seq.stepsDone.length),touch:L.map(a=>a.touch.out),next:L.map(a=>a.prog.next.d)}; });
     check('J15 «merk som sendt» logger utgående touch og flytter sekvensen til neste steg',[af.done.join(),af.touch.join(),af.next.join()],['1,1','1,1','7,7']);
     // økonomi
-    await p.click('[data-mttab="str"]'); await wait(300);
+    await p.click('.mt-top .mt-menu > summary');
+    await p.click('.mt-top [data-mttab="str"]'); await wait(300);
     await ev(async()=>{ await window.__salong.TIER.save({eco:{base:2000000,growth:25,fee:60000,paid:60000}}); });
     await wait(300);
     const eco=await ev(()=>{ const x=window.__salong.TIER.eco(); return {t:x.target,rem:x.rem,cost:x.cost,crit:x.crit.map(c=>c.k+':'+c.st),nCo:x.nCo,months:x.months}; });
