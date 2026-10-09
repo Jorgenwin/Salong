@@ -26,18 +26,20 @@
     document.querySelectorAll('[data-crm-view]').forEach(btn=>
       btn.setAttribute('aria-current',btn.dataset.crmView===mode?'page':'false'));
     get('crm-page-title').textContent=
-      mode==='pipeline'?'Pipeline':mode==='workspace'?'Salong-arbeidsflate':'Selskaper';
+      mode==='today'?'I dag':mode==='pipeline'?'Pipeline':mode==='workspace'?'Salong-arbeidsflate':'Selskaper';
     get('crm-pipeline-tabs').hidden=mode!=='pipeline';
-    get('crm-company-toolbar').hidden=mode==='pipeline';
-    get('crm-quicksearch').hidden=mode==='workspace';
+    get('crm-company-toolbar').hidden=mode!=='companies';
+    get('crm-quicksearch').hidden=mode==='workspace'||mode==='today';
     window.SalongOpportunityUI?.onNavigate(mode);
   }
   function showView(next){
-    if(!available()||!['companies','pipeline','workspace'].includes(next))return;
+    if(!available()||!['today','companies','pipeline','workspace'].includes(next))return;
     mode=next;
     setActiveNav();
     const workspace=get('workspace-area'),table=get('table-wrap'),pipe=get('pipeline-panel');
     if(next==='workspace'){
+      get('today-panel').hidden=true;
+      window.SalongTodayUI?.onNavigate(next);
       pipe.hidden=true;table.hidden=true;get('org-empty').hidden=true;
       get('open-workspace').hidden=true;get('back-list').hidden=false;
       if(workspace.hidden)bridge.showWorkspace();
@@ -46,11 +48,14 @@
     }
     if(!workspace.hidden)bridge.closeWorkspace();
     table.hidden=next!=='companies';pipe.hidden=next!=='pipeline';
+    get('today-panel').hidden=next!=='today';
+    if(next!=='companies')get('org-empty').hidden=true;
     get('open-workspace').hidden=false;
     get('back-list').hidden=true;
     if(next==='pipeline')fetchPipeline();
-    else renderCompanies();
+    else if(next==='companies')renderCompanies();
     setActiveNav();
+    window.SalongTodayUI?.onNavigate(next);
   }
   function renderCounts(){
     if(!available())return;
@@ -339,7 +344,9 @@
     pipelineView='board';opportunities=null;mode='companies';pending=false;
     selectedId=null;readerId=null;get('read-drawer').hidden=true;
     window.SalongOpportunityUI?.close();
-    get('pipeline-panel').hidden=true;get('table-wrap').hidden=false;get('org-empty').hidden=true;
+    get('pipeline-panel').hidden=true;get('today-panel').hidden=true;
+    get('table-wrap').hidden=false;get('org-empty').hidden=true;
+    window.SalongTodayUI?.reset();
     setActiveNav();
   }
   function init(value){
