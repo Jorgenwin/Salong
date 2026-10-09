@@ -81,7 +81,11 @@ const {navTo,setup} = require('./h.js');
   check('R15 forespørsel blir sak, og den innlimte teksten blir kilde',(()=>{ const d=Object.values(store.deals).find(d=>d.title==='[TEST] Medlemskveld'), a=Object.entries(store.acts).find(([,a])=>a.body&&/Testlaget/.test(a.body)); return [!!d,d&&d.stage,!!a,d&&a&&d.facts.title.ref==='a:'+a[0]]; })(),[true,'ny',true,true]);
   // ---------- prospekter, statistikk, kalender, pipeline, søk ----------
   await kill(); await view('prosp'); await p.waitForTimeout(200);
-  check('R16 Prospekter er målmarked: fem faner, ingen «Finn nye»/AI-forslag, ingenting lagres ved visning',[await all(p,'[data-mttab]').then(x=>x.length),await p.evaluate(()=>!/Claude foreslår|Finn nye/.test(document.body.innerText)),Object.values(store.orgs).some(o=>/Fiktivt/.test(o.name))],[5,true,false]);
+  check('R16 Prospekter starter med én anbefaling; ingen uønskede data lagres ved visning',[
+    await all(p,'.mt-top .mt-tabs [data-mttab]').then(x=>x.length),
+    await p.evaluate(()=>!/Claude foreslår|Finn nye/.test(document.body.innerText)),
+    Object.values(store.orgs).some(o=>/Fiktivt/.test(o.name)),
+    await p.evaluate(()=>!!document.querySelector('.ps-focus [data-mtstart]'))],[4,true,false,true]);
   await view('stat'); check('R17 kundestatistikk tegnes',[(await p.$$('#view table tbody tr')).length>0,(await p.$$('#view svg')).length>0],[true,true]);
   await view('kalender'); check('R18 kalender tegnes',(await p.$$('#view [data-cd], #view .cal td, #view .cal-c, #view .kl-body')).length>0,true);
   await view('pipeline'); check('R19 pipeline: syv steg',(await p.$$('#view [data-stage]')).length,7);
