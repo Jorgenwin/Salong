@@ -83,13 +83,13 @@ test('pipeline form stores real opportunities; stage writes are optimistic and r
     assert.equal(writes[0].body.value,120000.5);
     assert.equal(await page.locator('.pipeline-card').count(),1);
     await page.locator('.opp-card-wrap select').selectOption('dialog');
-    await page.waitForFunction(()=>document.querySelector('.opp-card-wrap select')?.value==='dialog');
+    await page.waitForFunction(()=>{const node=document.querySelector('.opp-card-wrap select');return node?.value==='dialog'&&!node.disabled&&document.getElementById('status').textContent.includes('Fasen er lagret');});
     assert.equal(writes[1].body.expectedStage,'ny');
     assert.equal(writes[1].body.stage,'dialog');
     assert.equal(deals[0].stage,'dialog');
     page.once('dialog',dialog=>dialog.accept('Annen dato'));
     await page.locator('.opp-card-wrap select').selectOption('tapt');
-    await page.waitForFunction(()=>document.querySelector('.opp-card-wrap select')?.value==='tapt');
+    await page.waitForFunction(()=>{const node=document.querySelector('.opp-card-wrap select');return node?.value==='tapt'&&!node.disabled;});
     assert.equal(writes[2].body.lostReason,'Annen dato');
     assert.equal(deals[0].lost_reason,'Annen dato');
     await page.locator('#logout').click();
