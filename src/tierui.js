@@ -82,7 +82,7 @@ function tierDrawerBlock(a){
     const html=_tDH(a);
     // Only wrap the company heading inside the original drawer header.
     return html.replace(/(<h2>[\s\S]*?<\/h2>)/,
-      '<div class="tp-heading">$1'+tierDrawerBlock(a)+'</div>');
+      (_match,heading)=>'<div class="tp-heading">'+heading+tierDrawerBlock(a)+'</div>');
   }; }
 
 /* hendelser: delegert, virker i både liste og kontokort */
