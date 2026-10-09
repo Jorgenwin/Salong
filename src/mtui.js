@@ -4,7 +4,7 @@ const mtPct=x=>x==null?'–':Math.round(x*100)+' %';
 const mtSegLabel=a=>a.seg?mtSegShort(a.seg.name):'Uten segment';
 const mtEvTitle=a=>a.ev.level==='Confirmed'?'Dokumentert: '+a.ev.sources.map(s=>s.label||mtHost(s.url)).join(', '):a.ev.level==='Likely'?'Sannsynlig, men ikke dokumentert med kilde':'Ukjent: ingen eventsignal registrert';
 const mtEvChip=a=>'<span class="mt-ev '+a.ev.level.toLowerCase()+'" title="'+esc(mtEvTitle(a))+'">'+a.ev.level+'</span>';
-const mtStChip=s=>'<span class="mt-st '+s+'" title="market_status: '+s+'">'+MT_STAT[s]+'</span>';
+const mtStChip=s=>'<span class="mt-st '+s+'" title="'+esc(MT_STAT[s]||'Status ukjent')+'">'+esc(MT_STAT[s]||'Ukjent')+'</span>';
 const mtDots=a=>a.prog?'<span class="mt-dots" title="'+esc(a.prog.name+': dag '+a.prog.day+', '+a.prog.doneN+' av '+a.prog.total+' steg gjort')+'">'+a.prog.steps.map(s=>'<i class="'+s.state+'"></i>').join('')+'</span>':'';
 const mtLast=a=>a.touch.lastOut?ago(a.touch.lastOut):'–';
 function mtCovCell(a){
