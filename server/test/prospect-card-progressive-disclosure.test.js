@@ -30,7 +30,15 @@ test('Prospekter leads with a short why-now and hides source details until opene
       for(const row of rows){
         const id=row.dataset.mtacc;
         const a=window.__salong.MT.get(id);
-        if(a&&a.why&&a.why.length>85&&a.pt) return {id,why:a.why,score:a.ptScore};
+        if(a&&a.why&&a.why.length>85&&a.pt){
+          const active=a.active.filter(p=>!p.general)[0]||a.active.find(p=>p.general);
+          const needsContact=!active||active.general||(!active.email&&!active.phone);
+          const canRun=!(a.es&&a.es.running)&&!a.flags.disqualified&&!a.dncAcc&&a.nx.k!=='deal';
+          return {id,why:a.why,score:a.ptScore,
+            history:a.profile&&a.profile.lhHistory||'',
+            showsContactEnrich:needsContact&&canRun,
+            showsHeaderEnrich:a.nx.k==='enrich'&&!(a.job&&['running','queued'].includes(a.job.status))};
+        }
       }
       return null;
     });
@@ -64,6 +72,15 @@ test('Prospekter leads with a short why-now and hides source details until opene
     const contextLabels=await page.locator('#mt-root .ov-context-label').allTextContents();
     assert.deepEqual(contextLabels,['Virksomhet','Historikk']);
     assert.equal(await page.locator('#mt-root .ov-context-line').count(),2);
+    if(chosen.history) assert.ok(
+      (await page.locator('#mt-root .ov-context-line').nth(1).textContent()).includes(
+        chosen.history.replace(/\s+/g,' ').slice(0,20)),
+      'Original Litteraturhuset history must appear in Context');
+    if(chosen.showsContactEnrich){
+      const contactEnrich=page.locator('#mt-root .ov-r:nth-child(3) [data-bk="berik"]');
+      assert.equal(await contactEnrich.count(),1);
+      assert.match(await contactEnrich.textContent(),/Berik kontakt/);
+    }
     assert.doesNotMatch(await page.locator('#mt-root .dh-t .o').textContent(),/\bFit\s*\d|\bP[012]\b/);
     const summary=await page.locator('#mt-root .ov-why-summary').textContent();
     assert.ok(summary.length>10&&summary.length<=141,summary);
