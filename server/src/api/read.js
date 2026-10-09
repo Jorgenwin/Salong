@@ -25,6 +25,12 @@ function validIsoDate(value) {
 async function handleReadRequest({ req, url, repositories }) {
   if (req.method !== 'GET' || !repositories) return null;
 
+  if(url.pathname==='/api/me'){
+    if(!req.salongUser)return {status:401,body:{success:false,error_code:'unauthorized',error_message:'Innlogging mangler.'}};
+    const {id,name,role}=req.salongUser;
+    return {status:200,body:{id,name,role}};
+  }
+
   if(url.pathname==='/api/organizations'){
     const organizations=await repositories.accounts.listOrganizations();
     return {status:200,body:organizations};
