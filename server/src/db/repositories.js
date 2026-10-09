@@ -18,6 +18,51 @@ function asDateOnly(value) {
   return String(value).slice(0,10);
 }
 
+function mapOrganization(row){
+  if(!row) return null;
+  return {
+    id:row.id,name:row.name,org_number:row.org_number||null,
+    website:row.website||null,domain:row.domain||null,
+    segment:row.segment||null,priority:row.tier||null,
+    previous_customer:row.former===true,notes:row.notes||null,
+    owner_id:row.owner_id||null,quality_manual_override:row.quality_manual_override===true
+  };
+}
+
+function organizationNameKey(name){
+  return String(name||'').normalize('NFKC').trim().replace(/\\s+/g,' ').toLocaleLowerCase('nb');
+}
+
+async function withOrganizationTransaction(db,fn){
+  if(typeof db.withClient!=='function') throw new TypeError('Organization writes require transaction-capable db');
+  return db.withClient(async client=>{
+    await client.query('BEGIN');
+    try{
+      const result=await fn(client);
+      await client.query('COMMIT');
+      return result;
+    }catch(error){
+      try{await client.query('ROLLBACK');}catch(_rollback){}
+      throw error;
+    }
+  });
+}
+
+async function lockOrgKeys(client,name,orgNumber){
+  const keys=['name:'+organizationNameKey(name)];
+  if(orgNumber) keys.push('orgnr:'+orgNumber);
+  for(const key of keys.sort()) await client.query('SELECT pg_advisory_xact_lock(hashtext($1))',['salong:org:'+key]);
+}
+
+async function findOrganizationDuplicate(client,{name,orgNumber,exceptId=null}){
+  const result=await client.query(
+    "SELECT id,name FROM organizations WHERE deleted_at IS NULL AND id<>COALESCE($3,'') AND ("+
+    "($1::text IS NOT NULL AND org_number=$1) OR lower(regexp_replace(trim(name),'[[:space:]]+',' ','g'))=$2) LIMIT 1",
+    [orgNumber||null,organizationNameKey(name),exceptId]
+  );
+  return result.rows[0]||null;
+}
+
 function mapAccount(row) {
   if (!row) return null;
   return {
@@ -334,15 +379,662 @@ function createRepositories(input) {
     accounts:{
       async listOrganizations(){
         const result=await db.query(
-          'SELECT id,name,org_number,website,domain,segment,tier,former,notes,owner_id FROM organizations WHERE deleted_at IS NULL ORDER BY lower(name),id'
+          'SELECT id,name,org_number,website,domain,segment,tier,former,notes,owner_id,quality_manual_override FROM organizations WHERE deleted_at IS NULL ORDER BY lower(name),id'
         );
-        return result.rows.map(row=>({
-          id:row.id,name:row.name,org_number:row.org_number||null,
-          website:row.website||null,domain:row.domain||null,
-          segment:row.segment||null,priority:row.tier||null,
-          previous_customer:row.former===true,
-          notes:row.notes||null,owner_id:row.owner_id||null
-        }));
+        return result.rows.map(mapOrganization);
+      },
+      async createOrganization(input,{actorId,id,auditId}={}){
+        if(!actorId||!id||!auditId||!input||!input.name) throw new TypeError('Missing organization create inputs');
+        return withOrganizationTransaction(db,async client=>{
+          await lockOrgKeys(client,input.name,input.org_number);
+          const existing=await findOrganizationDuplicate(client,{name:input.name,orgNumber:input.org_number});
+          if(existing)return {duplicate:true,existing:{id:existing.id,name:existing.name}};
+          const result=await client.query(
+            'INSERT INTO organizations (id,name,org_number,website,domain,segment,tier,former,notes,quality_manual_override) '+
+            'VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *',
+            [id,input.name,input.org_number||null,input.website||null,input.domain||null,
+             input.segment||null,input.priority||null,input.previous_customer===true,
+             input.notes||null,Boolean(input.priority)]
+          );
+          const org=mapOrganization(result.rows[0]);
+          await client.query(
+            'INSERT INTO crm_audit_events (id,organization_id,actor_id,action,before_data,after_data) '+
+            "VALUES ($1,$2,$3,'organization_created',NULL,$4::jsonb)",
+            [auditId,id,actorId,JSON.stringify(org)]
+          );
+          return {organization:org};
+        });
+      },
+      async updateOrganization(id,patch,{actorId,auditId}={}){
+        if(!id||!actorId||!auditId||!patch||!Object.keys(patch).length)
+          throw new TypeError('Missing organization update inputs');
+        return withOrganizationTransaction(db,async client=>{
+          const existing=await client.query(
+            'SELECT * FROM organizations WHERE id=$1 AND deleted_at IS NULL FOR UPDATE',[id]
+          );
+          if(!existing.rows.length)return {missing:true};
+          const before=mapOrganization(existing.rows[0]);
+          const after={...before,...patch};
+          await lockOrgKeys(client,after.name,after.org_number);
+          const duplicate=await findOrganizationDuplicate(client,{
+            name:after.name,orgNumber:after.org_number,exceptId:id
+          });
+          if(duplicate)return {duplicate:true,existing:{id:duplicate.id,name:duplicate.name}};
+          const cols={
+            name:'name',org_number:'org_number',website:'website',domain:'domain',
+            segment:'segment',priority:'tier',previous_customer:'former',notes:'notes'
+          };
+          const params=[id],set=[];
+          for(const [key,col] of Object.entries(cols))if(Object.prototype.hasOwnProperty.call(patch,key)){
+            params.push(patch[key]);set.push(col+'=
+      async get(id) {
+        const result=await db.query(
+          ACCOUNT_SELECT+' WHERE o.id = $1 AND o.deleted_at IS NULL LIMIT 1',
+          [id]
+        );
+        return mapAccount(result.rows[0]);
+      },
+
+      async listProspects(filter={}) {
+        const {where,params}=buildProspectWhere(filter);
+        const result=await db.query(
+          ACCOUNT_SELECT+' WHERE '+where+' ORDER BY p.fit_score DESC NULLS LAST, o.name ASC',
+          params
+        );
+        return result.rows.map(mapAccount);
+      }
+    },
+
+    contacts:{
+      async listByAccount(accountId) {
+        const result=await db.query(`
+          SELECT *
+          FROM contacts
+          WHERE organization_id = $1
+            AND deleted_at IS NULL
+          ORDER BY is_primary DESC, relevant DESC NULLS LAST, name ASC
+        `,[accountId]);
+        return result.rows.map(mapContact);
+      },
+
+      async get(id){
+        const result=await db.query(
+          'SELECT * FROM contacts WHERE id = $1 AND deleted_at IS NULL LIMIT 1',
+          [id]
+        );
+        return mapContact(result.rows[0]);
+      },
+
+      async add({
+        id,
+        accountId,
+        name,
+        title=null,
+        email=null,
+        emailStatus=null,
+        phone=null,
+        phoneStatus=null,
+        linkedinUrl=null,
+        roleMatch=null,
+        relevant=null,
+        active=true,
+        doNotContact=false,
+        doNotContactReason=null,
+        sourceState='manual',
+        verifiedAt=null
+      }={}){
+        const cleanName=String(name||'').trim();
+        if(!id||!accountId||!cleanName){
+          throw new TypeError('contacts.add requires id, accountId and name');
+        }
+        const result=await db.query(`
+          INSERT INTO contacts(
+            id, organization_id, name, title, email, email_status,
+            phone, phone_status, linkedin_url, role_match, relevant,
+            active, do_not_contact, do_not_contact_reason, source_state, verified_at
+          )
+          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+          RETURNING *
+        `,[
+          id,accountId,cleanName,title,email,emailStatus,
+          phone,phoneStatus,linkedinUrl,roleMatch,relevant,
+          active!==false,Boolean(doNotContact),doNotContactReason,sourceState,verifiedAt
+        ]);
+        return mapContact(result.rows[0]);
+      },
+
+      async update(id,patch={}){
+        const allowed={
+          name:'name',
+          title:'title',
+          email:'email',
+          email_status:'email_status',
+          phone:'phone',
+          phone_status:'phone_status',
+          linkedin_url:'linkedin_url',
+          role_match:'role_match',
+          relevant:'relevant',
+          active:'active'
+        };
+        const sets=[];
+        const params=[id];
+        const marker=String.fromCharCode(36);
+        for(const [key,column] of Object.entries(allowed)){
+          if(!Object.prototype.hasOwnProperty.call(patch,key)) continue;
+          params.push(patch[key]);
+          sets.push(column+' = '+marker+params.length);
+        }
+        if(!sets.length) throw new TypeError('contacts.update requires at least one supported field');
+        sets.push('updated_at = now()');
+        const result=await db.query(
+          'UPDATE contacts SET '+sets.join(', ')+' WHERE id = $1 AND deleted_at IS NULL RETURNING *',
+          params
+        );
+        return mapContact(result.rows[0]);
+      },
+
+      async setPrimary(id){
+        const result=await db.query(`
+          WITH target AS (
+            SELECT organization_id
+            FROM contacts
+            WHERE id=$1 AND deleted_at IS NULL
+          ),
+          cleared AS (
+            UPDATE contacts
+            SET is_primary=false,
+                updated_at=now()
+            WHERE organization_id=(SELECT organization_id FROM target)
+              AND id<>$1
+              AND deleted_at IS NULL
+            RETURNING id
+          )
+          UPDATE contacts
+          SET is_primary=true,
+              active=true,
+              updated_at=now()
+          WHERE id=$1
+            AND deleted_at IS NULL
+          RETURNING *
+        `,[id]);
+        return mapContact(result.rows[0]);
+      },
+
+      async setDoNotContact(id,{value=true,reason=null}={}){
+        const result=await db.query(`
+          UPDATE contacts
+          SET do_not_contact=$2,
+              do_not_contact_reason=CASE WHEN $2 THEN $3 ELSE NULL END,
+              is_primary=CASE WHEN $2 THEN false ELSE is_primary END,
+              updated_at=now()
+          WHERE id=$1
+            AND deleted_at IS NULL
+          RETURNING *
+        `,[id,Boolean(value),reason]);
+        return mapContact(result.rows[0]);
+      }
+    },
+
+    opportunities:{
+      async list(accountId=null) {
+        const params=[];
+        let where='deleted_at IS NULL';
+        if(accountId){
+          params.push(accountId);
+          where+=' AND organization_id = $1';
+        }
+        const result=await db.query(`
+          SELECT *
+          FROM opportunities
+          WHERE ${where}
+          ORDER BY event_date ASC NULLS LAST, created_at DESC
+        `,params);
+        return result.rows.map(mapOpportunity);
+      }
+    },
+
+    enrichmentJobs:{
+      async create({id,accountId,requestedBy=null,availableAt=null}={}){
+        if(!id||!accountId) throw new TypeError('enrichmentJobs.create requires id and accountId');
+        const result=await db.query(`
+          INSERT INTO enrichment_jobs(
+            id, account_id, requested_by, available_at
+          )
+          VALUES ($1,$2,$3,COALESCE($4::timestamptz,now()))
+          RETURNING *
+        `,[id,accountId,requestedBy,availableAt]);
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async get(id){
+        const result=await db.query(
+          'SELECT * FROM enrichment_jobs WHERE id = $1 LIMIT 1',
+          [id]
+        );
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async createMany(items){
+        if(!Array.isArray(items)||!items.length){
+          throw new TypeError('enrichmentJobs.createMany requires a non-empty items array');
+        }
+        if(items.length>100) throw new TypeError('enrichmentJobs.createMany supports at most 100 jobs');
+
+        const params=[];
+        const marker=String.fromCharCode(36);
+        const values=items.map((item,index)=>{
+          if(!item||!item.id||!item.accountId){
+            throw new TypeError('each enrichment job requires id and accountId');
+          }
+          const base=index*4;
+          params.push(item.id,item.accountId,item.requestedBy||null,item.availableAt||null);
+          return '('+marker+(base+1)+','+marker+(base+2)+','+marker+(base+3)+',COALESCE('+marker+(base+4)+'::timestamptz,now()))';
+        });
+
+        const result=await db.query(`
+          INSERT INTO enrichment_jobs(id,account_id,requested_by,available_at)
+          VALUES ${values.join(',')}
+          RETURNING *
+        `,params);
+        return result.rows.map(mapEnrichmentJob);
+      },
+
+      async latestForAccount(accountId){
+        const result=await db.query(`
+          SELECT *
+          FROM enrichment_jobs
+          WHERE account_id = $1
+          ORDER BY created_at DESC
+          LIMIT 1
+        `,[accountId]);
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async claimNext(workerId){
+        const worker=requireWorkerId(workerId);
+        const result=await db.query(`
+          WITH next_job AS (
+            SELECT id
+            FROM enrichment_jobs
+            WHERE status='queued'
+              AND available_at <= now()
+            ORDER BY available_at, created_at
+            FOR UPDATE SKIP LOCKED
+            LIMIT 1
+          )
+          UPDATE enrichment_jobs j
+          SET status='running',
+              locked_at=now(),
+              locked_by=$1,
+              started_at=COALESCE(j.started_at,now()),
+              attempt_count=j.attempt_count+1,
+              updated_at=now()
+          FROM next_job
+          WHERE j.id=next_job.id
+          RETURNING j.*
+        `,[worker]);
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async touch(id,workerId){
+        const worker=requireWorkerId(workerId);
+        const result=await db.query(`
+          UPDATE enrichment_jobs
+          SET locked_at=now(),
+              updated_at=now()
+          WHERE id=$1
+            AND status='running'
+            AND locked_by=$2
+          RETURNING *
+        `,[id,worker]);
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async requeueStale(staleSeconds=900,maxAttempts=3){
+        const seconds=Number(staleSeconds);
+        const attempts=Number(maxAttempts);
+        if(!Number.isFinite(seconds)||seconds<=0){
+          throw new TypeError('staleSeconds must be a positive number');
+        }
+        if(!Number.isInteger(attempts)||attempts<=0){
+          throw new TypeError('maxAttempts must be a positive integer');
+        }
+        const result=await db.query(`
+          UPDATE enrichment_jobs
+          SET status=CASE WHEN attempt_count >= $2 THEN 'failed' ELSE 'queued' END,
+              available_at=CASE WHEN attempt_count < $2 THEN now() ELSE available_at END,
+              completed_at=CASE WHEN attempt_count >= $2 THEN now() ELSE completed_at END,
+              locked_at=NULL,
+              locked_by=NULL,
+              error_code=CASE WHEN attempt_count >= $2
+                THEN 'stale_worker_attempts_exhausted'
+                ELSE 'stale_worker_requeued' END,
+              error_message=CASE WHEN attempt_count >= $2
+                THEN 'Worker lock expired after maximum attempts; job failed.'
+                ELSE 'Previous worker lock expired; job requeued.' END,
+              updated_at=now()
+          WHERE status='running'
+            AND locked_at IS NOT NULL
+            AND locked_at < now()-($1::double precision * interval '1 second')
+          RETURNING *
+        `,[seconds,attempts]);
+        return result.rows.map(mapEnrichmentJob);
+      },
+
+      async setSourceStatus(id,workerId,source,status){
+        const worker=requireWorkerId(workerId);
+        const sourceKey=String(source||'').trim();
+        if(!sourceKey) throw new TypeError('source is required');
+        if(!ENRICHMENT_SOURCE_STATUSES.has(status)){
+          throw new TypeError('invalid enrichment source status');
+        }
+        const result=await db.query(`
+          UPDATE enrichment_jobs
+          SET source_statuses=jsonb_set(
+                COALESCE(source_statuses,'{}'::jsonb),
+                ARRAY[$3]::text[],
+                to_jsonb($4::text),
+                true
+              ),
+              updated_at=now()
+          WHERE id=$1
+            AND status='running'
+            AND locked_by=$2
+          RETURNING *
+        `,[id,worker,sourceKey,status]);
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async finish(id,workerId,{status,errorCode=null,errorMessage=null}={}){
+        const worker=requireWorkerId(workerId);
+        if(!ENRICHMENT_FINISH_STATUSES.has(status)){
+          throw new TypeError('invalid enrichment finish status');
+        }
+        const result=await db.query(`
+          UPDATE enrichment_jobs
+          SET status=$3,
+              error_code=$4,
+              error_message=$5,
+              completed_at=now(),
+              locked_at=NULL,
+              locked_by=NULL,
+              updated_at=now()
+          WHERE id=$1
+            AND status='running'
+            AND locked_by=$2
+          RETURNING *
+        `,[id,worker,status,errorCode,errorMessage]);
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async reschedule(id,workerId,{delaySeconds=0,errorCode=null,errorMessage=null}={}){
+        const worker=requireWorkerId(workerId);
+        const delay=Number(delaySeconds);
+        if(!Number.isFinite(delay)||delay<0){
+          throw new TypeError('delaySeconds must be a non-negative number');
+        }
+        const result=await db.query(`
+          UPDATE enrichment_jobs
+          SET status='queued',
+              available_at=now()+($3::double precision * interval '1 second'),
+              error_code=$4,
+              error_message=$5,
+              locked_at=NULL,
+              locked_by=NULL,
+              updated_at=now()
+          WHERE id=$1
+            AND status='running'
+            AND locked_by=$2
+          RETURNING *
+        `,[id,worker,delay,errorCode,errorMessage]);
+        return mapEnrichmentJob(result.rows[0]);
+      },
+
+      async cancelQueued(id){
+        const result=await db.query(`
+          UPDATE enrichment_jobs
+          SET status='cancelled',
+              completed_at=now(),
+              updated_at=now()
+          WHERE id=$1
+            AND status='queued'
+          RETURNING *
+        `,[id]);
+        return mapEnrichmentJob(result.rows[0]);
+      }
+    },
+
+    enrichmentResults:{
+      async upsert(jobId,result={}){
+        if(!jobId) throw new TypeError('enrichmentResults.upsert requires jobId');
+        const organization=result.organization==null?null:JSON.stringify(result.organization);
+        const eventSignals=JSON.stringify(result.eventSignals||[]);
+        const contactCandidates=JSON.stringify(result.contactCandidates||[]);
+        const contactData=JSON.stringify(result.contactData||[]);
+        const recommendation=result.recommendation==null?null:JSON.stringify(result.recommendation);
+        const saved=await db.query(`
+          INSERT INTO enrichment_results(
+            job_id, organization, event_signals, contact_candidates, contact_data, recommendation
+          )
+          VALUES ($1,$2::jsonb,$3::jsonb,$4::jsonb,$5::jsonb,$6::jsonb)
+          ON CONFLICT (job_id) DO UPDATE SET
+            organization=EXCLUDED.organization,
+            event_signals=EXCLUDED.event_signals,
+            contact_candidates=EXCLUDED.contact_candidates,
+            contact_data=EXCLUDED.contact_data,
+            recommendation=EXCLUDED.recommendation,
+            updated_at=now()
+          RETURNING *
+        `,[jobId,organization,eventSignals,contactCandidates,contactData,recommendation]);
+        return mapEnrichmentResult(saved.rows[0]);
+      },
+
+      async get(jobId){
+        const result=await db.query(
+          'SELECT * FROM enrichment_results WHERE job_id = $1 LIMIT 1',
+          [jobId]
+        );
+        return mapEnrichmentResult(result.rows[0]);
+      }
+    },
+
+    sources:{
+      async save({
+        id,
+        organizationId=null,
+        enrichmentJobId=null,
+        provider,
+        sourceUrl=null,
+        providerRef=null,
+        title=null,
+        checkedAt=null,
+        metadata={}
+      }={}){
+        if(!id||!provider) throw new TypeError('sources.save requires id and provider');
+        if(!organizationId&&!enrichmentJobId){
+          throw new TypeError('sources.save requires organizationId or enrichmentJobId');
+        }
+        const saved=await db.query(`
+          INSERT INTO sources(
+            id, organization_id, enrichment_job_id, provider,
+            source_url, provider_ref, title, checked_at, metadata
+          )
+          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb)
+          ON CONFLICT (id) DO UPDATE SET
+            organization_id=EXCLUDED.organization_id,
+            enrichment_job_id=EXCLUDED.enrichment_job_id,
+            provider=EXCLUDED.provider,
+            source_url=EXCLUDED.source_url,
+            provider_ref=EXCLUDED.provider_ref,
+            title=EXCLUDED.title,
+            checked_at=EXCLUDED.checked_at,
+            metadata=EXCLUDED.metadata
+          RETURNING *
+        `,[
+          id,organizationId,enrichmentJobId,provider,
+          sourceUrl,providerRef,title,checkedAt,JSON.stringify(metadata||{})
+        ]);
+        return mapSource(saved.rows[0]);
+      },
+
+      async listForJob(jobId){
+        const result=await db.query(`
+          SELECT *
+          FROM sources
+          WHERE enrichment_job_id=$1
+          ORDER BY checked_at DESC NULLS LAST, created_at DESC
+        `,[jobId]);
+        return result.rows.map(mapSource);
+      }
+    },
+
+    researchedFacts:{
+      async save({
+        id,
+        organizationId,
+        fieldKey,
+        value=null,
+        sourceId=null,
+        confidence=null,
+        reviewState='unreviewed',
+        checkedAt=null
+      }={}){
+        if(!id||!organizationId||!fieldKey){
+          throw new TypeError('researchedFacts.save requires id, organizationId and fieldKey');
+        }
+        const allowed=new Set(['unreviewed','accepted','rejected','conflict']);
+        if(!allowed.has(reviewState)) throw new TypeError('invalid researched fact reviewState');
+        const serialized=value==null?null:JSON.stringify(value);
+        const saved=await db.query(`
+          INSERT INTO researched_facts(
+            id, organization_id, field_key, value,
+            source_id, confidence, review_state, checked_at
+          )
+          VALUES ($1,$2,$3,$4::jsonb,$5,$6,$7,$8)
+          ON CONFLICT (id) DO UPDATE SET
+            organization_id=EXCLUDED.organization_id,
+            field_key=EXCLUDED.field_key,
+            value=EXCLUDED.value,
+            source_id=EXCLUDED.source_id,
+            confidence=EXCLUDED.confidence,
+            review_state=EXCLUDED.review_state,
+            checked_at=EXCLUDED.checked_at,
+            updated_at=now()
+          RETURNING *
+        `,[
+          id,organizationId,fieldKey,serialized,
+          sourceId,confidence,reviewState,checkedAt
+        ]);
+        return mapResearchedFact(saved.rows[0]);
+      },
+
+      async listForAccount(organizationId){
+        const result=await db.query(`
+          SELECT *
+          FROM researched_facts
+          WHERE organization_id=$1
+          ORDER BY field_key, checked_at DESC NULLS LAST, created_at DESC
+        `,[organizationId]);
+        return result.rows.map(mapResearchedFact);
+      }
+    },
+
+    calendar:{
+      async list({from,to}) {
+        const range=[from,to];
+
+        const opportunities=await db.query(`
+          SELECT d.*, o.name AS organization_name
+          FROM opportunities d
+          LEFT JOIN organizations o ON o.id=d.organization_id
+          WHERE d.deleted_at IS NULL
+            AND d.stage <> 'tapt'
+            AND d.event_date BETWEEN $1::date AND $2::date
+          ORDER BY d.event_date, d.created_at
+        `,range);
+
+        const bookings=await db.query(`
+          SELECT b.*, o.name AS organization_name
+          FROM bookings b
+          LEFT JOIN organizations o ON o.id=b.organization_id
+          WHERE b.starts_at IS NOT NULL
+            AND b.status IN ('bekreftet','forelopig','holdt')
+            AND (b.starts_at AT TIME ZONE 'Europe/Oslo')::date BETWEEN $1::date AND $2::date
+          ORDER BY b.starts_at, b.created_at
+        `,range);
+
+        const activities=await db.query(`
+          SELECT
+            a.*,
+            o.name AS organization_name,
+            d.room AS opportunity_room,
+            d.owner_id AS opportunity_owner_id
+          FROM activities a
+          LEFT JOIN organizations o ON o.id=a.organization_id
+          LEFT JOIN opportunities d ON d.id=a.opportunity_id
+          WHERE a.deleted_at IS NULL
+            AND a.done=false
+            AND (
+              (
+                a.type IN ('visning','meeting')
+                AND (COALESCE(a.due_at,a.happened_at) AT TIME ZONE 'Europe/Oslo')::date BETWEEN $1::date AND $2::date
+              )
+              OR
+              (
+                a.type='task'
+                AND a.opportunity_id IS NOT NULL
+                AND (a.due_at AT TIME ZONE 'Europe/Oslo')::date BETWEEN $1::date AND $2::date
+              )
+            )
+          ORDER BY COALESCE(a.due_at,a.happened_at), a.created_at
+        `,range);
+
+        return [
+          ...opportunities.rows.map(mapOpportunityCalendar),
+          ...bookings.rows.map(mapBookingCalendar),
+          ...activities.rows.map(mapActivityCalendar)
+        ].filter(item=>item.date).sort(compareCalendarItems);
+      }
+    }
+  };
+}
+
+module.exports={
+  createRepositories,
+  mapAccount,
+  mapContact,
+  mapOpportunity,
+  mapOpportunityCalendar,
+  mapBookingCalendar,
+  mapActivityCalendar,
+  compareCalendarItems,
+  calendarParts,
+  mapEnrichmentJob,
+  mapEnrichmentResult,
+  mapSource,
+  mapResearchedFact,
+  buildProspectWhere,
+  asTimestamp,
+  asDateOnly
+};
++params.length);
+          }
+          if(Object.prototype.hasOwnProperty.call(patch,'priority'))
+            set.push('quality_manual_override=true');
+          if(!set.length)throw new TypeError('No fields to update');
+          set.push('updated_at=now()');
+          const result=await client.query(
+            'UPDATE organizations SET '+set.join(',')+' WHERE id=$1 AND deleted_at IS NULL RETURNING *',
+            params
+          );
+          const org=mapOrganization(result.rows[0]);
+          await client.query(
+            'INSERT INTO crm_audit_events (id,organization_id,actor_id,action,before_data,after_data) '+
+            "VALUES ($1,$2,$3,'organization_updated',$4::jsonb,$5::jsonb)",
+            [auditId,id,actorId,JSON.stringify(before),JSON.stringify(org)]
+          );
+          return {organization:org};
+        });
       },
       async get(id) {
         const result=await db.query(
