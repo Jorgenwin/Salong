@@ -1,5 +1,6 @@
 'use strict';
 const {mapOrganization,createOrganizationWrites}=require('./organization-writes');
+const {createOpportunityWrites}=require('./opportunity-writes');
 const {createActivityRepository}=require('./activity-ledger');
 
 function requireDb(db) {
@@ -532,6 +533,14 @@ function createRepositories(input) {
           'SELECT * FROM opportunities WHERE id=$1 AND deleted_at IS NULL LIMIT 1',[id]
         );
         return mapOpportunity(result.rows[0]);
+      },
+      async create(input,meta){
+        const result=await createOpportunityWrites(db).create(input,meta);
+        return result.row?{opportunity:mapOpportunity(result.row)}:result;
+      },
+      async changeStage(id,change,meta){
+        const result=await createOpportunityWrites(db).changeStage(id,change,meta);
+        return result.row?{opportunity:mapOpportunity(result.row),unchanged:result.unchanged===true}:result;
       }
     },
 
