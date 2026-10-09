@@ -352,4 +352,5 @@
     onAuth(){get('crm-quick-add').hidden=!bridge.canWrite();renderCounts();setActiveNav();},
     pipelineRefresh(){opportunities=null;if(mode==='pipeline')fetchPipeline();}
   };
+  if(window.SalongCRMBridge)window.SalongCRMUX.init(window.SalongCRMBridge);
 })();
