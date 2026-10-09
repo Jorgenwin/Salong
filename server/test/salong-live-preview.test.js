@@ -24,7 +24,8 @@ test('login page requires authenticated organization fetch before showing famili
   assert.match(JS,/if\(!token\|\|!accounts\.length\)/);
   assert.match(JS,/salong:crm-organizations/);
   assert.match(JS,/event\.origin!==location\.origin/);
-  assert.ok(JS.includes("closeEditor();closeWorkspace();canWrite=false;token=null"));
+  assert.ok(JS.includes("closeActivityDialog();closeEditor();closeWorkspace();"));
+  assert.ok(JS.includes("canWrite=false;token=null;accounts=[]"));
 });
 
 function runPreview(enabled){
@@ -102,6 +103,15 @@ test('authorized company actions are delegated to the authenticated parent and m
   assert.equal(h.ctx.S.orgs.a,undefined);
   assert.equal(h.ctx.S.orgs.b.name,'Oppdatert');
   assert.equal(h.notify()[2].count,1);
+  const logButton={
+    dataset:{salongLog:'b'},
+    matches:()=>false,
+    closest(selector){return selector==='[data-salong-log]'?this:null;}
+  };
+  h.documentListeners.click({target:{closest:()=>logButton},preventDefault:()=>{},
+    stopImmediatePropagation:()=>{}});
+  assert.equal(h.notify()[3].type,'salong:crm-log');
+  assert.equal(h.notify()[3].id,'b');
 });
 test('preview blocks mutation buttons before browser UI handlers run',()=>{
   const h=runPreview(true);let prevented=false,stopped=false;
