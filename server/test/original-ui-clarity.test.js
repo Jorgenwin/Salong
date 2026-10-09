@@ -41,11 +41,14 @@ test('Prospekter retains every original view and provides clear tab guidance', {
       assert.ok(views.includes(key),'Missing original Salong view: '+key);
     }
     assert.ok(views.length>=12,'No original Salong navigation item should disappear');
-    assert.equal(await page.locator('.mt-top .mt-tabs [data-mttab]').count(),5,
-      'All original Prospecting tabs remain present');
-    assert.match(await page.locator('.mt-guide').textContent(),/Start her/);
+    assert.equal(await page.locator('.mt-top .mt-tabs [data-mttab]').count(),4,
+      'Four clear workflow sections are visible; planning lives in More');
+    assert.equal(await page.locator('.mt-top .mt-tabs [data-mttab="start"]').getAttribute('aria-pressed'),'true');
+    assert.equal(await page.locator('.ps-flow li').count(),4);
+    assert.equal(await page.locator('.ps-focus [data-mtstart]').count(),1);
+    assert.equal(await page.locator('.tp-b').count(),0,'Time budgeting must not be the landing view');
     await page.locator('.mt-top .mt-tabs [data-mttab="mal"]').click();
-    assert.match(await page.locator('.mt-guide').textContent(),/målmarkedet/i);
+    assert.match(await page.locator('.mt-guide').textContent(),/nye selskaper/i);
     await page.locator('.mt-top .mt-tabs [data-mttab="arb"]').click();
     assert.match(await page.locator('.mt-guide').textContent(),/Følg opp aktive prospekter/);
     assert.match(await page.locator('#mode').textContent(),/demo|lagres ikke/i);
