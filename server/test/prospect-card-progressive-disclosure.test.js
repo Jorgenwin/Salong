@@ -24,7 +24,10 @@ test('Prospekter leads with a short why-now and hides source details until opene
     const base='http://127.0.0.1:'+server.address().port;
     const response=await page.goto(base+'/#prosp',{waitUntil:'domcontentloaded'});
     assert.equal(response.status(),200);
-    await page.locator('.mt-top .mt-tabs [data-mttab="pri"]').waitFor();
+    await page.locator('.mt-top .mt-tabs [data-mttab="start"]').waitFor();
+    await page.locator('.mt-top .mt-menu > summary').click();
+    await page.locator('.mt-top .mt-menu [data-mttab="pri"]').click();
+    await page.locator('.tp .mt-sec').first().waitFor();
     const chosen=await page.evaluate(()=>{
       const rows=[...document.querySelectorAll('#view tr[data-mtacc]')];
       for(const row of rows){
