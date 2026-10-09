@@ -22,6 +22,7 @@ test('signed-in Salong CRM offers drawer, keyboard search, A/B/C inline update a
     {id:'org',name:'Fagforeningen',priority:'B',segment:'fag',previous_customer:true}
   ];
   let writes=[];
+  const pipelineWrites=[];
   const deals=[
     {id:'case-1',account_id:'book',title:'Leie av sal',stage:'tilbud',
       value:45000,last_activity_at:'2026-10-01T10:00:00Z'},
@@ -51,6 +52,30 @@ test('signed-in Salong CRM offers drawer, keyboard search, A/B/C inline update a
         happened_at:'2026-10-01T10:00:00Z',text:'Snakket om seminar'}]);
     if(pathname.startsWith('/api/accounts/')&&pathname.endsWith('/contacts'))
       return send(200,'application/json',[]);
+    if(pathname==='/api/opportunities'&&req.method==='POST'){
+      let raw='';for await(const part of req)raw+=part;
+      const input=JSON.parse(raw);
+      pipelineWrites.push({method:'create',payload:input});
+      const opportunity={
+        id:'case-created',account_id:input.accountId,title:input.title,
+        stage:'ny',value:input.value??0,event_date:input.eventDate||null,
+        room:input.room||null,last_activity_at:null
+      };
+      deals.push(opportunity);
+      return send(201,'application/json',{success:true,data:opportunity});
+    }
+    if(/^\/api\/opportunities\/[^/]+\/stage$/.test(pathname)&&req.method==='POST'){
+      let raw='';for await(const part of req)raw+=part;
+      const input=JSON.parse(raw);
+      const id=pathname.split('/')[3],opportunity=deals.find(x=>x.id===id);
+      if(!opportunity)return send(404,'application/json',{success:false,error_message:'Not found'});
+      if(opportunity.stage!==input.expectedStage)
+        return send(409,'application/json',{success:false,error_code:'stage_conflict',
+          error_message:'En annen bruker har oppdatert fasen.'});
+      pipelineWrites.push({method:'stage',id,payload:input});
+      opportunity.stage=input.stage;
+      return send(200,'application/json',{success:true,data:opportunity});
+    }
     if(pathname.startsWith('/api/organizations/')&&req.method==='PATCH'){
       const id=decodeURIComponent(pathname.slice('/api/organizations/'.length));
       let raw='';for await(const part of req)raw+=part;
@@ -104,6 +129,31 @@ test('signed-in Salong CRM offers drawer, keyboard search, A/B/C inline update a
     await page.locator('[data-pipeline-view="table"]').click();
     assert.equal(await page.locator('#pipeline-table tbody tr').count(),2);
     assert.equal(await page.locator('#pipeline-board').isHidden(),true);
+
+    // New pipeline entries and stage updates are server-backed, never local guesses.
+    await page.locator('#pipeline-new').click();
+    await page.locator('#pipeline-create-modal').waitFor({state:'visible'});
+    await page.locator('#case-accountId').selectOption('book');
+    await page.locator('#case-title').fill('Fagseminar 2027');
+    await page.locator('#case-value').fill('18000');
+    await page.locator('#case-eventDate').fill('2027-03-19');
+    await page.locator('#pipeline-create-form button[type="submit"]').click();
+    await page.waitForFunction(()=>document.querySelectorAll('#pipeline-table tbody tr').length===3);
+    assert.equal(pipelineWrites[0].method,'create');
+    assert.equal(pipelineWrites[0].payload.accountId,'book');
+    assert.equal(pipelineWrites[0].payload.value,18000);
+    await page.locator('[data-pipeline-view="board"]').click();
+    const moved=page.locator('.pipeline-card-wrap').filter({hasText:'Fagseminar 2027'});
+    await moved.locator('.pipeline-stage-select').selectOption('tilbud');
+    await page.waitForFunction(()=>window.SalongCRMBridge &&
+      document.querySelectorAll('.pipeline-card-wrap').length===3 &&
+      [...document.querySelectorAll('.pipeline-card-wrap')].some(e=>
+        e.textContent.includes('Fagseminar 2027') &&
+        e.querySelector('.pipeline-stage-select')?.value==='tilbud'));
+    assert.equal(pipelineWrites[1].method,'stage');
+    assert.equal(pipelineWrites[1].payload.expectedStage,'ny');
+    assert.equal(pipelineWrites[1].payload.stage,'tilbud');
+
     await page.keyboard.press('Control+k');
     assert.equal(await page.evaluate(()=>document.activeElement.id),'search');
     assert.equal(await page.locator('[data-crm-view="companies"]').getAttribute('aria-current'),'page');
@@ -116,6 +166,7 @@ test('signed-in Salong CRM offers drawer, keyboard search, A/B/C inline update a
     await page.locator('#form button').click();
     await page.locator('#data').waitFor({state:'visible'});
     assert.equal(await page.locator('#crm-quick-add').isHidden(),true);
+    assert.equal(await page.locator('#pipeline-new').isHidden(),true);
     await page.locator('#search').fill('');
     await page.locator('#rows tr').first().click();
     await page.locator('#read-drawer').waitFor({state:'visible'});
