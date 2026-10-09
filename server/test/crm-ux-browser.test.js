@@ -46,7 +46,7 @@ test('signed-in Salong CRM offers drawer, keyboard search, A/B/C inline update a
     if(pathname==='/api/organizations'&&req.method==='GET')return send(200,'application/json',companies);
     if(pathname==='/api/outreach/summary')return send(200,'application/json',
       {contacted:0,remaining:500,goal:500,daily_required:4,deadline:'2027-05-31'});
-    if(pathname==='/api/opportunities')return send(200,'application/json',deals);
+    if(pathname==='/api/opportunities'&&req.method==='GET')return send(200,'application/json',deals);
     if(pathname.startsWith('/api/accounts/')&&pathname.endsWith('/activities'))
       return send(200,'application/json',[{type:'call',direction:'out',
         happened_at:'2026-10-01T10:00:00Z',text:'Snakket om seminar'}]);
