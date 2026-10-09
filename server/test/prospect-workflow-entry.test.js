@@ -71,6 +71,15 @@ test('Prospekter gives one next action while preserving original advanced tools'
       await page.locator('.mt-top .mt-tabs [data-mttab="'+tab+'"]').click();
       assert.equal(await page.locator('.mt-top .mt-tabs [data-mttab="'+tab+'"]').getAttribute('aria-pressed'),'true');
       if(tab==='mal'){
+        const debug=await page.evaluate(()=>({
+          tab:window.__salong.UI.mt.tab,
+          viewText:(document.querySelector('#view')?.innerText||'').slice(0,1200),
+          marketMarkup:(document.querySelector('.mt')?.innerHTML||'').slice(0,2800),
+          hasList:!!document.querySelector('.ps-market-list'),
+          hasAnalysis:!!document.querySelector('.ps-market-analysis')
+        }));
+        assert.equal(debug.tab,'mal');
+        assert.ok(debug.hasList,'Målmarked did not render the company list: '+JSON.stringify(debug));
         assert.equal(await page.locator('.ps-market-list h2').textContent(),'Velg et selskap');
         const analysis=page.locator('.ps-market-analysis');
         assert.equal(await analysis.count(),1,'Målmarked must retain expandable analysis');
