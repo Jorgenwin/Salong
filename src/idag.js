@@ -5,6 +5,7 @@
 const ID={offerDays:5,staleDays:7,replySla:24,topN:7,maxReady:3,maxLoose:3,minTierA:'A',
   stat:{ahead:1.05,on:.95,slight:.8}};
 UI.id=UI.id||{tab:'dag',scope:'mine',focus:null,pane:'',wkOff:0,edit:null,snoozed:false,nr:null};
+UI.id.queueLimit=UI.id.queueLimit||ID.topN;
 
 /* ---------- dato ---------- */
 const idPad=n=>String(n).padStart(2,'0');
@@ -87,7 +88,7 @@ function idSelectAccounts(ordered,limit){
 }
 function idQueue(){
   const sn=idSnoozeMap(), all=idItems().filter(i=>idInScope(i.ownerId,i.crit)), vis=all.filter(i=>!sn[i.key]), hidden=all.filter(i=>sn[i.key]);
-  const ranked=idSelectAccounts(vis,ID.topN);
+  const ranked=idSelectAccounts(vis,UI.id.queueLimit||ID.topN);
   return {all,vis,shown:ranked.shown,hidden,more:ranked.more};
 }
 /* tall til toppstripen */
@@ -107,6 +108,17 @@ async function idNotRelevant(accId,reason){ return typeof mtDisqualify==='functi
 
 /* ---------- uke ---------- */
 function idFirstOut(){ const m={}; for(const x of actsOp()){ if(x.type==='task'||x.derived||x.handover||x.dir==='in') continue; if(/^E-postutkast laget/.test(x.text||'')) continue; if(!(x.mt||['call','email','meeting','visning'].includes(x.type))) continue; if(!x.orgId) continue; if(!m[x.orgId]||x.at<m[x.orgId]) m[x.orgId]=x.at; } return m; }
+/* Contact goal is independent of how many accounts the queue currently shows.
+   First meaningful outgoing touch counts once per existing organization. */
+function idOutreachPace(){
+  const setting=(S.settings&&S.settings.outreach)||{};
+  const known=new Set(Object.entries(S.orgs).filter(([,o])=>o&&!o.deletedAt).map(([id])=>id));
+  if(typeof mtAll==='function')for(const acc of mtAll())if(!acc.flags.disqualified)known.add(acc.id);
+  const contacted=Object.keys(idFirstOut()).filter(id=>known.has(id)).length;
+  const goal=Math.floor(Number(setting.goal));
+  return outreachPace({goal:Number.isFinite(goal)&&goal>0?goal:OUTREACH_DEFAULT.goal,
+    contacted,start:setting.start,deadline:setting.deadline,today:idIso(new Date())});
+}
 function idWeekActual(off){
   const W=idWeekOf(off), a=W.a.getTime(), b=W.b.getTime(), inW=s=>{ if(!s) return false; const t=new Date(s).getTime(); return t>=a&&t<b; };
   const D=dealsOp().filter(idDealOk), mineOf=d=>idInScope(d.ownerId,false), res={W};
@@ -116,7 +128,14 @@ function idWeekActual(off){
   res.offers={n:offers.length,me:mine(offers).length};
   res.pipe={v:sum(created.filter(d=>d.stage!=='tapt')),me:sum(mine(created.filter(d=>d.stage!=='tapt')))};
   res.conf={n:conf.length,v:sum(conf),me:sum(mine(conf))};
-  let addr=0, addrMe=0; if(typeof mtAll==='function'){ const fo=idFirstOut(); for(const x of mtAll()){ if(x.kind!=='ny'||!x.flags.qualified||!fo[x.id]||!inW(fo[x.id])) continue; addr++; if(idInScope(x.ownerId,false)) addrMe++; } }
+  let addr=0, addrMe=0;
+  const byAccount=new Map(typeof mtAll==='function'?mtAll().filter(a=>!a.flags.disqualified).map(a=>[a.id,a]):[]);
+  for(const [id,at] of Object.entries(idFirstOut())){
+    const org=S.orgs[id],acc=byAccount.get(id);
+    if(!inW(at)||(!acc&&(!org||org.deletedAt)))continue;
+    addr++;
+    if(idInScope((acc&&acc.ownerId)||(org&&org.ownerId)||null,false))addrMe++;
+  }
   res.addr={n:addr,me:addrMe}; return res;
 }
 function idMonthGoal(){ const G=g3Calc('m'); return G; }
@@ -124,7 +143,10 @@ function idMonthGoal(){ const G=g3Calc('m'); return G; }
 function idWeekTargets(A,G){
   const has=G.goal>0, wk=Math.max(1,G.miss.weeks), T={has};
   T.dial=has?A.dial.n+Math.ceil(G.miss.di/wk):null; T.offers=has?A.offers.n+Math.ceil(G.miss.of/wk):null; T.pipe=has?A.pipe.v+Math.round(G.miss.of*G.avgVal/wk):null;
-  if(typeof mtStats==='function'){ const st=mtStats(), wl=mtWeeksLeft(), cfg=mtCfg(), need=Math.max(0,Math.ceil(cfg.goalPct/100*st.qualified)-st.addressed); T.addr=st.qualified?A.addr.n+Math.ceil(need/wl):null; T.addrQ=st.qualified; } else T.addr=null;
+  const contactPace=idOutreachPace();
+  T.addr=A.addr.n+(contactPace.beforeStart?0:contactPace.weekly);
+  T.addrQ=contactPace.goal;
+  T.outreach=contactPace;
   return T;
 }
 function idPlanKey(W){ return W.key+'|'+idUserKey(); }

@@ -44,18 +44,21 @@ function idFocusHTML(Q){
     (UI.id.nr===it.key?'<div class="id-nr"><label for="idNrR">Hvorfor er den ikke relevant? (kreves)</label><div class="row"><input class="in" id="idNrR" placeholder="F.eks. holder ikke arrangementer"><button type="button" class="btn" data-idnrgo="'+esc(it.key)+'">Diskvalifiser</button><button type="button" class="btn ghost" data-idnrx="1">Avbryt</button></div></div>':'')+
     '</section>'; }
 function idDagHTML(){
+  const pace=idOutreachPace(), dueDate=fd(pace.deadline,{day:'numeric',month:'short',year:'numeric'});
+  const paceMsg=pace.remaining===0?'Kontaktmålet er nådd.':pace.overdue?'Fristen er passert. '+pace.remaining+' selskaper gjenstår.':'Ca. '+pace.daily+' nye selskaper per arbeidsdag'+(pace.beforeStart?' fra '+fd(pace.start,{day:'numeric',month:'short'}):'')+'.';
+  const paceHtml='<section class="id-sec wide" aria-label="Kontakttempo mot sluttmål"><h3>'+pace.goal+'-SELSKAPSPLAN · '+esc(dueDate)+'</h3><p><b>'+pace.contacted+' / '+pace.goal+'</b> unike selskaper kontaktet · '+pace.remaining+' igjen · '+pace.days+' arbeidsdager tilgjengelig. <b>'+esc(paceMsg)+'</b></p><p class="id-note2">Kun logget utgående samtale, e-post, møte eller visning teller. De sju første forslagene nedenfor er ikke et dagsmaksimum.</p></section>';
   const Q=idQueue(), T=idTop(Q), groups=[['must','Må gjøres'],['should','Bør gjøres'],['maybe','Hvis det er tid']].map(([k,n])=>({k,n,L:Q.shown.filter(i=>ID_TIER[i.rank]===k)})).filter(g=>g.L.length);
   UI.id.cache=Object.fromEntries(Q.all.map(i=>[i.key,i]));
-  const top='<p class="id-top">'+idNum('prio','<b>'+T.prio+'</b> '+idPlural(T.prio,'prioritert handling','prioriterte handlinger'))+
+  const top='<p class="id-top">'+idNum('prio','<b>'+T.prio+'</b> '+idPlural(T.prio,'prioritert konto vist','prioriterte kontoer vist'))+
     '<span aria-hidden="true">·</span>'+idNum('late','<b>'+T.late+'</b> '+idPlural(T.late,'oppfølging forfalt','oppfølginger forfalt'),T.late?'warn':'zero')+
     '<span aria-hidden="true">·</span>'+idNum('ready','<b>'+T.ready+'</b> '+idPlural(T.ready,'account klar','accounts klare')+' for outreach',T.ready?'':'zero')+
     '<span aria-hidden="true">·</span>'+idNum('waiting','<b>'+T.waiting+'</b> '+idPlural(T.waiting,'kunde venter','kunder venter')+' på oss',T.waiting?'':'zero')+'</p>';
-  if(UI.id.focus) return top+idFocusHTML(Q);
+  if(UI.id.focus) return paceHtml+top+idFocusHTML(Q);
   const body=groups.length?groups.map(g=>'<section class="id-g '+g.k+'" aria-label="'+g.n+'"><h3>'+g.n+' <span>'+g.L.length+'</span></h3><ul class="id-list">'+g.L.map(i=>idRow(i)).join('')+'</ul></section>').join(''):idEmpty(Q);
-  const foot=(Q.more>0?'<p class="id-more-n">'+Q.more+' '+idPlural(Q.more,'handling','handlinger')+' til er rangert lavere.</p>':'')+
+  const foot=(Q.more>0?'<div class="id-more-n">'+Q.more+' andre kontoer i køen. <button type="button" class="btn sm" data-idmore="1">Vis neste '+Math.min(ID.topN,Q.more)+'</button></div>':'')+
     (Q.hidden.length?'<p class="id-more-n">'+Q.hidden.length+' utsatt i din visning. <button type="button" class="lnk" data-idsh="1">'+(UI.id.snoozed?'Skjul':'Vis')+'</button></p>'+(UI.id.snoozed?'<ul class="id-list quiet">'+Q.hidden.map(i=>'<li class="id-r" data-key="'+esc(i.key)+'"><span class="id-chk off"></span><div class="id-m"><div class="id-o">'+esc(i.org)+'</div><div class="id-a">'+esc(i.action)+'</div></div><div class="id-ac"><button type="button" class="lnk" data-idsn="'+esc(i.key)+'|clear">Hent tilbake</button></div></li>').join('')+'</ul>':''):'');
-  if(idNoData()) return body;
-  return '<div class="id-dagbar">'+top+(groups.length?'<button type="button" class="btn primary" data-idfs="1">Start fokus</button>':'')+'</div>'+idRecHTML('FOKUS I DAG',idDayRec(Q),groups.length?'':'')+body+foot; }
+  if(idNoData()) return paceHtml+body;
+  return paceHtml+'<div class="id-dagbar">'+top+(groups.length?'<button type="button" class="btn primary" data-idfs="1">Start fokus</button>':'')+'</div>'+idRecHTML('FOKUS I DAG',idDayRec(Q),groups.length?'':'')+body+foot; }
 
 /* ---------- DENNE UKEN ---------- */
 function idBar(v,t,cls){ const p=t>0?Math.min(100,Math.round(v/t*100)):0; return '<span class="id-bar'+(cls?' '+cls:'')+'" role="img" aria-label="'+p+' prosent"><i style="width:'+p+'%"></i></span>'; }
@@ -181,6 +184,7 @@ function idClick(e){
   if(d.idpane!==undefined){ UI.id.pane=d.idpane; idRR(); return; }
   if(d.idwk!==undefined){ UI.id.wkOff=Number(d.idwk); idRR(); return; }
   if(d.idreport){ makeReport(); return; }
+  if(d.idmore){ UI.id.queueLimit=(UI.id.queueLimit||ID.topN)+ID.topN; idRR(); return; }
   if(d.idsh){ UI.id.snoozed=!UI.id.snoozed; idRR(); return; }
   if(d.idopen){ const it=item(d.idopen); if(!it) return; if(it.open.k==='mt') mtOpen(it.open.id); else openDrawer(it.open.k,it.open.id); return; }
   if(d.idlog){ const it=item(d.idlog); if(it&&it.accId) mtOpen(it.accId,'do'); else if(it) openDrawer(it.open.k,it.open.id); return; }
