@@ -64,7 +64,7 @@ function idItems(){
     for(const a of mtAll()){ if(a.flags.disqualified||a.dncAcc||!idOperative(a)) continue; const n=a.nx, F=a.flags;
       const base={orgId:a.id,org:a.name,ownerId:a.ownerId||null,open:{k:'mt',id:a.id},obj:'acc',accId:a.id};
       if(n.k==='reply') push({...base,key:'acc:'+a.id+':svar',rank:1,score:50,action:'Følg opp svar innen 24 timer',why:['Innkommende svar registrert','Sekvens er stoppet – følg opp personlig'],src:'Sekvenser',crit:true});
-      else if(n.k==='enrich'&&F.qualified&&!F.enriched&&!(typeof bkActive==='function'&&bkActive(a.job))){
+      else if(n.k==='enrich'&&(F.qualified||a.seq&&a.seq.status==='bounced')&&(!F.enriched||a.seq&&a.seq.status==='bounced')&&!(typeof bkActive==='function'&&bkActive(a.job))){
         const time=a.pt===1?'Tier 1 først':a.pt===2?'Tier 2 – neste berikbølge':'Tier 3 – ved kapasitet';
         push({...base,key:'acc:'+a.id+':berik',rank:5,score:(a.pt===1?100:a.pt===2?40:0)+a.fit.total/10,
           action:'Berik – finn relevant kontaktperson',why:[time,n.t||'Kontaktdata mangler'],src:'Berik'});
