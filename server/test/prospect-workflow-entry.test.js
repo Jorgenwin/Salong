@@ -70,6 +70,13 @@ test('Prospekter gives one next action while preserving original advanced tools'
     for(const tab of ['mal','arb','seq','start']){
       await page.locator('.mt-top .mt-tabs [data-mttab="'+tab+'"]').click();
       assert.equal(await page.locator('.mt-top .mt-tabs [data-mttab="'+tab+'"]').getAttribute('aria-pressed'),'true');
+      if(tab==='mal'){
+        assert.equal(await page.locator('.ps-market-list h2').textContent(),'Velg et selskap');
+        const analysis=page.locator('.ps-market-analysis');
+        assert.equal(await analysis.count(),1,'Målmarked must retain expandable analysis');
+        assert.equal(await analysis.getAttribute('open'),null,'Analytics should start closed');
+        assert.equal(await page.locator('[data-mtquickseg]').count(),1);
+      }
     }
     assert.equal(new URL(page.url()).hash,'#prosp');
     assert.deepEqual(errors,[]);
