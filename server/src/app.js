@@ -10,6 +10,8 @@ const CRM_OPP_JS=fs.readFileSync(path.join(__dirname,'ui/opportunities-client.js
 const CRM_OPP_CSS=fs.readFileSync(path.join(__dirname,'ui/opportunities-client.css'),'utf8');
 const CRM_TODAY_JS=fs.readFileSync(path.join(__dirname,'ui/today-client.js'),'utf8');
 const CRM_TODAY_CSS=fs.readFileSync(path.join(__dirname,'ui/today-client.css'),'utf8');
+const CRM_BULK_JS=fs.readFileSync(path.join(__dirname,'ui/bulk-client.js'),'utf8');
+const CRM_BULK_CSS=fs.readFileSync(path.join(__dirname,'ui/bulk-client.css'),'utf8');
 const { handleReadRequest } = require('./api/read');
 const { handleEnrichmentRequest } = require('./api/enrichment');
 const { handleContactWriteRequest } = require('./api/contacts-write');
@@ -85,7 +87,7 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
 
       // A separate private CRM interface; not the public static demo.
       // Public auth configuration contains only a Supabase publishable key.
-      if(req.method==='GET' && ['/crm','/crm/','/crm/client.js','/crm/config.js','/crm/ux.js','/crm/ux.css','/crm/opportunities.js','/crm/today.js'].includes(url.pathname)){
+      if(req.method==='GET' && ['/crm','/crm/','/crm/client.js','/crm/config.js','/crm/ux.js','/crm/ux.css','/crm/opportunities.js','/crm/today.js','/crm/bulk.js'].includes(url.pathname)){
         if(!config.supabaseUrl||!config.supabasePublishableKey){
           writeJson(res,503,{success:false,error_code:'crm_auth_not_configured'},requestId);
           return;
@@ -100,8 +102,10 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
           data=CRM_OPP_JS;contentType='application/javascript; charset=utf-8';
         }else if(url.pathname==='/crm/today.js'){
           data=CRM_TODAY_JS;contentType='application/javascript; charset=utf-8';
+        }else if(url.pathname==='/crm/bulk.js'){
+          data=CRM_BULK_JS;contentType='application/javascript; charset=utf-8';
         }else if(url.pathname==='/crm/ux.css'){
-          data=CRM_UX_CSS+'\n'+CRM_OPP_CSS+'\n'+CRM_TODAY_CSS;contentType='text/css; charset=utf-8';
+          data=CRM_UX_CSS+'\n'+CRM_OPP_CSS+'\n'+CRM_TODAY_CSS+'\n'+CRM_BULK_CSS;contentType='text/css; charset=utf-8';
         }else if(url.pathname==='/crm/config.js'){
           data='window.SALONG_PUBLIC_CONFIG='+JSON.stringify({
             supabaseUrl:config.supabaseUrl,publishableKey:config.supabasePublishableKey
@@ -109,7 +113,7 @@ function createApp({ config, repositories = null, authBoundary = null, now = () 
           contentType='application/javascript; charset=utf-8';
         }else{
           data=CRM_HTML.replace('</body>',
-            '<script src="/crm/opportunities.js" defer></script><script src="/crm/today.js" defer></script></body>');
+            '<script src="/crm/opportunities.js" defer></script><script src="/crm/today.js" defer></script><script src="/crm/bulk.js" defer></script></body>');
           contentType='text/html; charset=utf-8';
         }
         res.statusCode=200;
