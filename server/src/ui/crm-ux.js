@@ -179,7 +179,7 @@
       board.append(section);
     }
     const table=document.createElement('table'),thead=document.createElement('thead'),tr=document.createElement('tr');
-    for(const heading of ['Selskap','Salgsmulighet','Fase','Verdi','Aktivitet']){
+    for(const heading of ['Selskap','Salgsmulighet','Fase','Verdi','Aktivitet',...(bridge.canWrite()?['Endre fase']:[])]){
       tr.append(text('th',heading));
     }
     thead.append(tr);table.append(thead);
@@ -192,9 +192,19 @@
         text('td',deal.value==null?'Ikke oppgitt':money(deal.value)),
         text('td',deal.last_activity_at?
           new Date(deal.last_activity_at).toLocaleDateString('nb-NO'):'Ikke registrert'));
+      if(bridge.canWrite()&&window.SalongOpportunityUI){
+        const cell=document.createElement('td');
+        cell.append(window.SalongOpportunityUI.stageControl(deal));
+        row.append(cell);
+      }
       if(company){
-        row.addEventListener('click',()=>openAccount(company.id));
-        row.addEventListener('keydown',e=>{if(e.key==='Enter')openAccount(company.id);});
+        row.addEventListener('click',event=>{
+          if(event.target.closest('input,select,button,a,label'))return;
+          openAccount(company.id);
+        });
+        row.addEventListener('keydown',event=>{
+          if(event.target===row&&event.key==='Enter')openAccount(company.id);
+        });
       }
       tbody.append(row);
     }
