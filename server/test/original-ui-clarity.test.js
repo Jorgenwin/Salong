@@ -34,8 +34,13 @@ test('Prospekter retains every original view and provides clear tab guidance', {
     assert.equal(response.status(),200);
     await page.locator('#nav button[data-view="prosp"]').waitFor();
     assert.equal(await page.locator('#vt').textContent(),'Prospekter');
-    assert.equal(await page.locator('#nav button[data-view]').count(),12,
-      'No original Salong navigation item should be hidden or removed');
+    const views=await page.locator('#nav button[data-view]').evaluateAll(
+      nodes=>nodes.map(node=>node.getAttribute('data-view')));
+    for(const key of ['idag','kontakter','prosp','innboks','pipeline','kalender',
+      'stat','tilbud','maler','prognose','om','data']){
+      assert.ok(views.includes(key),'Missing original Salong view: '+key);
+    }
+    assert.ok(views.length>=12,'No original Salong navigation item should disappear');
     assert.equal(await page.locator('#view [data-mttab]').count(),5,
       'All original Prospecting tabs remain present');
     assert.match(await page.locator('.mt-guide').textContent(),/Start her/);
