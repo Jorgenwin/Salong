@@ -23,10 +23,10 @@ test('schema check recognizes previously applied migrations',async()=>{
   const db={async query(sql){
     if(sql.includes('information_schema.tables'))return {rows:[{table_name:'organizations'},{table_name:'members'}]};
     if(sql.includes('to_regclass'))return {rows:[{migration_table:'schema_migrations'}]};
-    if(sql.includes('SELECT version'))return {rows:[{version:'001_initial'},{version:'002_artifact_export'}]};
+    if(sql.includes('SELECT version'))return {rows:[{version:'001_initial'},{version:'002_artifact_export'},{version:'003_crm_edit_and_rls'}]};
     throw Error('unexpected query');
   }};
   const status=await inspectSchema(db);
   assert.deepEqual(status.migrations_pending,[]);
-  assert.deepEqual(status.migrations_applied,['001_initial','002_artifact_export']);
+  assert.deepEqual(status.migrations_applied,['001_initial','002_artifact_export','003_crm_edit_and_rls']);
 });
