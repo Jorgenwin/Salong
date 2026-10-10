@@ -115,7 +115,8 @@ function id27Candidates(kind){
   // kvalifisert selskaps offentlig dokumenterte hovednummer, uten å
   // fabrikere eller automatisk godkjenne en personlig kontakt.
   const approved=pool.filter(a=>a.flags.enriched);
-  return sorted(approved.length?approved:pool.filter(a=>a.profile&&a.profile.contact&&a.profile.contact.phone));
+  const switchboards=pool.filter(a=>!a.flags.enriched&&a.profile&&a.profile.contact&&a.profile.contact.phone);
+  return sorted(approved).concat(sorted(switchboards));
 }
 function id27IsCall(it){
   if(it.obj==='task')return /ring|telefon|tilbake.?ring|oppring|call/i.test(it.action||'');
