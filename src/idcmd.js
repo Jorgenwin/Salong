@@ -117,7 +117,7 @@ function id27IsCall(it){
   const a=mtGet(it.accId);
   if(!a)return false;
   if(it.rank===6)return !!id27Phone(a).number;
-  if(it.rank===5&&a.prog&&a.prog.next)return a.prog.next.ch==='telefon';
+  if(it.rank===5&&a.prog&&a.prog.next)return a.prog.next.ch==='telefon'&&!!id27Phone(a).number;
   return it.rank===5&&!!id27Phone(a).number;
 }
 function id27Queues(){
