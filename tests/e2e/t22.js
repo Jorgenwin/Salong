@@ -62,14 +62,17 @@ const {setup,navTo,testSeed} = require('./h.js');
     check('TODAY08 distraction-free card runner opens',await ev(()=>[!!document.querySelector('.id27-runner[role="dialog"]'),
       !!document.querySelector('[data-id27-result="reached"]'),
       !!document.querySelector('.id27-call-link')]),[true,true,true]);
+    const firstId=await ev(()=>{const name=document.querySelector('.id27-run-card h2')?.textContent||'';
+      return window.__salong.MT.all().find(a=>a.name===name)?.id||'';});
+    check('TODAY08b the active call card belongs to an existing account',!!firstId,true);
     await p.fill('[data-id27-note]','[TEST] Tok samtalen');
     await p.click('[data-id27-result="reached"]');await wait(600);
-    check('TODAY09 call log and sequence progress saved via canonical records',await ev(()=>{
-      const W=window.__salong,ids=['test-cult-1','test-cult-2'];
-      const count=ids.filter(id=>W.MT.get(id).seq.stepsDone?.includes(0)).length;
-      const logs=Object.values(W.S.acts).filter(a=>/Ringeøkt: Nådd/.test(a.text||'')).length;
-      return [count,logs,!!document.querySelector('.id27-runner')];}),
-      v=>v[0]===1&&v[1]>=1&&v[2]);
+    check('TODAY09 call log and sequence progress saved on the actual called account',await ev(id=>{
+      const W=window.__salong,account=W.MT.get(id);
+      const progressed=!!(account&&account.seq.stepsDone&&account.seq.stepsDone.includes(0));
+      const logs=Object.values(W.S.acts).filter(a=>/Ringeøkt: Nådd/.test(a.text||'')&&a.orgId===id).length;
+      return [progressed,logs,!!document.querySelector('.id27-runner')];},firstId),
+      v=>v[0]&&v[1]>=1&&v[2]);
     await p.click('[data-id27-end]');await wait(200);
     check('TODAY10 closing session stays on I dag',await ev(()=>[location.hash,!!document.querySelector('.id27-work')]),['#idag',true]);
     check('TODAY11 no client errors',errs.length,0);
