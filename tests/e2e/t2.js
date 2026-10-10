@@ -48,7 +48,7 @@ const {navTo,setup,testSeed,T0} = require('./h.js');
   await p1.$$eval('details.ca',e=>e.forEach(x=>x.open=true));
   check('T08 oppgavelisten i saken viser oppgaveansvarlig per oppgave',await all(p1,'.ctask .s'),v=>v.some(x=>/^Oppgaveansvarlig: Jørgen · Forfalt/.test(x))&&v.some(x=>/^Oppgaveansvarlig: Ufordelt/.test(x)));
   await kill(p1); await view(p1,'pipeline'); check('T08 pipelinekortet viser ansvarlig',await txt(p1,'[data-deal="t-d1"] .own'),'JJørgen');
-  await view(p1,'idag'); await p1.click('[data-idsc="team"]'); await p1.waitForTimeout(150); check('T08 arbeidskøen viser ansvarlig per oppgave i Teamet-visning',await all(p1,'.id-r,.idd-r'),v=>v.some(x=>/\[TEST\] Nordlys Forlag AS/.test(x)&&/Jørgen/.test(x)));
+  await view(p1,'idag'); await p1.click('[data-idsc="team"]'); await p1.waitForTimeout(150); check('T08 admin-køen viser ansvarlig i Teamet-visning',await all(p1,'.id27-admin-row'),v=>v.some(x=>/\[TEST\] Nordlys Forlag AS/.test(x)&&/Jørgen/.test(x)));
   // ---------- overføring til en annen, med varsel ----------
   await openDeal(p1,'t-d1'); await p1.click('.drawer header [data-assign]'); await p1.waitForTimeout(250);
   check('T09 «Tildel»: ingen ny ansvarlig er forhåndsvalgt, knappen er sperret',[await p1.$eval('#asgTo',e=>e.value),await p1.$eval('#asgGo',e=>e.disabled)],['__',true]);
