@@ -89,9 +89,9 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
     const idag=await ev(()=>({date:document.querySelector('#vd')?.textContent||'',
       phases:[...document.querySelectorAll('.id27-step')].map(x=>x.textContent),
       mainBtns:document.querySelectorAll('.id27-work > section .id27-primary').length,
-      legacyTabs:document.querySelectorAll('[data-idtab]').length}));
+      legacyTabs:document.querySelectorAll('[data-idtab]').length,oldBoxes:document.querySelectorAll('.idn-box').length}));
     check('C01 I dag viser oppdatert dato og de to arbeidstrinnene',idag,v=>v.date.length>6&&v.phases.length===2&&/RINGEØKT/.test(v.phases[0])&&/ADMIN-KØ/.test(v.phases[1]));
-    check('C02 I dag har ingen uke-/månedsfaner eller parallelle KPI-dashbord',idag,v=>v.legacyTabs===0&&!document.querySelector('.idn-box'));
+    check('C02 I dag har ingen uke-/månedsfaner eller parallelle KPI-dashbord',idag,v=>v.legacyTabs===0&&v.oldBoxes===0);
     check('C03 I dag bygger ikke egen oppgaveliste: PriorityService gir fortsatt kanoniske elementer',await ev(async()=>{ const r=await window.__salong.crm.priority.getToday({focus:3}); const i=r.data.items[0]; return [r.success,['priority','type','object_id','object_type','title','reason','due_at','primary_action','source'].every(k=>k in i),r.data.focus.length<=3]; }),[true,true,true]);
     check('C04 ingen vannrett rulling (1440)',await noScroll(),true);
     await p.setViewportSize({width:1280,height:800}); await wait(150); check('C05 ingen vannrett rulling (1280)',await noScroll(),true);
