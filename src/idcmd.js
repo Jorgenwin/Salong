@@ -150,15 +150,15 @@ function id27Choice(){
       '<label class="id27-option'+(k===v?' selected':'')+'"><input type="radio" name="id27-sequence" data-id27-kind="'+v+'" value="'+v+'"'+(k===v?' checked':'')+'><span><b>'+t+'</b><small>'+s+'</small></span></label>').join('')+
     '</fieldset>';
 }
-function id27BatchCTA(B){
+function id27BatchCTA(B,secondary){
   const n=B.n;
-  return '<button type="button" class="id27-primary" data-id27-activate="1"'+(!n||UI.id27.busy?' disabled':'')+'>'+
+  return '<button type="button" class="'+(secondary?'id27-secondary':'id27-primary')+'" data-id27-activate="1"'+(!n||UI.id27.busy?' disabled':'')+'>'+
     (UI.id27.busy?'Aktiverer batch …':'▶ AKTIVER NESTE BATCH ('+n+' '+idPlural(n,'PROSPEKT','PROSPEKTER')+')')+'</button>';
 }
-function id27Activation(B){
+function id27Activation(B,secondary){
   return '<div class="id27-activate"><span class="id27-eyebrow">KLAR FOR NESTE BATCH?</span>'+
     '<p>Vil du kjøre en ny runde på '+B.n+' kontaktklare prospekter nå?</p>'+
-    id27Choice()+id27BatchCTA(B)+
+    id27Choice()+id27BatchCTA(B,secondary)+
     (B.available===0?'<p class="id27-hint">Ingen kvalifiserte prospekter med registrert telefonnummer er tilgjengelige i dette segmentet. Ingen oppdiktede prospekter legges til.</p>':
     B.available<ID27_BATCH_SIZE?'<p class="id27-hint">Det finnes '+B.available+' tilgjengelige nå. Batchen fylles ikke med ukvalifiserte selskaper.</p>':'')+
     '</div>';
@@ -169,7 +169,7 @@ function id27AdminRow(it){
     it.obj==='deal'&&it.rank===4?'Følg opp tilbud':
     it.obj==='acc'?'Behandle sekvenssteg':it.obj==='task'?'Åpne oppgave':'Åpne sak';
   return '<li class="id27-admin-row"><span class="id27-admin-icon" aria-hidden="true">'+typ+'</span>'+
-    '<div class="id27-admin-main"><b>'+esc(it.org)+'</b><span>'+esc(it.action)+'</span></div>'+
+    '<div class="id27-admin-main"><b>'+esc(it.org)+'</b><span>'+esc(it.action)+'</span>'+(UI.id.scope==='team'&&it.ownerId?'<small>Ansvarlig: '+esc(ownName(it.ownerId))+'</small>':'')+'</div>'+
     '<button type="button" class="id27-secondary" data-id27-open="'+esc(it.key)+'">'+cta+' <span aria-hidden="true">→</span></button></li>';
 }
 function id27Main(){
@@ -183,7 +183,7 @@ function id27Main(){
       '<h2>Ring de neste kontaktene</h2><p class="id27-summary">'+callbacks+' '+idPlural(callbacks,'forfalt tilbakeringing','forfalte tilbakeringinger')+
       ' <span aria-hidden="true">·</span> '+steps+' '+idPlural(steps,'sekvenssteg','sekvenssteg')+'</p>'+
       '<button type="button" class="id27-primary" data-id27-start="1">▶ START ØKT ('+n+' OPPGAVER)</button>'+
-      '<p class="id27-fill"><span class="id27-dot"></span>'+(B.n===ID27_BATCH_SIZE?'Neste batch på 20 ligger klar til aktivering':B.n>0?'Neste batch: '+B.n+' kontaktklare prospekter tilgjengelige':'Ingen nye kontaktklare prospekter tilgjengelige akkurat nå')+'</p></section>':
+      '<p class="id27-fill"><span class="id27-dot"></span>'+(B.n===ID27_BATCH_SIZE?'Neste batch på 20 ligger klar til aktivering':B.n>0?'Neste batch: '+B.n+' kontaktklare prospekter tilgjengelige':'Ingen nye kontaktklare prospekter tilgjengelige akkurat nå')+'</p><details class="id27-replenish"><summary>Aktiver flere prospekter</summary>'+id27Activation(B,true)+'</details></section>':
     '<section class="id27-card id27-phase">'+(!hasWork?'<div class="id27-success"><span aria-hidden="true">🎉</span><div><h2>Alt utført for i dag!</h2><p>Du har ingen forfalte oppgaver eller tilbakeringinger som venter.</p></div></div>':
     '<div class="id27-step">FASE 1 <span>·</span> RINGEØKT</div><h2>Ingen ringeoppgaver venter</h2><p class="id27-summary">Du kan behandle admin-køen nedenfor eller aktivere neste batch.</p>')+
     id27Activation(B)+'</section>';
@@ -218,7 +218,7 @@ function id27Runner(){
     (X.error?'<p class="id27-error" role="alert">'+esc(X.error)+'</p>':'')+
     '</div></div>';
 }
-function id27Page(){ return UI.id27.session?id27Runner():id27Main(); }
+function id27Page(){ return UI.id27.session?id27Runner():'<div class="id27-scope">'+idScope()+'</div>'+id27Main(); }
 /* Hovedvisningen viser bare i dag, ikke uke-/månedsfaner. De gamle
    uke- og månedsberegningene beholdes urørt for andre moduler. */
 function idHTML(){return '<div class="id id27">'+id27Page()+'</div>';}
