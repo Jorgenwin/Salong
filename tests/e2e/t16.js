@@ -34,7 +34,7 @@ const {navTo,setup,testSeed} = require('./h.js');
         admin:root.querySelector('.id27-admin-list')?.textContent||'',
         callCount:calls.length, tabs:root.querySelectorAll('[data-idtab]').length,
         calendarLeak:!![...root.querySelectorAll('.id27-admin-row')].find(x=>/Dagens arrangement/.test(x.textContent))}; });
-    check('G04 I dag har dynamisk dato uten uke- og månedsfaner',[id.date,id.tabs],v=>/\\d{1,2}\\.?(?: )+\\w/i.test(v[0])&&v[1]===0);
+    check('G04 I dag har dynamisk dato uten uke- og månedsfaner',[id.date,id.tabs],v=>/\d{1,2}\.?(?: )+\w/i.test(v[0])&&v[1]===0);
     check('G05 ringeøkt og admin-kø er to separate faser',id.phases,v=>v.length===2&&/RINGEØKT/.test(v[0])&&/ADMIN-KØ/.test(v[1]));
     check('G06 ny forespørsel har direkte handling i admin-kø',id.admin,v=>/Ny henvendelse/.test(v)&&/Behandle forespørsel/.test(v));
     check('G07 kalenderavtaler blandes ikke med admin-oppgaver',id.calendarLeak,false);
