@@ -80,3 +80,221 @@ function idDagHTML(){
       if(k==='deal') openDrawer('deal',id); else if(k==='mt') mtOpen(id); else if(k==='org') openOrg(id); else if(k==='go') idGo(id); else if(k==='task'){ const it=UI.id.cache&&UI.id.cache[id]; if(it) openDrawer(it.open.k,it.open.id); }
       return; }
     return prev&&prev.apply(this,arguments); }; }; })();
+
+
+/* ---------- I dag 2027: to atskilte operative køer ----------
+   Gjenbruker idQueue(), mtEligibility(), mtCreateBatch(), mtPatch(),
+   mtLogTouch() og eksisterende CRM-skuffer. Ingen fiktive oppgaver, ingen
+   e-postutsending og ingen automatisk aktivering uten et brukerklikk. */
+UI.id27=UI.id27||{kind:'culture',session:false,skipped:[],total:0,busy:false,error:''};
+const ID27_BATCH_SIZE=20;
+const ID27_SEGS={
+  culture:new Set(['forlag','forskning','fag','ngo','ambassade','utdanning','offentlig']),
+  commercial:new Set(['tech','saas','finans','konsulent','bedrift','byra','pharma','ovrige'])
+};
+const ID27_LABEL={culture:'Rolig kultursekvens',commercial:'Aktiv kommersiell sekvens'};
+const ID27_CAD={culture:'ID27_KULTUR',commercial:'ID27_KOMMERS'};
+function id27Phone(a){
+  if(!a)return {number:'',person:null,label:''};
+  const p=(a.active||[]).find(x=>x.phone&&!x.dnc);
+  if(p)return {number:p.phone,person:p,label:p.name+(p.title?' · '+p.title:'')};
+  const number=a.profile&&a.profile.contact&&a.profile.contact.phone||'';
+  const role=a.profile&&a.profile.contact&&a.profile.contact.askFor||'';
+  return {number,person:null,label:role||'Virksomhetens hovednummer'};
+}
+function id27Candidates(kind){
+  const segs=ID27_SEGS[kind]||ID27_SEGS.culture;
+  const me0=typeof actor==='function'?actor():null;
+  return mtEligibility({sort:'fit'}).pool.filter(a=>
+    segs.has(a.segId)&&a.flags.qualified&&!a.flags.disqualified&&!a.dncAcc&&
+    !!id27Phone(a).number&&(!me0||UI.id.scope==='team'||!a.ownerId||ownKey(a.ownerId)===me0.id)
+  ).sort((a,b)=>Number(b.flags.enriched)-Number(a.flags.enriched)||b.fit.total-a.fit.total||a.name.localeCompare(b.name,'nb'));
+}
+function id27IsCall(it){
+  if(it.obj==='task')return /ring|telefon|tilbake.?ring|oppring|call/i.test(it.action||'');
+  if(it.obj!=='acc'||it.rank===1)return false;
+  const a=mtGet(it.accId);
+  if(!a)return false;
+  if(it.rank===6)return !!id27Phone(a).number;
+  if(it.rank===5&&a.prog&&a.prog.next)return a.prog.next.ch==='telefon';
+  return it.rank===5&&!!id27Phone(a).number;
+}
+function id27Queues(){
+  const all=idQueue().vis, calls=[], admin=[], callAccounts=new Set();
+  for(const it of all){
+    if(id27IsCall(it)){
+      const key=it.orgId||it.key;
+      if(!callAccounts.has(key)){calls.push(it);callAccounts.add(key);}
+    }else if(it.rank<=7&&!(it.obj==='acc'&&it.rank===6)){
+      admin.push(it);
+    }
+  }
+  return {calls,admin};
+}
+function id27BatchState(){
+  const kind=UI.id27.kind, available=id27Candidates(kind).length, n=Math.min(ID27_BATCH_SIZE,available);
+  return {kind,available,n};
+}
+function id27Choice(){
+  const k=UI.id27.kind;
+  return '<fieldset class="id27-choice"><legend>Velg sekvens</legend>'+
+    [['culture','Rolig kultursekvens','Kultur, NGO, forlag'],['commercial','Aktiv kommersiell sekvens','Næringsliv, event']].map(([v,t,s])=>
+      '<label class="id27-option'+(k===v?' selected':'')+'"><input type="radio" name="id27-sequence" data-id27-kind="'+v+'" value="'+v+'"'+(k===v?' checked':'')+'><span><b>'+t+'</b><small>'+s+'</small></span></label>').join('')+
+    '</fieldset>';
+}
+function id27BatchCTA(B){
+  const n=B.n;
+  return '<button type="button" class="id27-primary" data-id27-activate="1"'+(!n||UI.id27.busy?' disabled':'')+'>'+
+    (UI.id27.busy?'Aktiverer batch …':'▶ AKTIVER NESTE BATCH ('+n+' '+idPlural(n,'PROSPEKT','PROSPEKTER')+')')+'</button>';
+}
+function id27Activation(B){
+  return '<div class="id27-activate"><span class="id27-eyebrow">KLAR FOR NESTE BATCH?</span>'+
+    '<p>Vil du kjøre en ny runde på '+B.n+' kontaktklare prospekter nå?</p>'+
+    id27Choice()+id27BatchCTA(B)+
+    (B.available===0?'<p class="id27-hint">Ingen kvalifiserte prospekter med registrert telefonnummer er tilgjengelige i dette segmentet. Ingen oppdiktede prospekter legges til.</p>':
+    B.available<ID27_BATCH_SIZE?'<p class="id27-hint">Det finnes '+B.available+' tilgjengelige nå. Batchen fylles ikke med ukvalifiserte selskaper.</p>':'')+
+    '</div>';
+}
+function id27AdminRow(it){
+  const typ=it.obj==='deal'?(it.rank===1?'✉':'▤'):it.obj==='acc'?'✉':it.obj==='task'?'✓':'▤';
+  const cta=it.obj==='deal'&&it.rank===1?'Behandle forespørsel':
+    it.obj==='deal'&&it.rank===4?'Følg opp tilbud':
+    it.obj==='acc'?'Behandle sekvenssteg':it.obj==='task'?'Åpne oppgave':'Åpne sak';
+  return '<li class="id27-admin-row"><span class="id27-admin-icon" aria-hidden="true">'+typ+'</span>'+
+    '<div class="id27-admin-main"><b>'+esc(it.org)+'</b><span>'+esc(it.action)+'</span></div>'+
+    '<button type="button" class="id27-secondary" data-id27-open="'+esc(it.key)+'">'+cta+' <span aria-hidden="true">→</span></button></li>';
+}
+function id27Main(){
+  const Q=id27Queues(), B=id27BatchState(), n=Q.calls.length;
+  UI.id.cache=Object.fromEntries(idQueue().all.map(it=>[it.key,it]));
+  const callbacks=Q.calls.filter(it=>it.obj==='task').length;
+  const steps=n-callbacks;
+  const hasWork=!!(n||Q.admin.length);
+  const phase1=n?
+    '<section class="id27-card id27-phase"><div class="id27-step">FASE 1 <span>·</span> RINGEØKT</div>'+
+      '<h2>Ring de neste kontaktene</h2><p class="id27-summary">'+callbacks+' '+idPlural(callbacks,'forfalt tilbakeringing','forfalte tilbakeringinger')+
+      ' <span aria-hidden="true">·</span> '+steps+' '+idPlural(steps,'sekvenssteg','sekvenssteg')+'</p>'+
+      '<button type="button" class="id27-primary" data-id27-start="1">▶ START ØKT ('+n+' OPPGAVER)</button>'+
+      '<p class="id27-fill"><span class="id27-dot"></span>'+(B.n===ID27_BATCH_SIZE?'Neste batch på 20 ligger klar til aktivering':B.n>0?'Neste batch: '+B.n+' kontaktklare prospekter tilgjengelige':'Ingen nye kontaktklare prospekter tilgjengelige akkurat nå')+'</p></section>':
+    '<section class="id27-card id27-phase">'+(!hasWork?'<div class="id27-success"><span aria-hidden="true">🎉</span><div><h2>Alt utført for i dag!</h2><p>Du har ingen forfalte oppgaver eller tilbakeringinger som venter.</p></div></div>':
+    '<div class="id27-step">FASE 1 <span>·</span> RINGEØKT</div><h2>Ingen ringeoppgaver venter</h2><p class="id27-summary">Du kan behandle admin-køen nedenfor eller aktivere neste batch.</p>')+
+    id27Activation(B)+'</section>';
+  const phase2='<section class="id27-card id27-phase"><div class="id27-step">FASE 2 <span>·</span> ADMIN-KØ</div>'+
+    '<div class="id27-admin-title"><h2>Tilbud og oppfølging</h2><span>'+Q.admin.length+' '+idPlural(Q.admin.length,'oppgave','oppgaver')+'</span></div>'+
+    (Q.admin.length?'<ul class="id27-admin-list">'+Q.admin.map(id27AdminRow).join('')+'</ul>':
+    '<p class="id27-muted">Ingen tilbud, forespørsler eller administrative oppgaver som krever handling nå.</p>')+
+    '</section>';
+  return '<div class="id27-work">'+phase1+phase2+
+    (!live?'<p class="id27-demo" role="note">Demomodus: Endringer i batcher og ringelogg gjelder bare denne økten og lagres ikke permanent.</p>':'')+
+    (UI.id27.error?'<p class="id27-error" role="alert">'+esc(UI.id27.error)+'</p>':'')+'</div>';
+}
+function id27Runner(){
+  const X=UI.id27, Q=id27Queues().calls.filter(it=>!X.skipped.includes(it.key));
+  if(!Q.length)return '<div class="id27-runner" role="dialog" aria-modal="true" aria-label="Ringeøkt ferdig"><div class="id27-run-card id27-run-finished"><span class="id27-step">RINGEØKT</span><h2>Økten er ferdig</h2><p>Ingen flere oppgaver i denne runden. Eventuelle hoppede kort er fortsatt tilgjengelige på I dag.</p><button type="button" class="id27-primary" data-id27-end="1">Tilbake til I dag</button></div></div>';
+  const it=Q[0], a=typeof mtGet==='function'?mtGet(it.accId||it.orgId):null, phone=id27Phone(a);
+  const step=it.obj==='acc'&&a&&a.prog&&a.prog.next?a.prog.next:null;
+  const rest=Q.length, pos=Math.max(1,X.total-rest+1), url=phone.number?'tel:'+String(phone.number).replace(/[^\d+]/g,''):'';
+  return '<div class="id27-runner" role="dialog" aria-modal="true" aria-label="Ringeøkt"><div class="id27-run-head"><b>RINGEØKT</b><span>'+pos+' av '+Math.max(pos,X.total)+'</span><button type="button" data-id27-end="1" class="id27-run-close">Avslutt økt ×</button></div>'+
+    '<div class="id27-run-card" aria-live="polite"><span class="id27-eyebrow">'+(it.obj==='task'?'TILBAKERINGING':step?'SEKVENS · DAG '+step.d:'FØRSTE KONTAKT')+'</span>'+
+    '<h2>'+esc(it.org)+'</h2><p class="id27-run-action">'+esc(it.action)+'</p>'+
+    '<div class="id27-contact"><span>Hvem ringer du?</span><strong>'+esc(phone.label||'Kontaktperson ikke registrert')+'</strong>'+
+    (url?'<a class="id27-call-link" href="'+esc(url)+'">☎ '+esc(phone.number)+'</a>':'<small>Telefonnummer er ikke registrert</small>')+'</div>'+
+    '<div class="id27-reason"><b>Hvorfor nå?</b><p>'+esc((it.why||[]).filter(Boolean).join(' · ')||'Oppgaven er planlagt til i dag.')+'</p>'+
+    (a&&a.why?'<p>'+esc(String(a.why).slice(0,240))+'</p>':'')+'</div>'+
+    '<label class="id27-note">Notat etter samtalen (valgfritt)<textarea data-id27-note rows="2" placeholder="Kort oppsummering av det du fikk vite"></textarea></label>'+
+    '<div class="id27-run-actions"><button type="button" class="id27-primary" data-id27-result="reached"'+(X.busy?' disabled':'')+'>Nådd</button>'+
+    '<button type="button" class="id27-secondary" data-id27-result="no_answer"'+(X.busy?' disabled':'')+'>Ikke svar</button>'+
+    '<button type="button" class="id27-secondary" data-id27-result="later"'+(X.busy?' disabled':'')+'>Ring senere</button></div>'+
+    '<div class="id27-run-foot"><button type="button" class="id27-text-button" data-id27-skip="1">Hopp over denne</button>'+
+    '<button type="button" class="id27-text-button" data-id27-detail="'+esc(it.key)+'">Åpne prospektdetaljer ↗</button></div>'+
+    (X.error?'<p class="id27-error" role="alert">'+esc(X.error)+'</p>':'')+
+    '</div></div>';
+}
+function id27Page(){ return UI.id27.session?id27Runner():id27Main(); }
+/* Hovedvisningen viser bare i dag, ikke uke-/månedsfaner. De gamle
+   uke- og månedsberegningene beholdes urørt for andre moduler. */
+function idHTML(){return '<div class="id id27">'+id27Page()+'</div>';}
+async function id27Activate(){
+  if(UI.id27.busy||readOnly)return;
+  const X=UI.id27, kind=X.kind, rows=id27Candidates(kind).slice(0,ID27_BATCH_SIZE);
+  if(!rows.length){X.error='Ingen ringeklare prospekter å aktivere.';renderView(true);return;}
+  X.busy=true;X.error='';renderView(true);
+  let enrolled=0;
+  try{
+    const label=ID27_LABEL[kind], ids=rows.map(a=>a.id);
+    await mtCreateBatch({name:label+' · '+idIso(new Date()),ids,requested:ID27_BATCH_SIZE,ownerId:(typeof actor==='function'&&actor()?actor().id:null)});
+    for(const id of ids){
+      const a=mtGet(id);
+      if(!a||a.flags.disqualified||a.dncAcc||a.prog||!id27Phone(a).number)continue;
+      await mtPatch(id,{seq:{...(a.seq||{}),enrolledAt:mtToday(),status:'active',stepsDone:[],cad:ID27_CAD[kind],drafted:{}},bStage:'active'},'Aktivert fra I dag: '+label);
+      enrolled++;
+    }
+    if(!enrolled)throw new Error('Ingen selskaper kunne legges i sekvens.');
+    toast(enrolled+' prospekter aktivert i '+label.toLowerCase()+(!live?' (kun demo)':'')+'.');
+  }catch(e){X.error='Batchen ble ikke fullført: '+(e&&e.message||'Ukjent feil')+'. Kontroller eventuelle delvise endringer.';}
+  finally{X.busy=false;renderView(true);}
+}
+function id27NextBusinessDay(){
+  const d=idAdd(idDay0(),1);
+  while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+1);
+  d.setHours(9,0,0,0);return d;
+}
+async function id27Record(it,outcome,note){
+  const a=mtGet(it.accId||it.orgId), phone=id27Phone(a), who=phone.person;
+  const label=({reached:'Nådd',no_answer:'Ikke svar',later:'Ring senere'})[outcome];
+  if(!label)throw new Error('Ukjent resultat');
+  if(a){
+    const r=await mtLogTouch(a.id,{ch:'telefon',dir:'out',pid:who?who.id:'',res:outcome,
+      text:'Ringeøkt: '+label+(note?' · '+note:'')});
+    if(r&&r.err)throw new Error(r.err);
+  }else{
+    await logAct({orgId:it.orgId,dealId:it.dealId,type:'call',text:'Ringeøkt: '+label+(note?' · '+note:'')});
+  }
+  if(it.obj==='task'&&it.done)await idDone(it);
+  if(it.obj==='acc'&&it.done&&it.done.k==='step'){
+    const fresh=mtGet(it.accId), i=it.done.i;
+    if(fresh&&fresh.prog&&Number.isInteger(i)&&!fresh.seq.stepsDone.includes(i)){
+      await mtPatch(fresh.id,{seq:{...fresh.seq,stepsDone:[...fresh.seq.stepsDone,i],status:'active',lastTouch:mtToday()}},'Ringeøkt: '+label);
+    }
+  }
+  if(outcome==='later'){
+    await activityRepository.create({account_id:it.orgId,case_id:it.dealId||null,type:'task',
+      text:'Ring tilbake: '+it.org,due_at:id27NextBusinessDay().toISOString(),completed:false,
+      owner_id:it.ownerId||null});
+  }
+}
+(function(){
+  const oldWire=V.idag.wire;
+  V.idag.wire=function(v){
+    oldWire.apply(this,arguments);
+    v.addEventListener('change',e=>{
+      const t=e.target.closest('[data-id27-kind]');
+      if(t){UI.id27.kind=t.value;UI.id27.error='';renderView(true);}
+    });
+    v.addEventListener('click',async e=>{
+      const t=e.target.closest('[data-id27-start],[data-id27-end],[data-id27-activate],[data-id27-open],[data-id27-result],[data-id27-skip],[data-id27-detail]');
+      if(!t)return;
+      e.preventDefault();
+      const X=UI.id27, d=t.dataset;
+      if(d.id27start!==undefined){X.total=id27Queues().calls.length;X.skipped=[];X.error='';X.session=true;renderView(true);return;}
+      if(d.id27end!==undefined){X.session=false;X.skipped=[];X.error='';renderView(true);return;}
+      if(d.id27activate!==undefined){await id27Activate();return;}
+      const it=UI.id.cache&&UI.id.cache[d.id27open||d.id27detail]||idQueue().all.find(x=>x.key===(d.id27open||d.id27detail));
+      if(d.id27open!==undefined||d.id27detail!==undefined){
+        if(!it)return;
+        if(d.id27detail!==undefined){X.session=false;X.skipped=[];renderView(true);}
+        if(it.open.k==='mt')mtOpen(it.open.id);else openDrawer(it.open.k,it.open.id);
+        return;
+      }
+      if(d.id27skip!==undefined){const cur=id27Queues().calls.find(x=>!X.skipped.includes(x.key));if(cur)X.skipped.push(cur.key);renderView(true);return;}
+      if(d.id27result!==undefined&&!X.busy){
+        const cur=id27Queues().calls.find(x=>!X.skipped.includes(x.key));if(!cur)return;
+        const note=(v.querySelector('[data-id27-note]')||{}).value||'';
+        X.busy=true;X.error='';t.disabled=true;
+        try{await id27Record(cur,d.id27result,note.trim());X.skipped.push(cur.key);}
+        catch(err){X.error='Kunne ikke registrere resultatet: '+(err&&err.message||'Ukjent feil');}
+        finally{X.busy=false;renderView(true);}
+      }
+    });
+  };
+})();
