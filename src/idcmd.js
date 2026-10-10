@@ -105,11 +105,17 @@ function id27Phone(a){
 function id27Candidates(kind){
   const segs=ID27_SEGS[kind]||ID27_SEGS.culture;
   const me0=typeof actor==='function'?actor():null;
-  return mtEligibility({sort:'fit'}).pool.filter(a=>
-    segs.has(a.segId)&&a.flags.qualified&&a.flags.enriched&&!a.flags.disqualified&&!a.dncAcc&&
+  const pool=mtEligibility({sort:'fit'}).pool.filter(a=>
+    segs.has(a.segId)&&a.flags.qualified&&!a.flags.disqualified&&!a.dncAcc&&
     !a.flags.addressed&&!a.flags.engaged&&!a.flags.opportunity&&!a.prog&&!(a.seq&&a.seq.enrolledAt)&&
     !!id27Phone(a).number&&(!me0||UI.id.scope==='team'||!a.ownerId||ownKey(a.ownerId)===me0.id)
-  ).sort((a,b)=>Number(b.flags.enriched)-Number(a.flags.enriched)||b.fit.total-a.fit.total||a.name.localeCompare(b.name,'nb'));
+  );
+  const sorted=L=>L.sort((a,b)=>b.fit.total-a.fit.total||a.name.localeCompare(b.name,'nb'));
+  // Bruk alltid godkjent person først. Når ingen finnes, kan vi ringe et
+  // kvalifisert selskaps offentlig dokumenterte hovednummer, uten å
+  // fabrikere eller automatisk godkjenne en personlig kontakt.
+  const approved=pool.filter(a=>a.flags.enriched);
+  return sorted(approved.length?approved:pool.filter(a=>a.profile&&a.profile.contact&&a.profile.contact.phone));
 }
 function id27IsCall(it){
   if(it.obj==='task')return /ring|telefon|tilbake.?ring|oppring|call/i.test(it.action||'');
