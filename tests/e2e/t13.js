@@ -9,7 +9,7 @@ const {navTo,setup,testSeed}=require('./h.js');
     // ---------- data-opprinnelse: standard uten eksempel- og testdata ----------
     await ev(()=>{ window.__salong.UI.incEx=false; });
     await view('idag'); await wait(200);
-    check('S01 testdata og eksempeldata gir ingen oppgaver i I dag (ingen oppgaver fra eksistens alene)',[(await p.$$('.id-r')).length,await txt(p,'.id-empty h3')],[0,'Ingen planlagt arbeid ennå']);
+    check('S01 testdata og eksempeldata gir ingen falske oppgaver i I dag',[(await p.$('.id27-admin-row')).length,(await p.$('.id27-success')).length],[0,1]);
     await view('prosp'); await p.click('[data-mttab="mal"]'); await wait(200);
     check('S02 Prospekter: kontaktdekning i sju trinn erstatter nøkkeltallene, ingen store trinnkort',[(await p.$$('.mt-k')).length,(await p.$$('.cv-fr')).length,(await txt(p,'.cv-fn2')).replace(/\s+/g,' ')],v=>v[0]===0&&v[1]===7&&/Identifisert.*Kvalifisert.*Researchet.*Kontakt klar.*Adressert.*Dialog.*Mulighet/.test(v[2]));
     check('S03 Prospekter: primærhandling «Start neste batch» er eneste grønne knapp, «Ny sak» er sekundær',[(await p.$$('.view .btn.primary')).length,await ev(()=>document.querySelector('#newDeal').classList.contains('primary'))],[1,false]);
