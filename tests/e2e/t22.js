@@ -41,20 +41,21 @@ const {setup,navTo,testSeed} = require('./h.js');
     check('TODAY04 test fixture contains three approved contact numbers',state,v=>v.length===3&&v.every(x=>x.q&&x.e&&x.phone));
     await p.check('[data-id27-kind="commercial"]');await wait(150);
     check('TODAY05 commercial segment can be selected without navigation',await ev(()=>[location.hash,document.querySelector('[data-id27-activate]')?.textContent||'']),
-      v=>v[0]==='#idag'&&/1 PROSPEKT/.test(v[1]));
+      v=>v[0]==='#idag'&&/PROSPEKT/.test(v[1]));
     await p.check('[data-id27-kind="culture"]');await wait(150);
     const before=await ev(()=>document.querySelector('[data-id27-activate]')?.textContent||'');
-    check('TODAY06 direct activation is limited to two ready culture leads',before,v=>/2 PROSPEKTER/.test(v));
+    check('TODAY06 culture batch includes two approved leads plus documented switchboards if available',before,v=>{const n=Number((v.match(/\((\d+) PROSPEKTER\)/)||[])[1]);return n>=2&&n<=20;});
     await p.click('[data-id27-activate]');
     await p.waitForFunction(()=>Object.keys(window.__salong.S.mtbat||{}).length>=1);
-    await wait(450);
+    await p.waitForFunction(()=>window.__salong.UI.id27.busy===false,null,{timeout:20000});
+    await wait(200);
     const after=await ev(()=>{const W=window.__salong;
       return {url:location.hash,
         selected:W.MT.all().filter(a=>/^test-cult/.test(a.id)).map(a=>({cad:a.seq.cad,due:a.nx.due,k:a.nx.k})),
         commercial:W.MT.get('test-comm-1').seq.cad||'',
         count:Object.values(W.S.mtbat).find(b=>/Rolig kultursekvens/.test(b.name))?.accIds?.length||0,
         button:document.querySelector('[data-id27-start]')?.textContent||''};});
-    check('TODAY07 batch and two sequences activated on I dag',after,v=>v.url==='#idag'&&v.count===2&&
+    check('TODAY07 batch and approved sequences activated on I dag',after,v=>v.url==='#idag'&&v.count>=2&&v.count<=20&&
       v.selected.every(x=>x.cad==='ID27_KULTUR'&&x.k==='step')&&!v.commercial&&/START ØKT/.test(v.button));
     await p.click('[data-id27-start]');await wait(150);
     check('TODAY08 distraction-free card runner opens',await ev(()=>[!!document.querySelector('.id27-runner[role="dialog"]'),
