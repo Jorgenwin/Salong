@@ -27,12 +27,17 @@ const {navTo,setup,testSeed} = require('./h.js');
     await p.keyboard.press('Escape'); await wait(150);
     // ---------- I dag ----------
     await view('idag'); await wait(300);
-    const id=await ev(()=>{ const P=document.querySelector('.idd-pri'), rows=P?[...P.querySelectorAll('.idd-r')]:[]; const K=k=>rows.filter(r=>r.textContent.includes(k)).map(r=>({t:r.textContent,b:[...r.querySelectorAll('button')].map(b=>b.textContent.trim())}));
-      return {hello:document.querySelector('.idn-hd h2').textContent,out:K('OUTREACH'),enq:K('NY FORESPØRSEL'),meet:rows.filter(r=>!/NY FORESPØRSEL|OUTREACH|OPPFØLGING|KONTAKT TIL|SVAR FRA/.test(r.textContent)).map(r=>({t:r.textContent})),n:rows.length}; });
-    check('G04 hilsen etter klokkeslett og navn',id.hello,v=>/^God (morgen|dag|kveld), Jørgen/.test(v));
-    check('G05 dagens sekvenssteg ligger i Dagens prioriteringer som OUTREACH med Start outreach',[id.out.length>=1,id.out.some(x=>x.b.some(y=>/^Start outreach/.test(y)))],[true,true]);
-    check('G06 ny forespørsel ligger i Dagens prioriteringer med Åpne',[id.enq.length>=1,id.enq.some(x=>x.b.some(y=>/^Åpne/.test(y)))],[true,true]);
-    check('G07 dagens arrangement vises som kalenderrad',id.meet.some(x=>/Nordlys Forening/.test(x.t)),true);
+    const id=await ev(()=>{ const root=document.querySelector('.id27');
+      const calls=window.__salong.IDX.queue().vis.filter(i=>i.obj==='acc'&&i.rank===5);
+      return {date:document.querySelector('#vd').textContent,
+        phases:[...root.querySelectorAll('.id27-step')].map(x=>x.textContent),
+        admin:root.querySelector('.id27-admin-list')?.textContent||'',
+        callCount:calls.length, tabs:root.querySelectorAll('[data-idtab]').length,
+        calendarLeak:!![...root.querySelectorAll('.id27-admin-row')].find(x=>/Dagens arrangement/.test(x.textContent))}; });
+    check('G04 I dag har dynamisk dato uten uke- og månedsfaner',[id.date,id.tabs],v=>/\d{1,2}\.?(?: )+\w/i.test(v[0])&&v[1]===0);
+    check('G05 ringeøkt og admin-kø er to separate faser',id.phases,v=>v.length===2&&/RINGEØKT/.test(v[0])&&/ADMIN-KØ/.test(v[1]));
+    check('G06 ny forespørsel har direkte handling i admin-kø',id.admin,v=>/Ny henvendelse/.test(v)&&/Behandle forespørsel/.test(v));
+    check('G07 kalenderavtaler blandes ikke med admin-oppgaver',id.calendarLeak,false);
     // ---------- Kalender ----------
     await view('kalender'); await wait(300);
     check('G09 Kalender har fire faner og viser saken på riktig dato (I dag)',await ev(()=>({tabs:[...document.querySelectorAll('.kl-tabs button')].map(b=>b.textContent),txt:document.querySelector('.kl-l')?document.querySelector('.kl-l').innerText:''})),v=>v.tabs.join()==='I dag,Uke,Måned,Kapasitet'&&/Nordlys Forening/.test(v.txt));
@@ -53,7 +58,7 @@ const {navTo,setup,testSeed} = require('./h.js');
     // ---------- ingen dummy i nøkkeltall ----------
     // produksjonsmodus: eksempel- og testdata teller ikke (UI.incEx er testkroken som er av i produksjon)
     await ev(()=>{ window.__salong.UI.incEx=false; }); await view('idag'); await wait(300);
-    check('G16 uten testkrok: eksempel- og testdata gir ingen oppgaver, forespørsler, I dag-rader eller kalenderoppføringer',await ev(()=>{ const W=window.__salong; const items=W.IDX.items().filter(i=>/EKSEMPEL|\[TEST\]/.test(i.org+i.action)).length; const body=document.querySelector('.idd-pri')?document.querySelector('.idd-pri').innerText:''; return [items,/EKSEMPEL|\[TEST\] Dagens|Ny henvendelse/.test(body)]; }),[0,false]);
+    check('G16 uten testkrok: eksempel- og testdata gir ingen oppgaver, forespørsler, I dag-rader eller kalenderoppføringer',await ev(()=>{ const W=window.__salong; const items=W.IDX.items().filter(i=>/EKSEMPEL|\[TEST\]/.test(i.org+i.action)).length; const body=document.querySelector('.id27-work')?document.querySelector('.id27-work').innerText:''; return [items,/EKSEMPEL|\[TEST\] Dagens|Ny henvendelse/.test(body)]; }),[0,false]);
     await view('kalender'); await wait(300);
     check('G17 kalenderen viser heller ikke eksempeldata uten testkrok',await ev(()=>/EKSEMPEL/.test(document.querySelector('.kl-l')?document.querySelector('.kl-l').innerText:'')),false);
   }catch(e){ e0=e; }

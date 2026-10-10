@@ -65,7 +65,7 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
     check('J22 CSV til Litteraturhuset har BOM, rader for kontaktet og planlagt',[csv.charCodeAt(0)===0xfeff,/Planlagt/.test(csv),csv.split('\r\n').length>2],[true,true,true]);
     // I dag
     await navTo(p,'idag',600);
-    check('J23 I dag viser tier-linje med lenke til Prioritet',await ev(()=>!!document.querySelector('.idc-tier [data-idgo="pri"]')),true);
+    check('J23 I dag beholder hovedfokus på ringeøkt og admin-kø uten Prioritet-avsporing',await ev(()=>[!!document.querySelector('.id27-phase'),!!document.querySelector('.id27-admin-title'),!!document.querySelector('.idc-tier')]),[true,true,false]);
     check('J24 ingen sideveis rulling og ingen sidefeil',await ev(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth),v=>v<=1);
   }catch(e){ e0=e; }
   await A.done(e0);

@@ -62,7 +62,7 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
     // ---------- B. planlegging ----------
     check('B01 uten mål: not_set, ingenting gjettes',await ev(async()=>{ const r=await window.__salong.crm.goals.getPlan(); return [r.data.status,r.data.goal]; }),['not_set',null]);
     await view('idag');
-    check('B02 I dag uten mål: hilsen, sett mål-knapp, ingen fremdriftstall',await ev(()=>({h:document.querySelector('.idn-hd h2')?.textContent,btn:!!document.querySelector('[data-idgo="maal"]'),pct:/\d+ %/.test(document.querySelector('.idn-prog')?.textContent||'')})),v=>/^God (morgen|dag|kveld)/.test(v.h)&&v.btn&&!v.pct);
+    check('B02 I dag uten mål: ringeøkt og admin-kø er klare uten falske mål',await ev(()=>[!!document.querySelector('.id27-phase'),!!document.querySelector('.id27-admin-title'),!!document.querySelector('.idn-prog')]),[true,true,false]);
     await ev(()=>{ window.__salong.S.settings.goalValue=0; });
     const gu=await ev(async()=>{ const r=await window.__salong.crm.goals.update({type:'value',target:2500000,period_start:'2026-11-01',period_end:'2027-04-30'}); return [r.success,r.data&&r.data.goal.original_target]; });
     check('B03 seksmånedersmål lagres (original_target settes)',gu,[true,2500000]);
@@ -86,25 +86,23 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
     check('B14 prognose: forventet ved dagens fart finnes',[typeof P2.forecast.at_pace,P2.forecast.at_pace>=P2.forecast.expected],['number',true]);
     // ---------- C. visninger ----------
     await view('idag');
-    const idag=await ev(()=>({hd:document.querySelector('.idn-hd h2')?.textContent,pct:document.querySelector('.idn-pn b')?.textContent,txt:document.querySelector('.idn-prog')?.textContent,week:document.querySelector('.idn-week')?.textContent,foc:document.querySelectorAll('.idn-f').length,pip:!!Array.from(document.querySelectorAll('.idn-box h3')).find(h=>h.textContent==='PIPELINE'),ter:!!Array.from(document.querySelectorAll('.idn-box h3')).find(h=>h.textContent==='TERRITORY'),ind:document.querySelectorAll('.idn-prog').length}));
-    check('C01 I dag: hilsen, én fremdriftskomponent med prosent, dager igjen og forventet ved dagens fart',idag,v=>/^God (morgen|dag|kveld)/.test(v.hd)&&/\d+ %/.test(v.pct)&&/arbeidsdager igjen/.test(v.txt)&&/Forventet ved dagens fart/.test(v.txt)&&v.ind===1);
-    check('C02 I dag: operativ startside med DAGENS PRIORITERINGER (maks 7 rader), ingen PIPELINE/TERRITORY-bokser',await ev(()=>({h:Array.from(document.querySelectorAll('.idd-pri')).map(h=>h.textContent),box:document.querySelectorAll('.idn-box').length,max:document.querySelectorAll('.idd-pri > .idd-l > .idd-r').length})),v=>v.box===0&&v.max<=8&&v.max>=1);
-    check('C03 I dag bygger ikke egen oppgaveliste: fokus kommer fra PriorityService (normaliserte elementer)',await ev(async()=>{ const r=await window.__salong.crm.priority.getToday({focus:3}); const i=r.data.items[0]; return [r.success,['priority','type','object_id','object_type','title','reason','due_at','primary_action','source'].every(k=>k in i),r.data.focus.length<=3]; }),[true,true,true]);
+    const idag=await ev(()=>({date:document.querySelector('#vd')?.textContent||'',
+      phases:[...document.querySelectorAll('.id27-step')].map(x=>x.textContent),
+      mainBtns:document.querySelectorAll('.id27-work > section .id27-primary').length,
+      legacyTabs:document.querySelectorAll('[data-idtab]').length,oldBoxes:document.querySelectorAll('.idn-box').length}));
+    check('C01 I dag viser oppdatert dato og de to arbeidstrinnene',idag,v=>v.date.length>6&&v.phases.length===2&&/RINGEØKT/.test(v.phases[0])&&/ADMIN-KØ/.test(v.phases[1]));
+    check('C02 I dag har ingen uke-/månedsfaner eller parallelle KPI-dashbord',idag,v=>v.legacyTabs===0&&v.oldBoxes===0);
+    check('C03 I dag bygger ikke egen oppgaveliste: PriorityService gir fortsatt kanoniske elementer',await ev(async()=>{ const r=await window.__salong.crm.priority.getToday({focus:3}); const i=r.data.items[0]; return [r.success,['priority','type','object_id','object_type','title','reason','due_at','primary_action','source'].every(k=>k in i),r.data.focus.length<=3]; }),[true,true,true]);
     check('C04 ingen vannrett rulling (1440)',await noScroll(),true);
     await p.setViewportSize({width:1280,height:800}); await wait(150); check('C05 ingen vannrett rulling (1280)',await noScroll(),true);
     await p.setViewportSize({width:390,height:800}); await wait(150); check('C06 ingen vannrett rulling (390)',await noScroll(),true);
     await p.setViewportSize({width:1440,height:900});
-    await p.click('[data-idtab="uke"]'); await wait(300);
-    const uke=await ev(()=>({t:document.querySelector('.id').innerText,adj:!!document.querySelector('[data-idpe]'),use:!!document.querySelector('[data-idpuse]')}));
-    check('C07 Denne uken: automatisk plan, «Juster plan …» er sekundær, ingen «Bruk ukeplan»',uke,v=>/planlagt denne uken/.test(v.t)&&/Juster plan/.test(v.t)&&v.adj&&!v.use);
-    await p.click('[data-idpe]'); await wait(250);
-    check('C08 Juster plan åpner panel med automatiske verdier som plassholder',await ev(()=>[!!document.querySelector('.id-plan.edit'),/Automatisk:/.test(document.querySelector('.id-plan.edit [data-idpf="dial"]')?.placeholder||'')]),[true,true]);
-    await p.click('[data-idpx]'); await wait(200);
-    await p.click('[data-idtab="mnd"]'); await wait(300);
-    const mnd=await ev(()=>document.querySelector('.id').innerText);
-    check('C09 Denne måneden: Månedsmål, Bekreftet, Vektet pipeline, Forventet, Gap, Pace',mnd,v=>['Månedsmål','Bekreftet','Vektet pipeline','Forventet','PACE','HVA MÅ TIL RESTEN AV MÅNEDEN'].every(k=>v.includes(k))&&/Gap|Over plan/.test(v));
-    check('C10 Denne måneden: opprinnelig vs oppdatert plan',mnd,v=>/Opprinnelig plan/.test(v)&&/Oppdatert plan/.test(v));
-    check('C11 baklengs kjede merket Faktisk historikk / Oppstartsantakelse',mnd,v=>/Oppstartsantakelse|Faktisk historikk/.test(v));
+    check('C07 ukeberegningene finnes fortsatt uten ekstra fane på I dag',await ev(()=>{const X=window.__salong.IDX,a=X.weekActual(0),T=X.weekTargets(a,null);return [typeof a.dial.n,typeof a.offers.n,typeof T.dial]}),['number','number','number']);
+    check('C08 aktivt seksmånedersmål bestemmer baklengsmål for uken',await ev(async()=>{const X=window.__salong.IDX,a=X.weekActual(0),T=X.weekTargets(a,null),P=(await window.__salong.crm.goals.getPlan()).data;return [P.status,T.dial>=a.dial.n,T.offers>=a.offers.n]}),['active',true,true]);
+    const monthly=await ev(async()=>{const r=await window.__salong.crm.goals.getMonth();return {success:r.success,m:r.data.month,basis:r.data.chain.steps.map(x=>x.basis&&x.basis.label).filter(Boolean)};});
+    check('C09 månedsmålene er tilgjengelige i domenetjenesten uten egen I dag-fane',monthly,v=>v.success&&typeof v.m.current_plan==='number'&&typeof v.m.actual==='number');
+    check('C10 månedsplan bevarer opprinnelig plan og beregnet oppdatert plan',monthly,v=>typeof v.m.original_plan==='number'&&typeof v.m.current_plan==='number');
+    check('C11 baklengs kjede merkes med historikk eller oppstartsantakelse',monthly,v=>v.basis.length>0&&v.basis.every(x=>x==='Faktisk historikk'||x==='Oppstartsantakelse'));
     await view('prognose');
     check('C12 Mål og prognose: ingen egne mål for dag/uke/måned/år, seksmånedersmål er eneste mål-input',await ev(()=>({old:!!document.querySelector('#g3Goal,#g3Year'),pl:!!document.querySelector('#plTarget'),txt:document.body.innerText.includes('Seksmånedersmål')})),{old:false,pl:true,txt:true});
     // endre seksmånedersmål via UI
@@ -113,7 +111,7 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
     check('C13 mål endres i UI, revisjon lagres, plan regnes på nytt',await ev(async()=>{ const g=(await window.__salong.crm.goals.getPlan()).data; return [g.target,g.original_target,g.revisions.length>=1]; }),[2600000,2500000,true]);
     // refresh
     await p.reload(); await wait(900); await hook(); await view('idag');
-    check('C14 etter refresh: mål og plan er bevart, I dag viser fremdrift',await ev(()=>[/\d+ %/.test(document.querySelector('.idn-pn b')?.textContent||''),window.__salong.S.settings.goal6&&window.__salong.S.settings.goal6.target]),[true,2600000]);
+    check('C14 etter refresh: mål er bevart og den nye I dag-arbeidsflaten vises',await ev(()=>[!!document.querySelector('.id27-work'),window.__salong.S.settings.goal6&&window.__salong.S.settings.goal6.target]),[true,2600000]);
     // ---------- D. Berik alle via crm ----------
     await view('prosp'); await p.click('[data-mttab="arb"]'); await wait(400);
     const bp=await ev(()=>!!document.querySelector('[data-bkall]')); check('D01 Berik alle-knapp finnes på aktiv batch',bp,v=>typeof v==='boolean');

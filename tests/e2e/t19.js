@@ -119,8 +119,8 @@ const {navTo,setup,testSeed} = require('./h.js');
     await p.screenshot({path:require('./h.js').SHOT+'/mal.png',fullPage:true});
     // ---------- I dag ----------
     await view('idag'); await wait(500);
-    const id_=await ev(()=>({t:document.body.innerText,hasPri:!!document.querySelector('.idd-pri'),cols:!!document.querySelector('.idd-cols')}));
-    check('I1 I dag: hilsen, dagens prioriteringer, kolonner, kalender',[/God (morgen|dag|ettermiddag|kveld)/.test(id_.t),id_.hasPri,!id_.cols,!/KPI/.test(id_.t)],[true,true,true,true]);
+    const id_=await ev(()=>({t:document.querySelector('.id27')?.innerText||'',phases:[...document.querySelectorAll('.id27-step')].map(x=>x.textContent),oldTabs:!!document.querySelector('.id-tabs'),hasAdmin:!!document.querySelector('.id27-admin-title')}));
+    check('I1 I dag: to separate operative faser uten tidshorisont-faner',[/RINGEØKT/.test(id_.phases[0]||''),/ADMIN-KØ/.test(id_.phases[1]||''),!id_.oldTabs,id_.hasAdmin],[true,true,true,true]);
     await p.screenshot({path:require('./h.js').SHOT+'/idag.png',fullPage:true});
     check('X1 ingen sidefeil',A.errs.length,0);
   }catch(e){ await A.done(e); return; }

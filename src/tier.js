@@ -16,6 +16,17 @@ function tierD(){ if(TIER_D) return TIER_D;
    T2:{name:'Tier 2: ring',steps:[{d:1,ch:'telefon',t:'Ring: mer kapasitet, vil dere se stedet?'},{d:2,ch:'epost',t:'Oppsummering etter samtale (eller kort invitasjon)',m:'t2a',bulk:true},{d:8,ch:'telefon',t:'Ring igjen'},{d:15,ch:'epost',t:'Siste høflige oppfølging',m:'t2b',bulk:true}]},
    T3:{name:'Tier 3: e-postsekvens',steps:[{d:1,ch:'epost',t:'Vi har åpnet mer kapasitet',m:'t3a',bulk:true},{d:6,ch:'epost',t:'Hva salene egner seg til',m:'t3b',bulk:true},{d:14,ch:'epost',t:'Kom og se stedet, uten binding',m:'t3c',bulk:true},{d:28,ch:'epost',t:'Siste høflige oppfølging',m:'t3d',bulk:true}]},
    PB:{name:'Byråer og partnere',steps:[{d:1,ch:'epost',t:'Mer kapasitet. Vil dere se stedet?',m:'pba',bulk:true},{d:7,ch:'linkedin',t:'LinkedIn eller kort telefon'},{d:14,ch:'epost',t:'Oppfølging med tilbud om visning',m:'pbb',bulk:true},{d:28,ch:'epost',t:'Siste høflige oppfølging',m:'t3d',bulk:true}]}};
+  // Telefon-først-kadenser for aktivering direkte fra I dag.
+  cad.ID27_KULTUR={name:'Rolig kultursekvens',steps:[
+    {d:1,ch:'telefon',t:'Ring med personlig vinkling'},
+    {d:4,ch:'epost',t:'Lag personlig oppfølging etter samtalen'},
+    {d:10,ch:'telefon',t:'Ring igjen og avklar interesse'},
+    {d:18,ch:'epost',t:'Siste høflige oppfølging'}]};
+  cad.ID27_KOMMERS={name:'Aktiv kommersiell sekvens',steps:[
+    {d:1,ch:'telefon',t:'Ring om arrangement eller samarbeid'},
+    {d:3,ch:'epost',t:'Oppsummer og foreslå relevant sal'},
+    {d:7,ch:'telefon',t:'Ring opp med konkret forslag'},
+    {d:14,ch:'telefon',t:'Siste oppringning'}]};
   const mail={
    t1a:{s:'Et sted å se for {org}?',b:'Hei {fornavn},\n\n«Skriv én konkret setning om {org}, for eksempel et arrangement eller en utgivelse du har sett.»\n\nVi har åpnet mer kapasitet på Litteraturhuset, blant annet storsalen Solstad med plass til opptil 320 i stolrader, og flere nye saler i husets to øverste etasjer. Det hadde vært interessant å vise dere stedet og høre hva dere planlegger i 2027.\n\nHar du tid til en kort omvisning de neste ukene?\n\nBeste hilsen\n{signatur}'},
    t1b:{s:'Forslag til tidspunkt',b:'Hei {fornavn},\n\nJeg følger opp i tilfelle forrige melding druknet. Jeg kan vise dere stedet på kort varsel, og vi kan ta det som en kaffe, uten forpliktelser.\n\nPasser en av disse dagene? «Foreslå to datoer»\n\nBeste hilsen\n{signatur}'},
