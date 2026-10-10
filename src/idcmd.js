@@ -106,7 +106,8 @@ function id27Candidates(kind){
   const segs=ID27_SEGS[kind]||ID27_SEGS.culture;
   const me0=typeof actor==='function'?actor():null;
   return mtEligibility({sort:'fit'}).pool.filter(a=>
-    segs.has(a.segId)&&a.flags.qualified&&!a.flags.disqualified&&!a.dncAcc&&
+    segs.has(a.segId)&&a.flags.qualified&&a.flags.enriched&&!a.flags.disqualified&&!a.dncAcc&&
+    !a.flags.addressed&&!a.flags.engaged&&!a.flags.opportunity&&!a.prog&&!(a.seq&&a.seq.enrolledAt)&&
     !!id27Phone(a).number&&(!me0||UI.id.scope==='team'||!a.ownerId||ownKey(a.ownerId)===me0.id)
   ).sort((a,b)=>Number(b.flags.enriched)-Number(a.flags.enriched)||b.fit.total-a.fit.total||a.name.localeCompare(b.name,'nb'));
 }
@@ -276,22 +277,22 @@ async function id27Record(it,outcome,note){
       if(!t)return;
       e.preventDefault();
       const X=UI.id27, d=t.dataset;
-      if(d.id27start!==undefined){X.total=id27Queues().calls.length;X.skipped=[];X.error='';X.session=true;renderView(true);return;}
-      if(d.id27end!==undefined){X.session=false;X.skipped=[];X.error='';renderView(true);return;}
-      if(d.id27activate!==undefined){await id27Activate();return;}
-      const it=UI.id.cache&&UI.id.cache[d.id27open||d.id27detail]||idQueue().all.find(x=>x.key===(d.id27open||d.id27detail));
-      if(d.id27open!==undefined||d.id27detail!==undefined){
+      if(d.id27Start!==undefined){X.total=id27Queues().calls.length;X.skipped=[];X.error='';X.session=true;renderView(true);return;}
+      if(d.id27End!==undefined){X.session=false;X.skipped=[];X.error='';renderView(true);return;}
+      if(d.id27Activate!==undefined){await id27Activate();return;}
+      const it=UI.id.cache&&UI.id.cache[d.id27Open||d.id27Detail]||idQueue().all.find(x=>x.key===(d.id27Open||d.id27Detail));
+      if(d.id27Open!==undefined||d.id27Detail!==undefined){
         if(!it)return;
-        if(d.id27detail!==undefined){X.session=false;X.skipped=[];renderView(true);}
+        if(d.id27Detail!==undefined){X.session=false;X.skipped=[];renderView(true);}
         if(it.open.k==='mt')mtOpen(it.open.id);else openDrawer(it.open.k,it.open.id);
         return;
       }
-      if(d.id27skip!==undefined){const cur=id27Queues().calls.find(x=>!X.skipped.includes(x.key));if(cur)X.skipped.push(cur.key);renderView(true);return;}
-      if(d.id27result!==undefined&&!X.busy){
+      if(d.id27Skip!==undefined){const cur=id27Queues().calls.find(x=>!X.skipped.includes(x.key));if(cur)X.skipped.push(cur.key);renderView(true);return;}
+      if(d.id27Result!==undefined&&!X.busy){
         const cur=id27Queues().calls.find(x=>!X.skipped.includes(x.key));if(!cur)return;
         const note=(v.querySelector('[data-id27-note]')||{}).value||'';
         X.busy=true;X.error='';t.disabled=true;
-        try{await id27Record(cur,d.id27result,note.trim());X.skipped.push(cur.key);}
+        try{await id27Record(cur,d.id27Result,note.trim());X.skipped.push(cur.key);}
         catch(err){X.error='Kunne ikke registrere resultatet: '+(err&&err.message||'Ukjent feil');}
         finally{X.busy=false;renderView(true);}
       }
