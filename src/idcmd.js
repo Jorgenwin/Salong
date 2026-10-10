@@ -183,7 +183,7 @@ function id27Main(){
       '<h2>Ring de neste kontaktene</h2><p class="id27-summary">'+callbacks+' '+idPlural(callbacks,'forfalt tilbakeringing','forfalte tilbakeringinger')+
       ' <span aria-hidden="true">·</span> '+steps+' '+idPlural(steps,'sekvenssteg','sekvenssteg')+'</p>'+
       '<button type="button" class="id27-primary" data-id27-start="1">▶ START ØKT ('+n+' OPPGAVER)</button>'+
-      '<p class="id27-fill"><span class="id27-dot"></span>'+(B.n===ID27_BATCH_SIZE?'Neste batch på 20 ligger klar til aktivering':B.n>0?'Neste batch: '+B.n+' kontaktklare prospekter tilgjengelige':'Ingen nye kontaktklare prospekter tilgjengelige akkurat nå')+'</p><details class="id27-replenish"><summary>Aktiver flere prospekter</summary>'+id27Activation(B,true)+'</details></section>':
+      '<p class="id27-fill"><span class="id27-dot"></span>'+(B.n===ID27_BATCH_SIZE?'Neste batch på 20 ligger klar til aktivering':B.n>0?'Neste batch: '+B.n+' kontaktklare prospekter tilgjengelige':'Ingen nye kontaktklare prospekter tilgjengelige akkurat nå')+'</p><details class="id27-replenish"'+(UI.id27.replenishOpen?' open':'')+'><summary>Aktiver flere prospekter</summary>'+id27Activation(B,true)+'</details></section>':
     '<section class="id27-card id27-phase">'+(!hasWork?'<div class="id27-success"><span aria-hidden="true">🎉</span><div><h2>Alt utført for i dag!</h2><p>Du har ingen forfalte oppgaver eller tilbakeringinger som venter.</p></div></div>':
     '<div class="id27-step">FASE 1 <span>·</span> RINGEØKT</div><h2>Ingen ringeoppgaver venter</h2><p class="id27-summary">Du kan behandle admin-køen nedenfor eller aktivere neste batch.</p>')+
     id27Activation(B)+'</section>';
@@ -277,7 +277,7 @@ async function id27Record(it,outcome,note){
     oldWire.apply(this,arguments);
     v.addEventListener('change',e=>{
       const t=e.target.closest('[data-id27-kind]');
-      if(t){UI.id27.kind=t.value;UI.id27.error='';renderView(true);}
+      if(t){if(t.closest('.id27-replenish'))UI.id27.replenishOpen=true;UI.id27.kind=t.value;UI.id27.error='';renderView(true);}
     });
     v.addEventListener('click',async e=>{
       const t=e.target.closest('[data-id27-start],[data-id27-end],[data-id27-activate],[data-id27-open],[data-id27-result],[data-id27-skip],[data-id27-detail]');
