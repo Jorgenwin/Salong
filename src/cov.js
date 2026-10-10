@@ -53,12 +53,23 @@ function covChart(){
     '<svg class="cv-svg" viewBox="0 0 '+W+' '+H+'" role="group" aria-label="Prioriteringsflate for prospekter">'+ticks+'<text class="cv-ax" x="'+((L+W-R)/2)+'" y="'+(H-4)+'" text-anchor="middle">Eventfit mot Solstad (dokumentert event + romfit) →</text><text class="cv-ax" transform="translate(12 '+((T+H-B)/2)+') rotate(-90)" text-anchor="middle">Kommersielt potensial →</text>'+circ+lab+'</svg>'+
     '<p class="mt-hint">Boblestørrelse = antall dokumenterte eventsignaler. Plassering bygger på samme poengsum som Fit, delt i eventfit og kommersielt potensial. Det er en rangering, ikke en prognose.</p></section>'; }
 
+/* Utvid kun den valgfrie analysen. Ikke overstyr liste-først-layouten fra mtui. */
 mtMalHTML=function(){
-  const cfg=mtCfg(), all=mtAll(), st=mtStats(all);
-  return '<div class="mt-head"><div><h2>Målmarked mot '+fd(cfg.target,{day:'numeric',month:'long',year:'numeric'})+'</h2>'+mtSnapLine(cfg)+'</div></div>'+covFunnel(st)+covSegTable()+
-   (st.dialogNoTouch||st.warn?'<p class="mt-note warn">'+(st.dialogNoTouch?st.dialogNoTouch+' har dialog, men ingen logget outbound-touch, og teller derfor ikke som adressert. ':'')+(st.warn?st.warn+' har kontakt, men oppfyller ikke målmarkedsreglene.':'')+'</p>':'')+
-   covChart()+
-   '<section class="mt-sec"><div class="mt-sh"><h3>Accounts</h3><button type="button" class="lnk" data-mtmodal="defs">Hva betyr statusene?</button></div>'+mtListHTML()+'</section>'; };
+  const U=UI.mt,cfg=mtCfg(),all=mtAll(),st=mtStats(all);
+  const warning=(st.dialogNoTouch||st.warn)?
+    '<p class="mt-note warn">'+
+      (st.dialogNoTouch?st.dialogNoTouch+' har dialog, men ingen logget utgående kontakt. ':'')+
+      (st.warn?st.warn+' har kontakt, men oppfyller ikke målmarkedsreglene.':'')+'</p>':'';
+  const analysis='<details class="mt-dt ps-market-analysis"'+(U.marketAnalysisOpen?' open':'')+'>'+
+    '<summary>Vis markedsanalyse og dekning</summary>'+
+    '<div class="ps-market-analysis-body">'+
+      '<div class="mt-head"><div><h2>Målmarked mot '+
+        fd(cfg.target,{day:'numeric',month:'long',year:'numeric'})+
+        '</h2>'+mtSnapLine(cfg)+'</div></div>'+
+      covFunnel(st)+covSegTable()+warning+covChart()+
+    '</div></details>';
+  return '<div class="ps-market">'+mtMalListHTML()+analysis+'</div>';
+};
 const _covPW=V.prosp.wire; V.prosp.wire=function(v){ _covPW(v);
   v.querySelectorAll('[data-cvest]').forEach(i=>{ i.addEventListener('click',e=>e.stopPropagation()); i.addEventListener('keydown',e=>e.stopPropagation()); i.addEventListener('change',async()=>{ await covSetEst(i.dataset.cvest,i.value); renderView(true); }); });
   v.querySelectorAll('tr[data-mtsegf]').forEach(r=>r.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); r.click(); } }));

@@ -10,10 +10,18 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
   const SRC=[{url:'https://example.test/arr',label:'example.test',checkedAt:'2026-10-01'}];
   try{
     await view('prosp');
-    check('P01 fem faner: Prioritet, Arbeidsliste, Målmarked, Sekvenser, Strategi',await all(p,'[data-mttab]'),v=>v.length===5&&v[0]==='Prioritet'&&/^Arbeidsliste/.test(v[1])&&v[2]==='Målmarked'&&v[3]==='Sekvenser'&&v[4]==='Strategi');
+    check('P01 Prospekter starter med én anbefaling og fire tydelige arbeidsfaner',await ev(()=>({tabs:[...document.querySelectorAll('.mt-top .mt-tabs [data-mttab]')].map(x=>x.textContent.trim()),focus:!!document.querySelector('.ps-focus [data-mtstart]'),steps:document.querySelectorAll('.ps-flow li').length,noBudget:!document.querySelector('.tp-b')})),v=>v.tabs.length===4&&v.tabs[0]==='Start'&&/^Arbeidsliste/.test(v.tabs[1])&&v.tabs[2]==='Målmarked'&&v.tabs[3]==='Kontaktløp'&&v.focus&&v.steps===4&&v.noBudget);
     await p.click('[data-mttab="mal"]'); await wait(250);
     check('P02 gamle «Finn nye» og «Claude foreslår» er borte',await ev(()=>!/Claude foreslår|Finn nye/.test(document.body.innerText)),true);
-    check('P03 Målmarked er standard med tittel, funnel og dekning per segment (15 segmenter)',[await txt(p,'.mt h2'),(await p.$$('.cv-fr')).length,(await p.$$('[data-mtsegf]')).length],v=>/Målmarked mot 31\. mai 2027/.test(v[0])&&v[1]===7&&v[2]===15);
+    check('P03 Målmarked starter med selskapslisten og skjuler avansert analyse',await ev(()=>{
+      const market=document.querySelector('.ps-market'),analysis=document.querySelector('.ps-market-analysis');
+      return {title:document.querySelector('.ps-market-list h2')?.textContent||'',
+        filters:document.querySelectorAll('[data-mtsegf]').length,
+        select:!!document.querySelector('[data-mtquickseg]'),
+        analysis:!!analysis,hidden:analysis?!analysis.open:null,
+        rows:document.querySelectorAll('tr[data-mtacc]').length,
+        marketTail:market?.outerHTML.slice(-220)||''};
+    }),v=>/Velg et selskap/.test(v.title)&&v.filters===15&&v.select&&v.analysis&&v.hidden&&v.rows>0);
     // ----- tallgrunnlag -----
     const base=await ev(()=>{ const M=window.__salong.MT; const s=M.stats(); return {s,n:M.all().filter(a=>a.kind==='ny').length,orgs:Object.keys(window.__salong.S.orgs).length}; });
     check('P04 identifisert = antall nye accounts, ingen dubletter',await ev(()=>{ const L=window.__salong.MT.all().filter(a=>a.kind==='ny'); const ids=new Set(L.map(a=>a.id)); const key=new Set(L.map(a=>a.orgnr||a.domain||a.name.toLowerCase())); return [L.length===ids.size,L.length===key.size]; }),[true,true]);
@@ -32,10 +40,10 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
     check('P09 fit = sum av seks komponenter med maks 100',fit,v=>v.n===6&&v.t===v.sum&&v.max===100);
     // ----- UI: segmentklikk -----
     await tab('mal'); await wait(150);
-    await p.click('[data-mtsegf="forlag"]'); await wait(250);
+    await p.selectOption('[data-mtquickseg]','forlag'); await wait(250);
     const rows1=await all(p,'tr[data-mtacc] .mt-o b');
     check('P10 klikk på segment filtrerer listen til segmentet',rows1.length>=1&&rows1.every(n=>/Forlag|Testforlaget|Res Publica|Alfa|Beta/i.test(n)||true)&&await ev(()=>[...document.querySelectorAll('tr[data-mtacc]')].every(tr=>/Forlag/.test(tr.children[0].textContent))),true);
-    await p.click('[data-mtsegf="forlag"]').catch(()=>{}); await wait(100); await ev(()=>{ const b=document.querySelector('[data-mtclr]'); if(b) b.click(); }); await wait(150);
+    await p.selectOption('[data-mtquickseg]',''); await wait(150);
     // fit-popover
     await p.click('[data-mtfit]'); await wait(200);
     check('P11 klikk på fit viser seks komponenter med poeng og forklaring',await ev(()=>{ const e=document.querySelector('#mt-pop'); return e?e.querySelectorAll('li, tr, .mt-pr').length:0; }),v=>v>=6);
@@ -69,7 +77,7 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
     // ----- batch -----
     const bs=await ev(async()=>{ const M=window.__salong.MT; const before=Object.keys(window.__salong.S.mtbat).length; const pk=M.pick({segIds:['forlag','forskning'],n:3}); return {n:pk.rows.length,sorted:pk.rows.every((r,i,a)=>!i||a[i-1].fit.total>=r.fit.total),noAddr:pk.rows.every(r=>!r.flags.addressed&&r.flags.qualified),before}; });
     check('P21 plukk velger høyest fit, kvalifiserte, ikke adresserte',bs,v=>v.n>=1&&v.n<=3&&v.sorted&&v.noAddr);
-    await p.click('[data-mtmodal="batch"]'); await wait(300);
+    await p.click('.mt-top .mt-menu > summary'); await p.click('.mt-top [data-mtmodal="batch"]'); await wait(300);
     const bm=await ev(()=>{ const m=document.querySelector('#mt-root .modal, #mt-root [role=dialog]'); return {open:!!m,rows:m?m.querySelectorAll('tr, li.mt-bi, .mt-brow, .mt-blr').length:0,t:m?m.textContent.replace(/\s+/g,' ').slice(0,300):''}; });
     const nBefore=await ev(()=>({b:Object.keys(window.__salong.S.mtbat).length}));
     check('P22 «Start neste batch» viser alle kandidater før bekreftelse og oppretter ingenting ved åpning',[bm.open,bm.rows>=1,nBefore.b],v=>v[0]&&v[1]&&v[2]===0);

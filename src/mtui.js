@@ -1,5 +1,5 @@
 /* ---------- Prospekter: Arbeidsliste, Målmarked, Sekvenser ---------- */
-UI.mt={tab:'pri',seg:'',stat:'',kind:'ny',page:1,sort:{k:'fit',dir:-1},acc:null,dr:{},modal:null,imp:null,bt:null,menu:false,wk:'all'};
+UI.mt={tab:'start',seg:'',stat:'',kind:'ny',page:1,sort:{k:'fit',dir:-1},acc:null,dr:{},modal:null,imp:null,bt:null,menu:false,wk:'all',marketAnalysisOpen:false};
 const mtPct=x=>x==null?'–':Math.round(x*100)+' %';
 const mtSegLabel=a=>a.seg?mtSegShort(a.seg.name):'Uten segment';
 const mtEvTitle=a=>a.ev.level==='Confirmed'?'Dokumentert: '+a.ev.sources.map(s=>s.label||mtHost(s.url)).join(', '):a.ev.level==='Likely'?'Sannsynlig, men ikke dokumentert med kilde':'Ukjent: ingen eventsignal registrert';
@@ -67,12 +67,32 @@ function mtListHTML(){
     '<td class="n"><button type="button" class="mt-fit" data-mtfit="'+esc(a.id)+'" aria-label="Fit '+a.fit.total+' av 100 for '+esc(a.name)+'. Vis komponenter">'+a.fit.total+'</button></td><td class="mt-cv">'+mtCovCell(a)+'</td><td>'+ownChip(a.ownerId)+'</td><td>'+mtStChip(a.status)+'</td><td class="mt-nc">'+mtNextCell(a)+'</td></tr>').join('')+'</tbody></table></div>'+
    (L.length>shown.length?'<div class="row" style="justify-content:center"><button type="button" class="btn sm" data-mtmore="1">Vis flere ('+(L.length-shown.length)+' igjen)</button></div>':'');
 }
+/* Felles inngang for Målmarked. Andre moduler kan utvide analysen, men
+   listen skal alltid være det første, uavhengig av hvilke moduler som lastes. */
+function mtMalListHTML(){
+  const U=UI.mt,cfg=mtCfg();
+  const segmentChoices=cfg.segs.filter(s=>s.on).map(s=>
+    '<option value="'+esc(s.id)+'"'+(U.seg===s.id?' selected':'')+'>'+esc(mtSegShort(s.name))+'</option>').join('');
+  const quickFilter='<label class="ps-market-filter">Segment <select class="in fsel" data-mtquickseg aria-label="Filtrer selskaper på segment">'+
+    '<option value="">Alle segmenter</option>'+segmentChoices+'</select></label>';
+  return '<section class="mt-sec ps-market-list"><div class="mt-sh"><div>'+
+    '<h2>Velg et selskap</h2><p>Åpne en rad for å vurdere selskapet, finne kontakter og velge neste handling.</p>'+
+    '</div>'+quickFilter+'</div>'+mtListHTML()+'</section>';
+}
 function mtMalHTML(){
-  const cfg=mtCfg(), all=mtAll(), st=mtStats(all), segs=mtSegStats().filter(s=>s.id&&s.prio);
-  return '<div class="mt-head"><div><h2>Målmarked mot '+fd(cfg.target,{day:'numeric',month:'long',year:'numeric'})+'</h2>'+mtSnapLine(cfg)+'</div></div>'+mtKpis(st,cfg)+
-   '<section class="mt-sec"><div class="mt-sh"><h3>Dekning per segment</h3><span class="mt-hint">Klikk et segment for å filtrere listen. Prosent = adresserte av kvalifiserte.</span></div>'+mtBars(segs)+'</section>'+
-   (st.dialogNoTouch||st.warn?'<p class="mt-note warn">'+(st.dialogNoTouch?st.dialogNoTouch+' kvalifisert'+(st.dialogNoTouch>1?'e':'')+' account'+(st.dialogNoTouch>1?'s':'')+' har dialog, men ingen logget outbound-touch, og teller derfor ikke som adressert. ':'')+(st.warn?st.warn+' har kontakt, men oppfyller ikke målmarkedsreglene.':'')+'</p>':'')+
-   '<section class="mt-sec"><div class="mt-sh"><h3>Accounts</h3><button type="button" class="lnk" data-mtmodal="defs">Hva betyr statusene?</button></div>'+mtListHTML()+'</section>';
+  const U=UI.mt,cfg=mtCfg(),all=mtAll(),st=mtStats(all),segs=mtSegStats().filter(s=>s.id&&s.prio);
+  const warning=(st.dialogNoTouch||st.warn)?
+    '<p class="mt-note warn">'+(st.dialogNoTouch?st.dialogNoTouch+
+      ' kvalifiserte selskaper har dialog, men ingen registrert utgående kontakt. ':'')+
+      (st.warn?st.warn+' har kontakt, men oppfyller ikke målmarkedsreglene.':'')+'</p>':'';
+  const analysis='<details class="mt-dt ps-market-analysis"'+(U.marketAnalysisOpen?' open':'')+'>'+
+    '<summary>Vis markedsanalyse og dekning</summary><div class="ps-market-analysis-body">'+
+    '<div class="mt-head"><div><h2>Målmarked mot '+fd(cfg.target,{day:'numeric',month:'long',year:'numeric'})+
+      '</h2>'+mtSnapLine(cfg)+'</div></div>'+mtKpis(st,cfg)+
+    '<section class="mt-sec"><div class="mt-sh"><h3>Dekning per segment</h3>'+
+      '<span class="mt-hint">Velg et segment for å filtrere listen ovenfor.</span></div>'+mtBars(segs)+'</section>'+
+    warning+'</div></details>';
+  return '<div class="ps-market">'+mtMalListHTML()+analysis+'</div>';
 }
 
 /* ---------- Arbeidsliste ---------- */
@@ -120,26 +140,113 @@ function mtSeqHTML(){
   return '<div class="mt-one">'+mtBatchesHTML()+mtTemplatesHTML()+'<details class="mt-dt"><summary>Bølger og mål</summary>'+mtWavesHTML()+'</details>'+(hasOut?mtLearnHTML():'')+mtApolloBox()+'</div>';
 }
 
+/* ---------- Start: én tydelig inngang til salgsarbeidet ----------
+   Ingen tier-budsjetter, automatiske utsendelser eller batcher vises før
+   brukeren selv åpner en avansert visning. */
+function mtStartCandidates(){
+  const now=mtToday(), query=UI.q||'';
+  const visible=a=>!a.flags.disqualified&&!a.dncAcc&&
+    a.stage!=='completed'&&ownMatch(a.ownerId)&&
+    match(query,a.name,a.domain,a.orgnr);
+  const active=mtWorking().filter(visible).sort((a,b)=>
+    mtGroupOf(a,now)-mtGroupOf(b,now)||
+    String(a.nx.due||'9999').localeCompare(String(b.nx.due||'9999'))||
+    a.name.localeCompare(b.name,'nb'));
+  const fresh=mtAll().filter(a=>visible(a)&&a.kind==='ny'&&!a.batch&&!a.prog&&!a.flags.addressed)
+    .sort((a,b)=>
+      Number(b.flags.qualified)-Number(a.flags.qualified)||
+      (a.pt||9)-(b.pt||9)||
+      (b.ptRaw||0)-(a.ptRaw||0)||
+      b.fit.total-a.fit.total||a.name.localeCompare(b.name,'nb'));
+  const seen=new Set();
+  return [...active,...fresh].filter(a=>seen.has(a.id)?false:(seen.add(a.id),true));
+}
+function mtStartAction(a){
+  if(!a) return '';
+  const k=a.nx.k;
+  if(k==='research') return 'Avklar om selskapet passer';
+  if(k==='enrich') return 'Finn riktig kontaktperson';
+  if(k==='ready') return 'Ta kontakt';
+  if(k==='reply') return 'Følg opp svaret';
+  if(k==='deal') return 'Følg opp salgsmuligheten';
+  if(k==='step'||k==='followup') return 'Følg opp kontakten';
+  return String(a.nx.t||'Vurder neste steg');
+}
+function mtStartHTML(){
+  const choices=mtStartCandidates(), first=choices[0], others=choices.slice(1,4);
+  const isOngoing=!!first&&!!first.batch;
+  const title=isOngoing?'Fortsett med neste oppgave':'Start med ett selskap';
+  const intro=isOngoing?'Du har et prospekt som venter. Fortsett der du slapp.':
+    'Åpne et relevant selskap, sjekk grunnlaget og finn riktig person. Du trenger ikke starte en batch først.';
+  const card=first?
+    '<div class="ps-focus"><div class="ps-focus-copy"><span class="ps-focus-label">'+
+      (isOngoing?'Neste i arbeidslisten':'Foreslått å starte med')+'</span>'+
+      '<h3>'+esc(first.name)+'</h3>'+
+      '<p class="ps-focus-sub">'+esc(mtSegLabel(first))+
+        (first.pt===1?' · Toppmål':'')+'</p>'+
+      '<p class="ps-focus-next"><b>Neste:</b> '+esc(mtStartAction(first))+'</p></div>'+
+      '<button type="button" class="btn primary ps-open" data-mtstart="'+esc(first.id)+'">Åpne prospekt <span aria-hidden="true">→</span></button></div>':
+    '<div class="ps-focus ps-focus-empty"><div><h3>Ingen prospekter å starte med ennå</h3><p>Begynn med å finne eller legge til et selskap i Målmarked.</p></div>'+
+      '<button type="button" class="btn primary ps-open" data-mttab="mal">Åpne Målmarked <span aria-hidden="true">→</span></button></div>';
+  const stages=[['Velg selskap','Se hvorfor det er aktuelt'],['Undersøk og berik','Vurder kilder og finn riktig person'],['Ta kontakt','Ta samtalen eller send en e-post'],['Følg opp','Registrer svar og neste handling']];
+  const stageHTML='<ol class="ps-flow">'+stages.map(([name,description],i)=>
+    '<li><span class="ps-flow-n">'+(i+1)+'</span><div><b>'+name+'</b><small>'+description+'</small></div></li>').join('')+'</ol>';
+  const otherHTML=others.length?
+    '<section class="ps-others"><div class="ps-others-head"><h3>Andre aktuelle selskaper</h3><span>Velg selv om du vil starte et annet sted</span></div>'+
+    '<div class="ps-other-list">'+others.map(a=>
+      '<button type="button" class="ps-other" data-mtstart="'+esc(a.id)+'"><span><b>'+esc(a.name)+'</b><small>'+esc(mtStartAction(a))+'</small></span>'+
+      '<span aria-hidden="true">→</span></button>').join('')+'</div></section>':'';
+  return '<div class="ps-start">'+
+    '<section class="ps-lead"><span class="ps-eyebrow">KOM I GANG</span><h2>'+title+'</h2><p>'+intro+'</p>'+card+'</section>'+
+    '<section class="ps-how"><h3>Fra første vurdering til oppfølging</h3>'+stageHTML+'</section>'+
+    otherHTML+
+    '<div class="ps-footer"><button type="button" class="lnk" data-mttab="mal">Se hele målmarkedet →</button>'+
+      '<span>Eksempelversjon: endringer og berikingsjobber lagres ikke permanent her.</span></div>'+
+    '</div>';
+}
+
 /* ---------- view ---------- */
 V.prosp={html(){
   const U=UI.mt, nw=mtWorking().length;
   const help={
-    pri:'Start her: vurder hvilke prospekter som bør prioriteres, og hva neste steg er.',
-    arb:'Følg opp aktive prospekter. Se hva som må gjøres, og åpne et selskap for detaljer.',
-    mal:'Utforsk hele målmarkedet. Filtrer og sorter for å finne relevante nye kunder.',
-    seq:'Hold oversikt over planlagte kontaktløp. Salong sender ikke e-post automatisk.',
-    str:'Se prioriteringer og begrunnelser for segmentene dere ønsker å jobbe med.'
+    arb:'Følg opp det du har begynt på. Åpne et selskap for neste handling.',
+    mal:'Velg selskaper fra listen, eller filtrer på segment.',
+    seq:'Planlegg og følg kontaktløp. Salong sender ikke e-post automatisk.',
+    pri:'Prioritering og tidsfordeling er planlegging, ikke en forutsetning for å komme i gang.',
+    str:'Se strategi, segmentvalg og langsiktige mål.'
   }[U.tab]||'';
-  const tabs='<div class="seg mt-tabs" role="group" aria-label="Prospekter">'+[['pri','Prioritet',null],['arb','Arbeidsliste',nw],['mal','Målmarked',null],['seq','Sekvenser',null],['str','Strategi',null]].map(([k,n,c])=>'<button type="button" data-mttab="'+k+'" aria-pressed="'+(U.tab===k)+'">'+n+(c!=null?' <span class="s">'+c+'</span>':'')+'</button>').join('')+'</div>';
+  const tabs='<div class="seg mt-tabs" role="group" aria-label="Prospekter">'+
+    [['start','Start',null],['arb','Arbeidsliste',nw||null],
+      ['mal','Målmarked',null],['seq','Kontaktløp',null]].map(([k,n,count])=>
+      '<button type="button" data-mttab="'+k+'" aria-pressed="'+(U.tab===k)+'">'+n+
+      (count!=null?' <span class="s">'+count+'</span>':'')+'</button>').join('')+'</div>';
   const menu='<details class="mt-menu"'+(U.menu?' open':'')+'><summary class="btn">Mer<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></summary><div class="mt-mi" role="menu">'+
-   [['add','Legg til account'],['scout','Market Scout (importkø)'],['cog','Importer Cognism-kontakter'],['exp','Eksporter → Apollo CSV (fallback)'],['enr','Eksporter → accounts for enrichment (fallback)'],['apo','Importer Apollo-status (CSV, fallback)'],['snap','Snapshots av målmarkedet'],['seg','Segmenter og bølger']].map(([k,n])=>'<button type="button" role="menuitem" data-mtmodal="'+k+'">'+n+'</button>').join('')+'</div></details>';
-  return '<div class="mt"><div class="mt-top">'+tabs+'<div class="mt-top-r">'+menu+'<button type="button" class="btn primary" data-mtmodal="batch">Start neste batch</button></div></div><p class="mt-guide">'+esc(help)+'</p>'+(U.tab==='pri'?tierPriHTML():U.tab==='str'?stratHTML():U.tab==='arb'?mtArbHTML():U.tab==='seq'?mtSeqHTML():mtMalHTML())+'</div>'; },
+    '<button type="button" role="menuitem" data-mttab="pri">Prioritering og tidsfordeling</button>'+
+    '<button type="button" role="menuitem" data-mttab="str">Strategi</button>'+
+    '<button type="button" role="menuitem" data-mtmodal="batch">Opprett batch</button>'+
+    '<div class="ps-menu-sep" role="separator"></div>'+
+    [['add','Legg til selskap'],['scout','Market Scout (importkø)'],
+      ['cog','Importer Cognism-kontakter'],['exp','Eksporter til Apollo CSV'],
+      ['enr','Eksporter for beriking'],['apo','Importer Apollo-status (CSV)'],
+      ['snap','Markedsoversikter'],['seg','Segmenter og bølger']]
+      .map(([k,n])=>'<button type="button" role="menuitem" data-mtmodal="'+k+'">'+n+'</button>').join('')+
+    '</div></details>';
+  const body=U.tab==='start'?mtStartHTML():U.tab==='pri'?tierPriHTML():
+    U.tab==='str'?stratHTML():U.tab==='arb'?mtArbHTML():U.tab==='seq'?mtSeqHTML():mtMalHTML();
+  const title=U.tab==='pri'?'Prioritering og tidsfordeling':U.tab==='str'?'Strategi':'';
+  return '<div class="mt"><div class="mt-top">'+tabs+'<div class="mt-top-r">'+menu+'</div></div>'+
+    (help?'<p class="mt-guide">'+esc(help)+'</p>':'')+
+    (title?'<div class="ps-advanced-heading"><h2>'+title+'</h2><button type="button" class="lnk" data-mttab="start">← Tilbake til start</button></div>':'')+
+    body+'</div>'; },
  wire(v){
   const U=UI.mt, rr=()=>renderView(true);
   v.querySelectorAll('[data-mttab]').forEach(b=>b.addEventListener('click',()=>{ U.tab=b.dataset.mttab; U.menu=false; rr(); }));
+  v.querySelectorAll('[data-mtstart]').forEach(b=>b.addEventListener('click',()=>mtOpen(b.dataset.mtstart)));
   v.querySelectorAll('[data-mtmodal]').forEach(b=>b.addEventListener('click',()=>{ U.menu=false; mtModalOpen(b.dataset.mtmodal); }));
   v.querySelectorAll('[data-mtstat]').forEach(b=>b.addEventListener('click',()=>{ U.stat=U.stat===b.dataset.mtstat?'':b.dataset.mtstat; U.page=1; rr(); }));
   v.querySelectorAll('[data-mtsegf]').forEach(b=>b.addEventListener('click',()=>{ U.seg=U.seg===b.dataset.mtsegf?'':b.dataset.mtsegf; U.page=1; rr(); }));
+  v.querySelector('[data-mtquickseg]')?.addEventListener('change',e=>{ U.seg=e.target.value; U.page=1; rr(); });
+  v.querySelector('.ps-market-analysis')?.addEventListener('toggle',e=>{ U.marketAnalysisOpen=e.currentTarget.open; });
   v.querySelectorAll('[data-mtclr]').forEach(b=>b.addEventListener('click',()=>{ U[b.dataset.mtclr]=''; U.page=1; rr(); }));
   v.querySelectorAll('[data-mtkind]').forEach(b=>b.addEventListener('click',()=>{ U.kind=b.dataset.mtkind; U.page=1; rr(); }));
   v.querySelectorAll('[data-mtsort]').forEach(b=>b.addEventListener('click',()=>{ const k=b.dataset.mtsort; U.sort=U.sort.k===k?{k,dir:-U.sort.dir}:{k,dir:k==='fit'||k==='last'||k==='ev'?-1:1}; rr(); }));
@@ -158,7 +265,7 @@ V.prosp={html(){
   v.querySelectorAll('[data-mttpl]').forEach(b=>b.addEventListener('click',()=>mtModalOpen('tpl',{key:b.dataset.mttpl})));
   if(UI.pr){ const id=UI.pr; UI.pr=null; if(mtGet(id)) setTimeout(()=>mtOpen(id),0); }
  }};
-VDESC.prosp='Hele målmarkedet, prioriterte accounts og neste batch';
+VDESC.prosp='Velg et selskap, undersøk, ta kontakt og følg opp';
 UI.pmode='list';
 
 /* ---------- fit-komponenter (popover) ---------- */

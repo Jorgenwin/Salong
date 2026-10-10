@@ -12,6 +12,7 @@ Oppdatert 9. oktober 2026 etter tilbakemelding fra brukeren.
 - **Vis konklusjonen først:** korte, konkrete setninger på kontokort og prospektlister. La `<details>`/piler åpne original begrunnelse, kildehenvisninger og poengfordeling ved behov. Ingen kildedata slettes.
 - Interne felt som `score`, `market_status`, `cult/3`, automatisk tierberegning og API-koder skal ikke brukes som hovedtekst eller hjelpetekst rettet mot brukeren. Vis menneskelig språk uten å forandre beregningene.
 - Kontokortet i Prospekter skal prioritere **Hvorfor nå**, **Kontekst** (virksomhet + historikk hos oss) og **Kontakt**. En liten infoknapp åpner hvorfor-grunnlag, mens prioritet er en diskret markering ved navnet med valgfri forklaring/samtalestøtte. Ikke lag en stor Tier-boks eller egen dobbel Beriking-rad.
+- **Prospekter skal være handlingsstyrt:** Ved `/#prosp` åpnes `Start` med ett faktisk anbefalt selskap og en knapp for å åpne kontokortet. Flyten er velg selskap → undersøk/berik → ta kontakt → følg opp. Prioritering/tidsfordeling, strategi og opprett batch ligger under `Mer`, uten å bli slettet. `Målmarked` starter med selskapslisten; statistikk og dekning kan åpnes ved behov. Ikke la avanserte konfigurasjoner bli første skjerm.
 
 
 

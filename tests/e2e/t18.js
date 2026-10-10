@@ -7,7 +7,16 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
   try{
     await ev(()=>{ window.__salong.UI.incEx=false; });
     await navTo(p,'prosp',600);
-    check('J01 Prospekter åpner på Prioritet-fanen med tre tier-seksjoner',await ev(()=>[document.querySelector('[data-mttab="pri"]').getAttribute('aria-pressed'),document.querySelectorAll('.tp .mt-sec').length]),['true',4]);
+    check('J01 Prospekter åpner på startflyten med ett tydelig prospekt',await ev(()=>[
+      document.querySelector('.mt-top .mt-tabs [data-mttab="start"]').getAttribute('aria-pressed'),
+      document.querySelectorAll('.ps-focus [data-mtstart]').length,
+      document.querySelectorAll('.ps-flow li').length]),['true',1,4]);
+    await p.click('.mt-top .mt-menu > summary');
+    await p.click('.mt-top [data-mttab="pri"]');
+    await wait(250);
+    check('J01b Prioritering og tidsfordeling er beholdt under Mer',await ev(()=>[
+      document.querySelectorAll('.tp .mt-sec').length,
+      !!document.querySelector('[data-tphours]')]),[4,true]);
     const st=await ev(()=>{ const L=window.__salong.MT.all(); const c={0:0,1:0,2:0,3:0}; for(const a of L) c[a.pt]++; const t1=L.filter(a=>a.pt===1); return {c,t1cult:t1.every(a=>a.cult>=3),t1min:Math.min(...t1.map(a=>a.fit.total)),corpT1:L.filter(a=>a.pt===1&&['bedrift','finans','konsulent','saas','pharma'].includes(a.segId)).length,corpT3:L.filter(a=>['bedrift','finans','konsulent','saas'].includes(a.segId)&&a.pt===3).length,corp:L.filter(a=>['bedrift','finans','konsulent','saas'].includes(a.segId)).length}; });
     check('J02 Tier 1 er maks 30 og bare kulturprofil 3',[st.c[1]<=30,st.c[1]>0,st.t1cult],[true,true,true]);
     check('J03 bedrifter (finans, konsulent, SaaS, bedrift) havner ikke i Tier 1 og stort sett i Tier 3',[st.corpT1,st.corpT3>=st.corp-2],[0,true]);
@@ -48,7 +57,8 @@ const {navTo,setup,testSeed} = require('./h.js'); const fs=require('fs');
     const af=await ev(()=>{ const L=window.__salong.MT.all().filter(a=>a.src==='liste'); return {done:L.map(a=>a.seq.stepsDone.length),touch:L.map(a=>a.touch.out),next:L.map(a=>a.prog.next.d)}; });
     check('J15 «merk som sendt» logger utgående touch og flytter sekvensen til neste steg',[af.done.join(),af.touch.join(),af.next.join()],['1,1','1,1','7,7']);
     // økonomi
-    await p.click('[data-mttab="str"]'); await wait(300);
+    await p.click('.mt-top .mt-menu > summary');
+    await p.click('.mt-top [data-mttab="str"]'); await wait(300);
     await ev(async()=>{ await window.__salong.TIER.save({eco:{base:2000000,growth:25,fee:60000,paid:60000}}); });
     await wait(300);
     const eco=await ev(()=>{ const x=window.__salong.TIER.eco(); return {t:x.target,rem:x.rem,cost:x.cost,crit:x.crit.map(c=>c.k+':'+c.st),nCo:x.nCo,months:x.months}; });

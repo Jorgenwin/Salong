@@ -12,7 +12,11 @@ const {navTo,setup,testSeed}=require('./h.js');
     check('S01 testdata og eksempeldata gir ingen falske oppgaver i I dag',[(await p.$$('.id27-admin-row')).length,(await p.$$('.id27-success')).length],[0,1]);
     await view('prosp'); await p.click('[data-mttab="mal"]'); await wait(200);
     check('S02 Prospekter: kontaktdekning i sju trinn erstatter nøkkeltallene, ingen store trinnkort',[(await p.$$('.mt-k')).length,(await p.$$('.cv-fr')).length,(await txt(p,'.cv-fn2')).replace(/\s+/g,' ')],v=>v[0]===0&&v[1]===7&&/Identifisert.*Kvalifisert.*Researchet.*Kontakt klar.*Adressert.*Dialog.*Mulighet/.test(v[2]));
-    check('S03 Prospekter: primærhandling «Start neste batch» er eneste grønne knapp, «Ny sak» er sekundær',[(await p.$$('.view .btn.primary')).length,await ev(()=>document.querySelector('#newDeal').classList.contains('primary'))],[1,false]);
+    await p.click('.mt-top .mt-tabs [data-mttab="start"]'); await wait(150);
+    check('S03 Prospekter: ett anbefalt selskap er primærhandlingen; batch er skjult under Mer',[
+      (await p.$('.ps-focus .btn.primary')).length,
+      await ev(()=>document.querySelector('.mt-top .mt-menu')?.open||false),
+      await ev(()=>document.querySelector('#newDeal').classList.contains('primary'))],[1,false,false]);
     await view('data',300); await p.click('[data-dsec="status"]').catch(()=>{}); await wait(250);
     check('S04 Datastatus finnes under Data og oppsett og lister poster som kan beholdes som ekte',await p.evaluate(()=>/Behold som ekte/.test(document.querySelector('#view').textContent)),true);
     // ---------- Maler og samtaler ----------
@@ -42,7 +46,8 @@ const {navTo,setup,testSeed}=require('./h.js');
     check('S24 I dag-kontekst forklarer prioriteringen med faste regler',[await txt(p,'#askSub'),await p.evaluate(()=>/faste regler/.test(document.querySelector('.ask-why')?.textContent||''))],v=>/I dag/.test(v[0])&&v[1]);
     await p.click('#askClose'); await wait(100);
     // ---------- batch-modal ----------
-    await view('prosp'); await p.click('[data-mttab="mal"]').catch(()=>{}); await wait(150); await p.click('[data-mtmodal="batch"]'); await wait(300);
+    await view('prosp'); await p.click('.mt-top .mt-tabs [data-mttab="mal"]').catch(()=>{}); await wait(150);
+    await p.click('.mt-top .mt-menu > summary'); await p.click('.mt-top [data-mtmodal="batch"]'); await wait(300);
     const bm=await ev(()=>{ const m=document.querySelector('.mt-md'); return {h:m.scrollWidth-m.clientWidth, b:m.querySelector('.mt-mb').scrollWidth-m.querySelector('.mt-mb').clientWidth, n:m.querySelectorAll('[data-mtb="n"]').length, nb:m.querySelectorAll('[data-mtbn]').length, ft:m.querySelector('footer').textContent.replace(/\s+/g,' ').trim(), rows:m.querySelectorAll('.mt-blr').length, first:(m.querySelector('.mt-blr')||{}).textContent||''}; });
     check('S30 batch-modal: ingen horisontal rulling, ett antallsvalg, rader med bare navn og segment/fit/kontakt',[bm.h<=1&&bm.b<=1,bm.n,bm.nb,/ · Fit \d+ · (Dokumentert event|Sannsynlig event|Event ukjent)/.test(bm.first)],[true,1,0,true]);
     check('S31 batch-modal: bunn viser «N accounts valgt», Avbryt og Start batch',bm.ft,v=>/^\d+ accounts valgt/.test(v)&&/Avbryt/.test(v)&&/Start batch/.test(v)&&!/Bekreft batch/.test(v));
