@@ -36,6 +36,7 @@ const {setup,navTo,testSeed} = require('./h.js');
       /RINGEØKT/.test(v.phases[0])&&/ADMIN-KØ/.test(v.phases[1])&&!v.hasOldTabs);
     check('TODAY02 incoming inquiry stays in admin',initial.hasAdmin,true);
     check('TODAY03 culture selected by default',initial.hasCulture,true);
+    if(await p.locator('.id27-replenish').count()) await p.locator('.id27-replenish > summary').click();
     const state=await ev(()=>{const a=window.__salong.MT.all().filter(x=>/^test-(?:cult|comm)/.test(x.id));
       return a.map(x=>({id:x.id,q:x.flags.qualified,e:x.flags.enriched,phone:x.active[0]?.phone||''}));});
     check('TODAY04 test fixture contains three approved contact numbers',state,v=>v.length===3&&v.every(x=>x.q&&x.e&&x.phone));
