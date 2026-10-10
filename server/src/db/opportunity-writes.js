@@ -35,6 +35,17 @@ function createOpportunityWrites(db,mapOpportunity){
           [input.accountId]
         );
         if(!account.rows.length)return {accountMissing:true};
+        const normalizedTitle=input.title.normalize('NFKC').trim().replace(/\s+/g,' ').toLocaleLowerCase('nb');
+        const duplicateKey='salong:opportunity:'+input.accountId+':'+normalizedTitle+':'+(input.eventDate||'');
+        await client.query('SELECT pg_advisory_xact_lock(hashtext($1))',[duplicateKey]);
+        const dupe=await client.query(
+          "SELECT id FROM opportunities WHERE deleted_at IS NULL AND organization_id=$1 "+
+          "AND lower(regexp_replace(trim(title),'[[:space:]]+',' ','g'))=$2 "+
+          'AND event_date IS NOT DISTINCT FROM $3::date LIMIT 1',
+          [input.accountId,normalizedTitle,input.eventDate||null]
+        );
+        if(dupe.rows.length)return {duplicate:true,existingId:dupe.rows[0].id};
+
         const response=await client.query(
           'INSERT INTO opportunities '+
           '(id,organization_id,title,stage,room,event_date,value_amount,notes,owner_id,stage_at) '+

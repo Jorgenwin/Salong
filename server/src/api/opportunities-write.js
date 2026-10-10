@@ -73,6 +73,8 @@ async function handleOpportunityWrite({req,url,repositories,
       actorId:req.salongUser.id,id:makeId(),auditId:makeAuditId()
     });
     if(result.accountMissing)return fail(404,'account_not_found','Selskapet finnes ikke.');
+    if(result.duplicate)return fail(409,'duplicate_opportunity',
+      'Denne salgsmuligheten er allerede registrert for selskapet og datoen.');
     return {status:201,body:{success:true,data:result.opportunity}};
   }
   let id;

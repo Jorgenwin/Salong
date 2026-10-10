@@ -17,6 +17,7 @@ function repos(){
     async create(input,meta){
       calls.push(['create',input,meta]);
       if(input.accountId==='missing')return {accountMissing:true};
+      if(input.title==='Duplikat')return {duplicate:true,existingId:'opp-old'};
       return {opportunity:{id:meta.id,account_id:input.accountId,
         title:input.title,stage:'ny',value:input.value}};
     },
@@ -97,6 +98,9 @@ test('invalid media, missing organization, JSON and unsupported keys fail closed
       repositories:a.repositories});
   }
   assert.equal((await call({accountId:'missing',title:'Seminar'})).status,404);
+  const dupe=await call({accountId:'org-1',title:'Duplikat'});
+  assert.equal(dupe.status,409);
+  assert.equal(dupe.body.error_code,'duplicate_opportunity');
   assert.equal((await call({accountId:'org-1',title:'Seminar',secret:'x'})).status,400);
   assert.equal((await call('{notjson')).status,400);
   const req=request({accountId:'org-1',title:'Seminar'});
